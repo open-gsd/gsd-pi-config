@@ -7,7 +7,7 @@ Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 Desktop configuration manager for [GSD Pi](https://github.com/open-gsd/gsd-pi) preferences. A native Tauri app that gives you a structured GUI over the YAML preferences file you'd otherwise hand-edit, plus a library view for skills, agents, and API keys.
 
-**Web app:** Cloud-hosted editor — upload or create a configuration, edit in the browser, then download `preferences.md`, `models.json`, and `settings.json` for your machine. Preset gallery and wizard included (see [Web vs desktop](#web-vs-desktop)).
+**Web app:** Browser editor — upload or create a configuration, edit in the browser, then download `preferences.md`, `models.json`, and `settings.json` for your machine. Preset gallery and wizard included (see [Web vs desktop](#web-vs-desktop)).
 
 ## Screenshots
 
@@ -60,37 +60,12 @@ npm run dev:web
 Opens the gallery + editor on port `5173`. Copy `.env.web.example` to `.env.web.local` to override preset repo URLs.
 
 ```bash
-npm run build:web    # static dist/ for GitHub Pages
+npm run build:web
 npm run preview:web
-npm test             # preferencesCore unit tests
+npm test
 ```
 
-Preset gallery data lives in [`gsd-pi-presets/`](gsd-pi-presets/) (publish as [open-gsd/gsd-pi-presets](https://github.com/open-gsd/gsd-pi-presets)).
-
-### Deploy to Vercel (`pi.opengsd.net`)
-
-Production uses root path `/` (see `.env.web.production`). GitHub Pages builds use `/gsd-pi-config/` via the Pages workflow.
-
-1. Import the repo in [Vercel](https://vercel.com) (team **fluxlabs-projects** or your org).
-2. Framework preset: **Other** — `vercel.json` sets `buildCommand`, `outputDirectory`, and SPA rewrites.
-3. **Environment variables** (Project → Settings → Environment Variables):
-
-   | Variable | Required | Notes |
-   |----------|----------|--------|
-   | `GITHUB_CLIENT_ID` | For preset submit | GitHub OAuth App |
-   | `GITHUB_CLIENT_SECRET` | For preset submit | Server only |
-   | `PRESETS_REPO` | Optional | Default `open-gsd/gsd-pi-presets` |
-
-   Build-time `VITE_*` vars come from `.env.web.production` in the repo.
-
-4. **Domain:** Project → Settings → Domains → add `pi.opengsd.net`. At your DNS host, add a CNAME (or Vercel’s recommended A/ALIAS records) pointing to Vercel.
-5. **GitHub OAuth App** (if using Submit preset): set callback URL to `https://pi.opengsd.net/oauth/callback`.
-
-```bash
-npm i -g vercel   # optional CLI
-vercel link       # link to project
-vercel --prod     # production deploy
-```
+Preset gallery data is loaded from [open-gsd/gsd-pi-presets](https://github.com/open-gsd/gsd-pi-presets) (override URLs in `.env.web.local`).
 
 ### Web vs desktop
 

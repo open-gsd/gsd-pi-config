@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), tailwindcss()],
     clearScreen: false,
-    base: isWeb ? process.env.VITE_BASE_PATH ?? "/gsd-pi-config/" : "/",
+    base: isWeb ? (process.env.VITE_BASE_PATH ?? "/") : "/",
     define: {
       "import.meta.env.VITE_PLATFORM": JSON.stringify(isWeb ? "web" : "desktop"),
     },

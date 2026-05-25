@@ -3,6 +3,11 @@
   "installCommand": "npm ci",
   "buildCommand": "npm run build:web",
   "outputDirectory": "dist",
+  "build": {
+    "env": {
+      "VITE_BASE_PATH": "/"
+    }
+  },
   "rewrites": [
     {
       "source": "/((?!api/).*)",
