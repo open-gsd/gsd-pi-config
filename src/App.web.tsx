@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import { WebApp } from "./WebApp";
 import { GalleryPage } from "./pages/GalleryPage";
 import { OAuthCallbackPage } from "./pages/OAuthCallbackPage";
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   );
 }
