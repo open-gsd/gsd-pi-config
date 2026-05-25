@@ -1,4 +1,4 @@
-// GSD2 Config - Tauri auto-update helper
+// GSD Pi Config - Tauri auto-update helper
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Thin wrapper around @tauri-apps/plugin-updater. The check() call hits the

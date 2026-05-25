@@ -1552,7 +1552,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "gsd2-config"
+name = "gsd-pi-config"
 version = "1.1.0"
 dependencies = [
  "dirs",

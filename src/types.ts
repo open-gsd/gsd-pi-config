@@ -1,8 +1,12 @@
-// GSD Setup - TypeScript Types (mirrors GSD-2 preferences)
+// GSD Pi Config - TypeScript Types (mirrors GSD Pi preferences)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 export type WorkflowMode = "solo" | "team";
-export type TokenProfile = "budget" | "balanced" | "quality";
+export type TokenProfile = "budget" | "balanced" | "quality" | "burn-max";
+export type PlanningDepth = "light" | "deep";
+export type GitCollapseCadence = "milestone" | "slice";
+export type UokTurnActionMode = "commit" | "snapshot" | "status-only";
+export type WorkspaceMode = "project" | "parent";
 export type BudgetEnforcementMode = "warn" | "pause" | "halt";
 export type SkillDiscoveryMode = "auto" | "suggest" | "off";
 export type ContextSelectionMode = "full" | "smart";
@@ -77,6 +81,9 @@ export interface GitPreferences {
   worktree_post_create?: string;
   auto_pr?: boolean;
   pr_target_branch?: string;
+  absorb_snapshot_commits?: boolean;
+  collapse_cadence?: GitCollapseCadence;
+  milestone_resquash?: boolean;
 }
 
 export interface NotificationPreferences {
@@ -95,6 +102,8 @@ export interface PhaseSkipPreferences {
   skip_milestone_validation?: boolean;
   reassess_after_slice?: boolean;
   require_slice_discussion?: boolean;
+  mid_execution_escalation?: boolean;
+  progressive_planning?: boolean;
 }
 
 export interface ParallelConfig {
@@ -125,6 +134,70 @@ export interface DynamicRoutingConfig {
   cross_provider?: boolean;
   hooks?: boolean;
   capability_routing?: boolean;
+  allow_flat_rate_providers?: boolean;
+}
+
+export interface ModelCapabilityScores {
+  coding?: number;
+  debugging?: number;
+  research?: number;
+  reasoning?: number;
+  speed?: number;
+  longContext?: number;
+  instruction?: number;
+}
+
+export interface ContextModeConfig {
+  enabled?: boolean;
+  exec_timeout_ms?: number;
+  exec_stdout_cap_bytes?: number;
+  exec_digest_chars?: number;
+  exec_env_allowlist?: string[];
+}
+
+export interface UokPreferences {
+  enabled?: boolean;
+  legacy_fallback?: { enabled?: boolean };
+  gates?: { enabled?: boolean };
+  model_policy?: { enabled?: boolean };
+  execution_graph?: { enabled?: boolean };
+  gitops?: {
+    enabled?: boolean;
+    turn_action?: UokTurnActionMode;
+    turn_push?: boolean;
+  };
+  audit_unified?: { enabled?: boolean };
+  plan_v2?: { enabled?: boolean };
+}
+
+export interface GitHubSyncConfig {
+  enabled?: boolean;
+  repo?: string;
+  project?: number;
+  labels?: string[];
+  auto_link_commits?: boolean;
+  slice_prs?: boolean;
+}
+
+export interface WorkspaceRepositoryPreference {
+  path: string;
+  role?: string;
+  verification?: string[];
+  commit_policy?: "auto" | "skip";
+}
+
+export interface WorkspacePreferences {
+  mode?: WorkspaceMode;
+  repositories?: Record<string, WorkspaceRepositoryPreference>;
+}
+
+export interface ClaudeCodeMcpPerModelEntry {
+  allowed_servers?: string[];
+  blocked_servers?: string[];
+}
+
+export interface ClaudeCodeMcpConfig {
+  per_model?: Record<string, ClaudeCodeMcpPerModelEntry>;
 }
 
 export interface ExperimentalPreferences {
@@ -147,6 +220,7 @@ export interface SafetyHarnessConfig {
   checkpoints?: boolean;
   auto_rollback?: boolean;
   timeout_scale_cap?: number;
+  file_change_allowlist?: string[];
 }
 
 export interface ReactiveExecutionConfig {
@@ -195,6 +269,8 @@ export interface SliceParallelConfig {
 export interface GSDPreferences {
   version?: number;
   mode?: WorkflowMode;
+  planning_depth?: PlanningDepth;
+  language?: string;
   always_use_skills?: string[];
   prefer_skills?: string[];
   avoid_skills?: string[];
@@ -209,6 +285,8 @@ export interface GSDPreferences {
   budget_ceiling?: number;
   budget_enforcement?: BudgetEnforcementMode;
   context_pause_threshold?: number;
+  per_unit_cost_cap_usd?: number;
+  min_request_interval_ms?: number;
   notifications?: NotificationPreferences;
   cmux?: CmuxPreferences;
   remote_questions?: RemoteQuestionsConfig;
@@ -217,7 +295,15 @@ export interface GSDPreferences {
   pre_dispatch_hooks?: PreDispatchHookConfig[];
   dynamic_routing?: DynamicRoutingConfig;
   disabled_model_providers?: string[];
+  flat_rate_providers?: string[];
+  modelOverrides?: Record<string, { capabilities?: Partial<ModelCapabilityScores> }>;
+  uok?: UokPreferences;
+  github?: GitHubSyncConfig;
+  workspace?: WorkspacePreferences;
+  claude_code_mcp?: ClaudeCodeMcpConfig;
   context_management?: ContextManagementConfig;
+  context_mode?: ContextModeConfig;
+  context_window_override?: number;
   token_profile?: TokenProfile;
   phases?: PhaseSkipPreferences;
   auto_visualize?: boolean;
@@ -249,7 +335,7 @@ export interface GSDPreferences {
 }
 
 // ─── Custom providers / models (~/.gsd/agent/models.json) ───────────────────
-// Mirrors the subset of GSD2's ProviderConfig / ModelDefinition that the
+// Mirrors the subset of GSD Pi's ProviderConfig / ModelDefinition that the
 // editor currently exposes. Unknown fields (headers, authHeader, cost,
 // compat, modelOverrides) are preserved by the backend round-trip; we just
 // don't render form controls for them yet.
@@ -319,9 +405,9 @@ export interface ClaudeCodeStatusLine {
 }
 
 /**
- * Read-time lens over Claude Code's settings.json. The underlying state is
- * a free-form `Record<string, unknown>` so unknown/experimental keys (hooks,
- * enterprise fields, etc.) round-trip verbatim — cast to this interface only
+ * Read-time lens over the agent runtime settings.json schema (Claude Code–
+ * compatible). The underlying state is a free-form `Record<string, unknown>` so
+ * unknown/experimental keys round-trip verbatim — cast to this interface only
  * when reading a specific field.
  */
 export interface ClaudeCodeSettings {
@@ -345,6 +431,10 @@ export const KNOWN_UNIT_TYPES = [
   "validate-milestone", "rewrite-docs", "discuss-milestone", "discuss-slice",
   "worktree-merge",
 ] as const;
+
+export const UNIT_TYPE_OPTIONS: { value: string; label: string }[] = KNOWN_UNIT_TYPES.map(
+  (ut) => ({ value: ut, label: ut }),
+);
 
 export const MODEL_PHASES = [
   "research", "planning", "discuss", "execution",

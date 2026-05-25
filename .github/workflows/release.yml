@@ -1,4 +1,4 @@
-# GSD2 Config — cross-platform release workflow
+# GSD Pi Config — cross-platform release workflow
 # Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 #
 # Security note: this workflow only interpolates `secrets.GITHUB_TOKEN`,
@@ -70,11 +70,11 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: tag,
-              name: `GSD2 Config ${tag}`,
+              name: `GSD Pi Config ${tag}`,
               body: [
-                '## GSD2 Config ' + tag,
+                '## GSD Pi Config ' + tag,
                 '',
-                'Desktop configuration manager for GSD-2 preferences — Tauri + React GUI for `~/.gsd/preferences.md`, with skills, agents, and keychain-backed API keys.',
+                'Desktop configuration manager for GSD Pi preferences — Tauri + React GUI for `~/.gsd/preferences.md`, with skills, agents, and keychain-backed API keys.',
                 '',
                 '### Install',
                 '',

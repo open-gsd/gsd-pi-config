@@ -1,4 +1,4 @@
-// GSD Setup - Remote Questions Settings Section
+// GSD Pi Config - Remote Questions Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, RemoteQuestionsConfig, RemoteChannel } from "../../types";

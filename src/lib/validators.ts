@@ -1,4 +1,4 @@
-// GSD Setup - Pure-TS field validators
+// GSD Pi Config - Pure-TS field validators
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Each validator returns `null` if the value is valid, or an error string

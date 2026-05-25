@@ -1,4 +1,4 @@
-// GSD Setup - Codebase Map Settings Section
+// GSD Pi Config - Codebase Map Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, CodebaseMapPreferences } from "../../types";

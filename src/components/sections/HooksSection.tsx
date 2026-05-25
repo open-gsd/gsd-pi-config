@@ -1,23 +1,27 @@
-// GSD Setup - Hooks Settings Section
+// GSD Pi Config - Hooks Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, PostUnitHookConfig, PreDispatchHookConfig } from "../../types";
-import { KNOWN_UNIT_TYPES } from "../../types";
-import { SectionHeader } from "../FormControls";
+import { UNIT_TYPE_OPTIONS } from "../../types";
+import type { ProviderCatalog } from "../../constants";
+import { ModelPicker, MultiSelectField, SectionHeader } from "../FormControls";
 
 interface Props {
   prefs: GSDPreferences;
   onChange: (prefs: GSDPreferences) => void;
+  modelCatalog?: readonly ProviderCatalog[];
 }
 
 function PostHookCard({
   hook,
   onUpdate,
   onRemove,
+  modelCatalog,
 }: {
   hook: PostUnitHookConfig;
   onUpdate: (h: PostUnitHookConfig) => void;
   onRemove: () => void;
+  modelCatalog: readonly ProviderCatalog[];
 }) {
   return (
     <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
@@ -44,19 +48,13 @@ function PostHookCard({
       <div className="space-y-2">
         <div>
           <label className="text-xs text-gsd-text-dim block mb-1">After (unit types)</label>
-          <select
-            multiple
-            value={hook.after}
-            onChange={(e) => {
-              const selected = Array.from(e.target.selectedOptions, (o) => o.value);
-              onUpdate({ ...hook, after: selected });
-            }}
-            className="w-full h-20 text-xs"
-          >
-            {KNOWN_UNIT_TYPES.map((ut) => (
-              <option key={ut} value={ut}>{ut}</option>
-            ))}
-          </select>
+          <MultiSelectField
+            values={hook.after}
+            onChange={(after) => onUpdate({ ...hook, after })}
+            options={UNIT_TYPE_OPTIONS}
+            placeholder="Select unit types…"
+            className="w-full"
+          />
         </div>
         <div>
           <label className="text-xs text-gsd-text-dim block mb-1">Prompt</label>
@@ -71,7 +69,13 @@ function PostHookCard({
         <div className="flex gap-2">
           <div className="flex-1">
             <label className="text-xs text-gsd-text-dim block mb-1">Model</label>
-            <input type="text" value={hook.model ?? ""} onChange={(e) => onUpdate({ ...hook, model: e.target.value || undefined })} placeholder="Default" className="w-full text-xs" />
+            <ModelPicker
+              value={hook.model}
+              onChange={(v) => onUpdate({ ...hook, model: v })}
+              catalog={modelCatalog}
+              placeholder="Default"
+              className="w-full text-xs"
+            />
           </div>
           <div className="w-20">
             <label className="text-xs text-gsd-text-dim block mb-1">Max Cycles</label>
@@ -87,6 +91,10 @@ function PostHookCard({
             <label className="text-xs text-gsd-text-dim block mb-1">Retry On</label>
             <input type="text" value={hook.retry_on ?? ""} onChange={(e) => onUpdate({ ...hook, retry_on: e.target.value || undefined })} placeholder="Trigger file" className="w-full text-xs" />
           </div>
+          <div className="flex-1">
+            <label className="text-xs text-gsd-text-dim block mb-1">Agent</label>
+            <input type="text" value={hook.agent ?? ""} onChange={(e) => onUpdate({ ...hook, agent: e.target.value || undefined })} placeholder="Optional agent id" className="w-full text-xs" />
+          </div>
         </div>
       </div>
     </div>
@@ -97,10 +105,12 @@ function PreHookCard({
   hook,
   onUpdate,
   onRemove,
+  modelCatalog,
 }: {
   hook: PreDispatchHookConfig;
   onUpdate: (h: PreDispatchHookConfig) => void;
   onRemove: () => void;
+  modelCatalog: readonly ProviderCatalog[];
 }) {
   return (
     <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
@@ -136,19 +146,13 @@ function PreHookCard({
           </div>
           <div className="flex-1">
             <label className="text-xs text-gsd-text-dim block mb-1">Before (unit types)</label>
-            <select
-              multiple
-              value={hook.before}
-              onChange={(e) => {
-                const selected = Array.from(e.target.selectedOptions, (o) => o.value);
-                onUpdate({ ...hook, before: selected });
-              }}
-              className="w-full h-16 text-xs"
-            >
-              {KNOWN_UNIT_TYPES.map((ut) => (
-                <option key={ut} value={ut}>{ut}</option>
-              ))}
-            </select>
+            <MultiSelectField
+              values={hook.before}
+              onChange={(before) => onUpdate({ ...hook, before })}
+              options={UNIT_TYPE_OPTIONS}
+              placeholder="Select unit types…"
+              className="w-full"
+            />
           </div>
         </div>
         {hook.action === "modify" && (
@@ -175,12 +179,34 @@ function PreHookCard({
             <input type="text" value={hook.skip_if ?? ""} onChange={(e) => onUpdate({ ...hook, skip_if: e.target.value || undefined })} className="w-full text-xs" placeholder="Relative file path" />
           </div>
         )}
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <label className="text-xs text-gsd-text-dim block mb-1">Model</label>
+            <ModelPicker
+              value={hook.model}
+              onChange={(v) => onUpdate({ ...hook, model: v })}
+              catalog={modelCatalog}
+              placeholder="Default"
+              className="w-full text-xs"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="text-xs text-gsd-text-dim block mb-1">Unit type filter</label>
+            <input
+              type="text"
+              value={hook.unit_type ?? ""}
+              onChange={(e) => onUpdate({ ...hook, unit_type: e.target.value || undefined })}
+              className="w-full text-xs"
+              placeholder="Optional unit type"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export function HooksSection({ prefs, onChange }: Props) {
+export function HooksSection({ prefs, onChange, modelCatalog = [] }: Props) {
   const postHooks = prefs.post_unit_hooks ?? [];
   const preHooks = prefs.pre_dispatch_hooks ?? [];
 
@@ -216,6 +242,7 @@ export function HooksSection({ prefs, onChange }: Props) {
         <PostHookCard
           key={i}
           hook={hook}
+          modelCatalog={modelCatalog}
           onUpdate={(h) => {
             const updated = [...postHooks];
             updated[i] = h;
@@ -238,6 +265,7 @@ export function HooksSection({ prefs, onChange }: Props) {
         <PreHookCard
           key={i}
           hook={hook}
+          modelCatalog={modelCatalog}
           onUpdate={(h) => {
             const updated = [...preHooks];
             updated[i] = h;

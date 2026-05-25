@@ -1,4 +1,4 @@
-// GSD2 Config - Models Settings Section
+// GSD Pi Config - Models Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type {

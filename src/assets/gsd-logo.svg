@@ -1,41 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 80" width="192" height="80">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 168 64" width="168" height="64" role="img" aria-label="GSD Pi">
   <defs>
     <style>
       .wordmark {
-        font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+        font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Menlo', monospace;
         font-weight: 700;
         letter-spacing: -0.02em;
         fill: #7dcfff;
       }
-      .badge {
-        font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+      .badge-text {
+        font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Menlo', monospace;
         font-weight: 700;
-        fill: #000000;
+        fill: #0a0e14;
       }
       .bracket {
-        font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+        font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Menlo', monospace;
         font-weight: 400;
         fill: rgba(125, 207, 255, 0.45);
       }
     </style>
   </defs>
 
-  <!-- Centered group: content spans 0→172, viewBox 192 → 10px padding on each side -->
-  <g transform="translate(10, 0)">
-    <!-- Left bracket -->
-    <text class="bracket" x="0" y="54" font-size="48" text-anchor="start">[</text>
+  <g transform="translate(8, 4)">
+    <text class="bracket" x="0" y="44" font-size="40" text-anchor="start">[</text>
 
-    <!-- GSD wordmark -->
-    <text class="wordmark" x="22" y="54" font-size="44">GSD</text>
+    <text class="wordmark" x="18" y="44" font-size="36">GSD</text>
+    <rect x="18" y="50" width="70" height="2.5" fill="rgba(125, 207, 255, 0.28)" rx="1"/>
 
-    <!-- Underscore cursor accent under GSD -->
-    <rect x="22" y="62" width="82" height="3" fill="rgba(125, 207, 255, 0.3)"/>
+    <rect x="96" y="14" width="32" height="32" rx="6" fill="#7dcfff"/>
+    <text class="badge-text" x="112" y="38" font-size="22" text-anchor="middle">π</text>
 
-    <!-- "2" badge — cyan square placed tight against GSD -->
-    <rect x="112" y="22" width="36" height="36" rx="6" fill="#7dcfff"/>
-    <text class="badge" x="130" y="50" font-size="28" text-anchor="middle">2</text>
-
-    <!-- Right bracket — anchored at end so its glyph sits tight against the badge -->
-    <text class="bracket" x="172" y="54" font-size="48" text-anchor="end">]</text>
+    <text class="bracket" x="152" y="44" font-size="40" text-anchor="end">]</text>
   </g>
 </svg>

@@ -1,12 +1,23 @@
-// GSD2 Config - Agents Library Section
+// GSD Pi Config - Agents Library Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Mirrors the Skills Library but targets `.claude/agents/*.md` (flat .md files
 // rather than skill directories). Global and project scopes supported.
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { SectionHeader } from "../FormControls";
+import { useConfigBackend } from "../../platform/backend";
+import {
+  btn,
+  btnPrimary,
+  btnSegment,
+  btnSegmentActive,
+  btnDanger,
+  choiceBtn,
+  choiceBtnActive,
+  segmentGroup,
+  bannerDanger,
+} from "../../lib/uiClasses";
 
 export interface AgentInfo {
   id: string;
@@ -24,6 +35,7 @@ interface Props {
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 export function AgentsLibrarySection({ projectPath }: Props) {
+  const backend = useConfigBackend();
   const [agents, setAgents] = useState<AgentInfo[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
@@ -39,8 +51,7 @@ export function AgentsLibrarySection({ projectPath }: Props) {
   const loadAgents = useCallback(async () => {
     try {
       setError("");
-      const args = projectPath ? { projectPath } : {};
-      const list = await invoke<AgentInfo[]>("list_agents", args);
+      const list = await backend.listAgents(projectPath);
       setAgents(list);
     } catch (e) {
       setError(String(e));
@@ -62,7 +73,7 @@ export function AgentsLibrarySection({ projectPath }: Props) {
     }
     (async () => {
       try {
-        const text = await invoke<string>("read_agent", { path: selected.path });
+        const text = await backend.readAgent(selected.path);
         setContent(text);
         setOriginalContent(text);
         setSaveState("idle");
@@ -93,7 +104,7 @@ export function AgentsLibrarySection({ projectPath }: Props) {
     if (!selected) return;
     setSaveState("saving");
     try {
-      await invoke("write_agent", { path: selected.path, content });
+      await backend.writeAgent(selected.path, content);
       setOriginalContent(content);
       setSaveState("saved");
       setTimeout(() => setSaveState("idle"), 1500);
@@ -110,7 +121,7 @@ export function AgentsLibrarySection({ projectPath }: Props) {
     if (!selected) return;
     if (!confirm(`Delete agent "${selected.name}"? This removes the .md file.`)) return;
     try {
-      await invoke("delete_agent", { path: selected.path });
+      await backend.deleteAgent(selected.path);
       setSelectedId(null);
       await loadAgents();
     } catch (e) {
@@ -126,7 +137,11 @@ export function AgentsLibrarySection({ projectPath }: Props) {
         scope: newScope,
       };
       if (newScope === "project" && projectPath) args.projectPath = projectPath;
-      const created = await invoke<AgentInfo>("create_agent", args);
+      const created = await backend.createAgent(
+        args.name,
+        args.scope,
+        args.projectPath,
+      );
       setShowNewDialog(false);
       setNewName("");
       await loadAgents();
@@ -143,20 +158,19 @@ export function AgentsLibrarySection({ projectPath }: Props) {
       <div className="flex items-start justify-between mb-4">
         <SectionHeader
           title="Agents Library"
-          description="View and edit Claude Code subagents. Agents are single .md files with YAML frontmatter that Claude dispatches to for specialized tasks."
+          description="View and edit subagent definitions. Agents are single .md files with YAML frontmatter the runtime dispatches for specialized tasks."
         />
-        <button
-          onClick={() => setShowNewDialog(true)}
-          className="px-3 py-1.5 text-xs rounded-md bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover transition-colors shrink-0"
-        >
+        <button type="button" onClick={() => setShowNewDialog(true)} className={`${btnPrimary} shrink-0`}>
           + New Agent
         </button>
       </div>
 
       {error && (
-        <div className="mb-3 px-3 py-2 bg-gsd-danger/10 border border-gsd-danger/30 text-gsd-danger text-xs rounded flex items-center justify-between">
+        <div className={`${bannerDanger} mb-3 flex items-center justify-between text-xs`}>
           <span>{error}</span>
-          <button onClick={() => setError("")} className="ml-2 hover:text-red-300">dismiss</button>
+          <button type="button" onClick={() => setError("")} className={`${btn} ml-2`}>
+            Dismiss
+          </button>
         </div>
       )}
 
@@ -177,25 +191,19 @@ export function AgentsLibrarySection({ projectPath }: Props) {
             </div>
             <div>
               <label className="text-xs text-gsd-text-dim block mb-1">Scope</label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
+                  type="button"
                   onClick={() => setNewScope("global")}
-                  className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                    newScope === "global"
-                      ? "border-gsd-accent text-gsd-accent bg-gsd-accent-dim"
-                      : "border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-                  }`}
+                  className={newScope === "global" ? choiceBtnActive : choiceBtn}
                 >
                   Global (~/.claude/agents)
                 </button>
                 <button
+                  type="button"
                   onClick={() => setNewScope("project")}
                   disabled={!hasProject}
-                  className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                    newScope === "project"
-                      ? "border-gsd-accent text-gsd-accent bg-gsd-accent-dim"
-                      : "border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-                  } ${!hasProject ? "opacity-40 cursor-not-allowed" : ""}`}
+                  className={newScope === "project" ? choiceBtnActive : choiceBtn}
                 >
                   Project (.claude/agents)
                 </button>
@@ -206,16 +214,16 @@ export function AgentsLibrarySection({ projectPath }: Props) {
             </div>
             <div className="flex gap-2 justify-end">
               <button
-                onClick={() => { setShowNewDialog(false); setNewName(""); }}
-                className="px-3 py-1.5 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
+                type="button"
+                onClick={() => {
+                  setShowNewDialog(false);
+                  setNewName("");
+                }}
+                className={btn}
               >
                 Cancel
               </button>
-              <button
-                onClick={createNew}
-                disabled={!newName.trim()}
-                className="px-3 py-1.5 text-xs rounded-md bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover disabled:opacity-40 disabled:cursor-not-allowed"
-              >
+              <button type="button" onClick={createNew} disabled={!newName.trim()} className={btnPrimary}>
                 Create
               </button>
             </div>
@@ -234,15 +242,14 @@ export function AgentsLibrarySection({ projectPath }: Props) {
               placeholder="Search agents..."
               className="w-full text-xs"
             />
-            <div className="flex rounded-md border border-gsd-border overflow-hidden text-[10px]">
+            <div className={`${segmentGroup} text-[10px]`}>
               {(["all", "global", "project"] as const).map((s) => (
                 <button
                   key={s}
+                  type="button"
                   onClick={() => setScopeFilter(s)}
-                  className={`flex-1 px-2 py-1 uppercase tracking-wider font-medium transition-colors ${
-                    scopeFilter === s
-                      ? "bg-gsd-accent text-gsd-on-accent"
-                      : "text-gsd-text-dim hover:text-gsd-text"
+                  className={`flex-1 uppercase tracking-wider font-medium ${
+                    scopeFilter === s ? btnSegmentActive : btnSegment
                   }`}
                 >
                   {s}
@@ -303,28 +310,23 @@ export function AgentsLibrarySection({ projectPath }: Props) {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={remove}
-                    className="px-2 py-1 text-[10px] rounded border border-gsd-danger/40 text-gsd-danger hover:bg-gsd-danger/10"
-                  >
+                  <button type="button" onClick={remove} className={btnDanger}>
                     Delete
                   </button>
                   {isDirty && (
-                    <button
-                      onClick={discard}
-                      className="px-2 py-1 text-[10px] rounded border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-                    >
+                    <button type="button" onClick={discard} className={btn}>
                       Discard
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={save}
                     disabled={!isDirty || saveState === "saving"}
-                    className={`px-3 py-1 text-[11px] rounded font-medium transition-colors ${
+                    className={
                       isDirty
-                        ? "bg-gsd-accent text-gsd-on-accent hover:bg-gsd-accent-hover"
-                        : "bg-gsd-border text-gsd-text-dim cursor-not-allowed"
-                    }`}
+                        ? btnPrimary
+                        : `${btn} !bg-gsd-border !text-gsd-text-dim !border-transparent`
+                    }
                   >
                     {saveState === "saving" ? "Saving..." : saveState === "saved" ? "Saved" : "Save"}
                   </button>

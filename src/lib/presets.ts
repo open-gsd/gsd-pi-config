@@ -1,4 +1,4 @@
-// GSD Setup - Workflow mode & token profile cascade presets
+// GSD Pi Config - Workflow mode & token profile cascade presets
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // When a user picks "solo" / "team" as a workflow mode, or switches the
@@ -48,7 +48,7 @@ const MODE_PRESETS: Record<WorkflowMode, PresetPatch> = {
 
 // ─── Token profile presets ──────────────────────────────────────────────────
 
-// These phase-skip values mirror `resolveProfileDefaults` in GSD-2's
+// These phase-skip values mirror `resolveProfileDefaults` in GSD Pi's
 // `preferences-models.ts`. Keep them in sync — a profile flip here that
 // disagrees with the runtime ends up applying a config the runtime would
 // have overridden, confusing the user. Balanced and Quality both skip
@@ -84,6 +84,20 @@ const PROFILE_PRESETS: Record<TokenProfile, PresetPatch> = {
     "context_management.observation_masking": false,
     "context_management.compaction_threshold_percent": 90,
     "context_selection": "full",
+    "enhanced_verification": true,
+    "enhanced_verification_pre": true,
+    "enhanced_verification_post": true,
+    "enhanced_verification_strict": true,
+  },
+  "burn-max": {
+    "dynamic_routing.enabled": false,
+    "context_selection": "full",
+    "phases.skip_research": false,
+    "phases.skip_reassess": false,
+    "phases.skip_slice_research": false,
+    "phases.skip_milestone_validation": false,
+    "phases.reassess_after_slice": true,
+    "context_management.observation_masking": false,
     "enhanced_verification": true,
     "enhanced_verification_pre": true,
     "enhanced_verification_post": true,

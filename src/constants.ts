@@ -1,12 +1,13 @@
-// GSD2 Config - Shared Constants (model catalog, commit types, etc.)
+// GSD Pi Config - Shared Constants (model catalog, commit types, etc.)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 /**
  * Provider-first model catalog. Each provider represents a distinct auth/routing path.
- * The same model (e.g. claude-opus-4-6) can appear under multiple providers —
+ * The same model ID can appear under multiple providers (e.g. gpt-4o via OpenAI
+ * vs Azure, or claude-opus-4-6 via Anthropic vs Bedrock) —
  * the picker preserves which one was chosen so GSD can route correctly.
  *
- * Values are stored in `provider/model` prefix notation that GSD-2 supports,
+ * Values are stored in `provider/model` prefix notation that GSD Pi supports,
  * or as `{provider, model}` pairs on GSDPhaseModelConfig.
  */
 export interface ProviderCatalog {
@@ -74,7 +75,7 @@ export const MODEL_CATALOG: readonly ProviderCatalog[] = [
   {
     id: "vertex",
     label: "Google Vertex AI",
-    description: "Claude & Gemini via GCP Vertex (GCP service account)",
+    description: "Multi-vendor models via GCP Vertex (service account)",
     models: [
       "claude-opus-4-6@vertex",
       "claude-sonnet-4-6@vertex",
@@ -351,6 +352,23 @@ export function parseQualified(val: string | undefined): { provider: string; mod
 export function getProviderCatalog(id: string): ProviderCatalog | undefined {
   return MODEL_CATALOG.find((p) => p.id === id);
 }
+
+/** Provider IDs from the model catalog (for multi-select UIs). */
+export const CATALOG_PROVIDER_IDS = MODEL_CATALOG.map((p) => p.id);
+
+/** Known slice-scoped gate names (free-form strings are also allowed elsewhere). */
+export const KNOWN_SLICE_GATES = [
+  "verification",
+  "discussion",
+  "research",
+  "planning",
+] as const;
+
+/** Reactive execution isolation modes supported by GSD Pi. */
+export const REACTIVE_ISOLATION_MODES = ["same-tree"] as const;
+
+/** Git pre-merge check stored values (UI maps labels separately). */
+export const GIT_PRE_MERGE_VALUES = ["true", "false", "auto"] as const;
 
 /** Conventional commit types. */
 export const COMMIT_TYPES = [

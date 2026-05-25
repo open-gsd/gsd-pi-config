@@ -1,4 +1,4 @@
-// GSD2 Config - Tauri Backend (command layer over `core`)
+// GSD Pi Config - Tauri Backend (command layer over `core`)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 pub mod core;
@@ -15,7 +15,39 @@ use crate::core::{
     serialize_preferences, write_atomic, ConfigDoc, JsonDoc,
 };
 
-const KEYRING_SERVICE: &str = "net.fluxlabs.gsd2-config";
+const KEYRING_SERVICE: &str = "net.fluxlabs.gsd-pi-config";
+const LEGACY_KEYRING_SERVICE: &str = "net.fluxlabs.gsd2-config";
+
+/// Env var names managed in the API Keys UI (`ApiKeysSection.tsx`). Used for
+/// one-time startup migration from the pre-rebrand keychain service.
+const KNOWN_API_KEY_NAMES: &[&str] = &[
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "OPENAI_API_KEY",
+    "OPENAI_ORG_ID",
+    "GEMINI_API_KEY",
+    "GOOGLE_API_KEY",
+    "XAI_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "MISTRAL_API_KEY",
+    "GROQ_API_KEY",
+    "CEREBRAS_API_KEY",
+    "OPENROUTER_API_KEY",
+    "VERCEL_AI_GATEWAY_KEY",
+    "DASHSCOPE_API_KEY",
+    "ZHIPU_API_KEY",
+    "MOONSHOT_API_KEY",
+    "TAVILY_API_KEY",
+    "BRAVE_API_KEY",
+    "EXA_API_KEY",
+    "GOOGLE_SEARCH_API_KEY",
+    "GOOGLE_CSE_ID",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_REGION",
+    "AZURE_OPENAI_API_KEY",
+    "AZURE_OPENAI_ENDPOINT",
+];
 
 fn ensure_parent_dir(path: &PathBuf) -> Result<(), String> {
     if let Some(parent) = path.parent() {
@@ -50,7 +82,7 @@ fn get_preferences_path(project_path: Option<String>) -> Result<String, String> 
 
 // ─── Settings / Models commands ─────────────────────────────────────────────
 //
-// GSD2 reads three independent config files: preferences.md (above),
+// GSD Pi reads three independent config files: preferences.md (above),
 // settings.json (agent runtime), and models.json (custom providers). Settings
 // and models are plain JSON and share the same load/save machinery in
 // `core::{load_json_at, save_json_at}`. Each returns a JsonDoc (value + mtime)
@@ -140,6 +172,19 @@ fn import_preset(source_path: String) -> Result<Value, String> {
     // load_preferences_at already handles frontmatter parsing + snowflake
     // coercion, so a round-trip through export_preset/import_preset is safe.
     load_preferences_at(&path)
+}
+
+/// Load arbitrary JSON config (models.json, settings.json) from a user-picked path.
+#[tauri::command]
+fn import_json_file(source_path: String) -> Result<Value, String> {
+    if source_path.trim().is_empty() {
+        return Err("Source path is empty".to_string());
+    }
+    let path = PathBuf::from(&source_path);
+    if !path.exists() {
+        return Err(format!("File does not exist: {}", source_path));
+    }
+    Ok(load_json_at(&path)?.value)
 }
 
 /// Walk a JSON value and replace any string value whose key contains
@@ -234,7 +279,7 @@ fn skill_roots(project_path: Option<&str>) -> Vec<(PathBuf, &'static str)> {
 }
 
 /// Legacy GSD-1 skills live under `.claude/skills/gsd-*` and should not be
-/// surfaced in the GSD-2 config manager. Returns true when the given skill
+/// surfaced in the GSD Pi config manager. Returns true when the given skill
 /// directory sitting under a `.claude/skills` root should be filtered out.
 fn is_legacy_gsd_skill(root: &Path, dir_name: &str) -> bool {
     if !dir_name.starts_with("gsd-") {
@@ -465,13 +510,54 @@ struct KeyStatus {
     preview: Option<String>,
 }
 
-fn keyring_entry(name: &str) -> Result<Entry, String> {
-    Entry::new(KEYRING_SERVICE, name).map_err(|e| format!("Keyring error: {}", e))
+fn keyring_entry(service: &str, name: &str) -> Result<Entry, String> {
+    Entry::new(service, name).map_err(|e| format!("Keyring error: {}", e))
+}
+
+fn current_keyring_entry(name: &str) -> Result<Entry, String> {
+    keyring_entry(KEYRING_SERVICE, name)
+}
+
+/// Copy a credential from `net.fluxlabs.gsd2-config` when the new service has
+/// no entry yet. Removes the legacy entry after a successful copy.
+fn migrate_legacy_keyring_entry(name: &str) -> Result<(), String> {
+    let new_entry = current_keyring_entry(name)?;
+    match new_entry.get_password() {
+        Ok(_) => return Ok(()),
+        Err(keyring::Error::NoEntry) => {}
+        Err(e) => return Err(format!("Failed to read key {}: {}", name, e)),
+    }
+
+    let legacy_entry = keyring_entry(LEGACY_KEYRING_SERVICE, name)?;
+    match legacy_entry.get_password() {
+        Ok(value) => {
+            new_entry
+                .set_password(&value)
+                .map_err(|e| format!("Failed to migrate key {}: {}", name, e))?;
+            if let Err(e) = legacy_entry.delete_credential() {
+                log::warn!("Migrated {} but could not remove legacy keyring entry: {}", name, e);
+            } else {
+                log::info!("Migrated keyring entry {} from legacy service", name);
+            }
+            Ok(())
+        }
+        Err(keyring::Error::NoEntry) => Ok(()),
+        Err(e) => Err(format!("Failed to read legacy key {}: {}", name, e)),
+    }
+}
+
+fn migrate_all_legacy_keyring_entries() {
+    for name in KNOWN_API_KEY_NAMES {
+        if let Err(e) = migrate_legacy_keyring_entry(name) {
+            log::warn!("Keyring migration skipped for {}: {}", name, e);
+        }
+    }
 }
 
 #[tauri::command]
 fn get_key(name: String) -> Result<Option<String>, String> {
-    let entry = keyring_entry(&name)?;
+    migrate_legacy_keyring_entry(&name)?;
+    let entry = current_keyring_entry(&name)?;
     match entry.get_password() {
         Ok(v) => Ok(Some(v)),
         Err(keyring::Error::NoEntry) => Ok(None),
@@ -484,7 +570,8 @@ fn set_key(name: String, value: String) -> Result<(), String> {
     if value.is_empty() {
         return delete_key(name);
     }
-    let entry = keyring_entry(&name)?;
+    migrate_legacy_keyring_entry(&name)?;
+    let entry = current_keyring_entry(&name)?;
     entry
         .set_password(&value)
         .map_err(|e| format!("Failed to set key: {}", e))
@@ -492,7 +579,8 @@ fn set_key(name: String, value: String) -> Result<(), String> {
 
 #[tauri::command]
 fn delete_key(name: String) -> Result<(), String> {
-    let entry = keyring_entry(&name)?;
+    migrate_legacy_keyring_entry(&name)?;
+    let entry = current_keyring_entry(&name)?;
     match entry.delete_credential() {
         Ok(()) => Ok(()),
         Err(keyring::Error::NoEntry) => Ok(()),
@@ -504,7 +592,8 @@ fn delete_key(name: String) -> Result<(), String> {
 fn list_key_statuses(names: Vec<String>) -> Result<Vec<KeyStatus>, String> {
     let mut result = Vec::with_capacity(names.len());
     for name in names {
-        let entry = keyring_entry(&name)?;
+        migrate_legacy_keyring_entry(&name)?;
+        let entry = current_keyring_entry(&name)?;
         match entry.get_password() {
             Ok(v) => {
                 let preview = if v.len() > 4 {
@@ -539,13 +628,14 @@ fn export_env_file(names: Vec<String>) -> Result<String, String> {
 
     let mut lines: Vec<String> = Vec::new();
     lines.push("#!/usr/bin/env bash".to_string());
-    lines.push("# Generated by GSD2 Config — do not edit by hand.".to_string());
+    lines.push("# Generated by GSD Pi Config — do not edit by hand.".to_string());
     lines.push("# Source this file from your shell profile:".to_string());
     lines.push("#   [ -f ~/.gsd/env.sh ] && source ~/.gsd/env.sh".to_string());
     lines.push(String::new());
 
     for name in names {
-        let entry = keyring_entry(&name)?;
+        migrate_legacy_keyring_entry(&name)?;
+        let entry = current_keyring_entry(&name)?;
         match entry.get_password() {
             Ok(v) => {
                 // Single-quote and escape internal single quotes
@@ -884,6 +974,7 @@ pub fn run() {
                         .build(),
                 )?;
             }
+            migrate_all_legacy_keyring_entries();
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -898,6 +989,7 @@ pub fn run() {
             get_models_path,
             export_preset,
             import_preset,
+            import_json_file,
             build_shareable_preset,
             list_skills,
             read_skill,

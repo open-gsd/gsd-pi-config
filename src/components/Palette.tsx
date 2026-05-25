@@ -1,4 +1,4 @@
-// GSD Setup - ⌘K Command Palette
+// GSD Pi Config - ⌘K Command Palette
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Fuzzy-free substring + token-prefix search across the field registry and
@@ -10,10 +10,14 @@ import { ALL_FIELD_PATHS, getField } from "../lib/fields";
 import type { FieldMeta } from "../lib/fields";
 import { SECTION_GROUPS, type SectionId } from "./Sidebar";
 
+import type { SectionGroup } from "./Sidebar";
+import { modalPanel } from "../lib/uiClasses";
+
 interface Props {
   open: boolean;
   onClose: () => void;
   onNavigate: (section: SectionId, fieldPath?: string) => void;
+  sectionGroups?: readonly SectionGroup[];
 }
 
 type Result =
@@ -67,7 +71,12 @@ function scoreSection(label: string, id: string, q: string): number {
   return 0;
 }
 
-export function Palette({ open, onClose, onNavigate }: Props) {
+export function Palette({
+  open,
+  onClose,
+  onNavigate,
+  sectionGroups = SECTION_GROUPS,
+}: Props) {
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -76,10 +85,10 @@ export function Palette({ open, onClose, onNavigate }: Props) {
   // Flat list of { id, label, group } for all sections
   const allSections = useMemo(
     () =>
-      SECTION_GROUPS.flatMap((g) =>
+      sectionGroups.flatMap((g) =>
         g.items.map((it) => ({ id: it.id as SectionId, label: it.label, group: g.label })),
       ),
-    [],
+    [sectionGroups],
   );
 
   const results: Result[] = useMemo(() => {
@@ -160,7 +169,7 @@ export function Palette({ open, onClose, onNavigate }: Props) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-xl bg-gsd-surface-solid border border-gsd-border rounded-lg shadow-2xl overflow-hidden"
+        className={`w-full max-w-xl overflow-hidden ${modalPanel}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="px-4 py-3 border-b border-gsd-border">
@@ -188,7 +197,7 @@ export function Palette({ open, onClose, onNavigate }: Props) {
                 data-idx={i}
                 onMouseEnter={() => setCursor(i)}
                 onClick={() => pick(r)}
-                className={`px-4 py-2 cursor-pointer text-sm flex items-center justify-between gap-3 ${
+                className={`min-h-10 px-4 py-2 cursor-pointer text-sm flex items-center justify-between gap-3 transition-[background-color,color,transform] active:scale-[0.96] ${
                   active
                     ? "bg-gsd-accent-dim text-gsd-accent"
                     : "text-gsd-text hover:bg-gsd-surface-hover"

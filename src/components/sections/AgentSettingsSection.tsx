@@ -1,13 +1,6 @@
-// GSD Setup - Agent Settings (settings.json) Section
+// GSD Pi Config - Agent Settings (settings.json) — pi-coding-agent Settings
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
-//
-// Editor for `~/.gsd/agent/settings.json` (or `<project>/.gsd/settings.json`).
-// State is stored as a free-form `Record<string, unknown>` so unknown keys
-// (hooks, experimental flags, enterprise fields) round-trip verbatim — we
-// only touch the keys this UI owns. `ClaudeCodeSettings` is used as a
-// read-time lens to type-check the fields we expose.
 
-import { useState } from "react";
 import {
   SectionHeader,
   Field,
@@ -15,439 +8,671 @@ import {
   SelectField,
   TextField,
   NumberField,
+  ModelPicker,
+  TagInput,
 } from "../FormControls";
+import type { ProviderCatalog } from "../../constants";
+import { CATALOG_PROVIDER_IDS } from "../../constants";
+import {
+  asAgentSettings,
+  setKey,
+  patchNested,
+  defaultModelPickerValue,
+  applyDefaultModelPicker,
+  readHooks,
+  setHookEvent,
+  packageSourceLabels,
+  setPackageSourcesFromLabels,
+} from "../../lib/agentSettings";
+import type { HookEventName } from "../../lib/agentSettings";
 import type {
-  ClaudeCodeSettings,
-  ClaudeCodePermissions,
-  ClaudeCodePermissionMode,
-  ClaudeCodeStatusLine,
-} from "../../types";
+  ThinkingLevel,
+  TransportSetting,
+  SteeringMode,
+  AdaptiveTuiMode,
+  DoubleEscapeAction,
+  TreeFilterMode,
+  EditMode,
+  TimestampFormat,
+  TaskIsolationMode,
+  TaskIsolationMerge,
+} from "../../lib/agentSettingsTypes";
+import {
+  StringListField,
+  EnvEditor,
+  HooksEditor,
+  FallbackChainsEditor,
+  BashInterceptorRulesEditor,
+  SettingsGroup,
+} from "./agentSettingsEditors";
 
 interface Props {
   value: Record<string, unknown>;
   onChange: (next: Record<string, unknown>) => void;
+  modelCatalog?: readonly ProviderCatalog[];
 }
 
-const PERMISSION_MODES: readonly ClaudeCodePermissionMode[] = [
-  "default",
-  "acceptEdits",
-  "bypassPermissions",
-  "plan",
-  "auto",
-];
+const THINKING_LEVELS: ThinkingLevel[] = ["off", "minimal", "low", "medium", "high", "xhigh"];
+const PERMISSION_MODES = ["default", "acceptEdits", "bypassPermissions", "plan", "auto"] as const;
 
-const STATUS_LINE_TYPES = ["command", "static_text"] as const;
-
-/** Read a top-level field through the typed lens. */
-function read<K extends keyof ClaudeCodeSettings>(
-  doc: Record<string, unknown>,
-  key: K,
-): ClaudeCodeSettings[K] {
-  return (doc as ClaudeCodeSettings)[key];
-}
-
-/** Set or unset a top-level key. `undefined` removes the key entirely. */
-function setKey(
-  doc: Record<string, unknown>,
-  key: string,
-  next: unknown,
-): Record<string, unknown> {
-  if (next === undefined) {
-    const { [key]: _drop, ...rest } = doc;
-    return rest;
-  }
-  return { ...doc, [key]: next };
-}
-
-export function AgentSettingsSection({ value, onChange }: Props) {
-  const model = read(value, "model");
-  const apiKeyHelper = read(value, "apiKeyHelper");
-  const outputStyle = read(value, "outputStyle");
-  const includeCoAuthoredBy = read(value, "includeCoAuthoredBy");
-  const cleanupPeriodDays = read(value, "cleanupPeriodDays");
-  const verbose = read(value, "verbose");
-  const autoUpdates = read(value, "autoUpdates");
-  const alwaysThinkingEnabled = read(value, "alwaysThinkingEnabled");
-  const permissions = (read(value, "permissions") ?? {}) as ClaudeCodePermissions;
-  const statusLine = (read(value, "statusLine") ?? {}) as ClaudeCodeStatusLine;
-  const env = (read(value, "env") ?? {}) as Record<string, string>;
-
+export function AgentSettingsSection({ value, onChange, modelCatalog = [] }: Props) {
+  const s = () => asAgentSettings(value);
   const update = (key: string, next: unknown) => onChange(setKey(value, key, next));
 
-  const updatePermissions = (patch: Partial<ClaudeCodePermissions>) => {
-    const merged: ClaudeCodePermissions = { ...permissions, ...patch };
-    // Drop undefined keys so they don't get serialized as null
-    const cleaned: ClaudeCodePermissions = {};
-    if (merged.defaultMode !== undefined) cleaned.defaultMode = merged.defaultMode;
-    if (merged.allow !== undefined) cleaned.allow = merged.allow;
-    if (merged.deny !== undefined) cleaned.deny = merged.deny;
-    if (merged.ask !== undefined) cleaned.ask = merged.ask;
-    update("permissions", Object.keys(cleaned).length > 0 ? cleaned : undefined);
-  };
-
-  const updateStatusLine = (patch: Partial<ClaudeCodeStatusLine>) => {
-    const merged: ClaudeCodeStatusLine = { ...statusLine, ...patch };
-    const cleaned: ClaudeCodeStatusLine = {};
-    if (merged.type !== undefined) cleaned.type = merged.type;
-    if (merged.command !== undefined) cleaned.command = merged.command;
-    if (merged.padding !== undefined) cleaned.padding = merged.padding;
-    update("statusLine", Object.keys(cleaned).length > 0 ? cleaned : undefined);
-  };
+  const permissions = s().permissions ?? {};
+  const statusLine = s().statusLine ?? {};
+  const env = s().env ?? {};
+  const compaction = s().compaction ?? {};
+  const branchSummary = s().branchSummary ?? {};
+  const retry = s().retry ?? {};
+  const terminal = s().terminal ?? {};
+  const images = s().images ?? {};
+  const thinkingBudgets = s().thinkingBudgets ?? {};
+  const memory = s().memory ?? {};
+  const asyncCfg = s().async ?? {};
+  const bashInterceptor = s().bashInterceptor ?? {};
+  const taskIsolation = s().taskIsolation ?? {};
+  const fallback = s().fallback ?? {};
+  const modelDiscovery = s().modelDiscovery ?? {};
+  const markdown = s().markdown ?? {};
+  const hooks = readHooks(value);
 
   return (
     <div>
       <SectionHeader
         title="Agent Settings"
-        description="Edit Claude Code's settings.json. Writes to ~/.gsd/agent/settings.json (or the project equivalent). Unknown fields (hooks, enterprise keys, experimental flags) are preserved verbatim on save."
+        description="pi-coding-agent runtime settings (settings.json). Writes to ~/.gsd/agent/settings.json or the project .gsd copy. Unknown keys round-trip verbatim on save."
       />
 
-      <h3 className="mt-4 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
-        Model &amp; Defaults
-      </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border px-4">
-        <Field label="Default model" description="Model name (e.g. claude-opus-4-6) or a provider/model-qualified string.">
-          <TextField
-            value={model}
-            onChange={(v) => update("model", v)}
-            placeholder="claude-opus-4-6"
-            className="w-72"
+      <SettingsGroup title="Model &amp; defaults">
+        <Field label="Default model" description="provider/model or model ID. Maps to defaultProvider + defaultModel.">
+          {modelCatalog.length > 0 ? (
+            <ModelPicker
+              value={defaultModelPickerValue(value)}
+              onChange={(v) => onChange(applyDefaultModelPicker(value, v))}
+              catalog={modelCatalog}
+              placeholder="Not set"
+              className="w-72"
+            />
+          ) : (
+            <TextField
+              value={defaultModelPickerValue(value)}
+              onChange={(v) => onChange(applyDefaultModelPicker(value, v))}
+              placeholder="provider/model-id"
+              className="w-72"
+            />
+          )}
+        </Field>
+        <Field label="Default provider" description="Optional explicit provider when defaultModel has no slash.">
+          <SelectField
+            value={s().defaultProvider}
+            onChange={(v) => update("defaultProvider", v)}
+            options={CATALOG_PROVIDER_IDS}
+            placeholder="From model picker"
           />
         </Field>
-        <Field label="API key helper" description="Shell command that prints an API key to stdout. Claude Code runs it on demand.">
+        <Field label="Default thinking level">
+          <SelectField<ThinkingLevel>
+            value={s().defaultThinkingLevel}
+            onChange={(v) => update("defaultThinkingLevel", v)}
+            options={THINKING_LEVELS}
+            placeholder="off"
+          />
+        </Field>
+        <Field label="Transport">
+          <SelectField<TransportSetting>
+            value={s().transport}
+            onChange={(v) => update("transport", v)}
+            options={["auto", "sse", "websocket"]}
+            placeholder="auto"
+          />
+        </Field>
+        <Field label="Steering mode">
+          <SelectField<SteeringMode>
+            value={s().steeringMode}
+            onChange={(v) => update("steeringMode", v)}
+            options={["all", "one-at-a-time"]}
+          />
+        </Field>
+        <Field label="Follow-up mode">
+          <SelectField<SteeringMode>
+            value={s().followUpMode}
+            onChange={(v) => update("followUpMode", v)}
+            options={["all", "one-at-a-time"]}
+          />
+        </Field>
+        <Field label="Theme">
+          <TextField value={s().theme} onChange={(v) => update("theme", v)} placeholder="default" />
+        </Field>
+        <StringListField
+          label="Enabled models"
+          description="Patterns for model cycling (same as --models CLI)."
+          values={s().enabledModels}
+          onChange={(v) => update("enabledModels", v)}
+          placeholder="provider/model"
+          wide
+        />
+        <Field label="API key helper" description="Shell command that prints an API key (Claude Code compat).">
           <TextField
-            value={apiKeyHelper}
+            value={s().apiKeyHelper}
             onChange={(v) => update("apiKeyHelper", v)}
-            placeholder="/usr/local/bin/get-anthropic-key"
+            placeholder="/path/to/helper"
             className="w-72"
           />
         </Field>
-        <Field label="Output style" description="Named output style (e.g. 'concise', 'explanatory') or a custom style name.">
-          <TextField
-            value={outputStyle}
-            onChange={(v) => update("outputStyle", v)}
-            placeholder="default"
-            className="w-52"
+        <Field label="Output style">
+          <TextField value={s().outputStyle} onChange={(v) => update("outputStyle", v)} placeholder="default" />
+        </Field>
+      </SettingsGroup>
+
+      <SettingsGroup title="Compaction &amp; retry">
+        <Field label="Compaction enabled">
+          <Toggle
+            checked={compaction.enabled !== false}
+            onChange={(b) =>
+              onChange(patchNested(value, "compaction", { enabled: b ? undefined : false }))
+            }
           />
         </Field>
-      </div>
+        <Field label="Reserve tokens">
+          <NumberField
+            value={compaction.reserveTokens}
+            onChange={(v) => onChange(patchNested(value, "compaction", { reserveTokens: v }))}
+            min={0}
+            placeholder="16384"
+          />
+        </Field>
+        <Field label="Keep recent tokens">
+          <NumberField
+            value={compaction.keepRecentTokens}
+            onChange={(v) => onChange(patchNested(value, "compaction", { keepRecentTokens: v }))}
+            min={0}
+            placeholder="20000"
+          />
+        </Field>
+        <Field label="Threshold percent" description="Runtime override; 0–1 fraction of context window.">
+          <NumberField
+            value={compaction.thresholdPercent}
+            onChange={(v) => onChange(patchNested(value, "compaction", { thresholdPercent: v }))}
+            min={0}
+            max={1}
+            placeholder="Optional"
+          />
+        </Field>
+        <Field label="Branch summary reserve tokens">
+          <NumberField
+            value={branchSummary.reserveTokens}
+            onChange={(v) => onChange(patchNested(value, "branchSummary", { reserveTokens: v }))}
+            min={0}
+          />
+        </Field>
+        <Field label="Skip branch summary prompt">
+          <Toggle
+            checked={branchSummary.skipPrompt ?? false}
+            onChange={(b) => onChange(patchNested(value, "branchSummary", { skipPrompt: b || undefined }))}
+          />
+        </Field>
+        <Field label="Retry enabled">
+          <Toggle
+            checked={retry.enabled !== false}
+            onChange={(b) => onChange(patchNested(value, "retry", { enabled: b ? undefined : false }))}
+          />
+        </Field>
+        <Field label="Max retries">
+          <NumberField
+            value={retry.maxRetries}
+            onChange={(v) => onChange(patchNested(value, "retry", { maxRetries: v }))}
+            min={0}
+            placeholder="3"
+          />
+        </Field>
+        <Field label="Base delay (ms)">
+          <NumberField
+            value={retry.baseDelayMs}
+            onChange={(v) => onChange(patchNested(value, "retry", { baseDelayMs: v }))}
+            min={0}
+          />
+        </Field>
+        <Field label="Max delay (ms)">
+          <NumberField
+            value={retry.maxDelayMs}
+            onChange={(v) => onChange(patchNested(value, "retry", { maxDelayMs: v }))}
+            min={0}
+          />
+        </Field>
+      </SettingsGroup>
 
-      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
-        Permissions
-      </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border px-4">
-        <Field label="Default permission mode" description="How tool permissions are gated by default.">
-          <SelectField<ClaudeCodePermissionMode>
+      <SettingsGroup title="Terminal, images &amp; shell">
+        <Field label="Show images in terminal">
+          <Toggle
+            checked={terminal.showImages !== false}
+            onChange={(b) => onChange(patchNested(value, "terminal", { showImages: b ? undefined : false }))}
+          />
+        </Field>
+        <Field label="Clear terminal on shrink">
+          <Toggle
+            checked={terminal.clearOnShrink ?? false}
+            onChange={(b) => onChange(patchNested(value, "terminal", { clearOnShrink: b || undefined }))}
+          />
+        </Field>
+        <Field label="Adaptive TUI mode">
+          <SelectField<AdaptiveTuiMode>
+            value={terminal.adaptiveMode}
+            onChange={(v) => onChange(patchNested(value, "terminal", { adaptiveMode: v }))}
+            options={["auto", "chat", "workflow", "validation", "debug", "compact"]}
+          />
+        </Field>
+        <Field label="Auto-resize images">
+          <Toggle
+            checked={images.autoResize !== false}
+            onChange={(b) => onChange(patchNested(value, "images", { autoResize: b ? undefined : false }))}
+          />
+        </Field>
+        <Field label="Block all images">
+          <Toggle
+            checked={images.blockImages ?? false}
+            onChange={(b) => onChange(patchNested(value, "images", { blockImages: b || undefined }))}
+          />
+        </Field>
+        <Field label="Shell path">
+          <TextField value={s().shellPath} onChange={(v) => update("shellPath", v)} className="w-72" />
+        </Field>
+        <Field label="Shell command prefix">
+          <TextField
+            value={s().shellCommandPrefix}
+            onChange={(v) => update("shellCommandPrefix", v)}
+            className="w-full max-w-xl font-mono text-xs"
+          />
+        </Field>
+        <Field label="Quiet startup">
+          <Toggle
+            checked={s().quietStartup ?? false}
+            onChange={(b) => update("quietStartup", b || undefined)}
+          />
+        </Field>
+        <Field label="Hide thinking block">
+          <Toggle
+            checked={s().hideThinkingBlock ?? false}
+            onChange={(b) => update("hideThinkingBlock", b || undefined)}
+          />
+        </Field>
+      </SettingsGroup>
+
+      <SettingsGroup title="Editor &amp; UI">
+        <Field label="Edit mode">
+          <SelectField<EditMode>
+            value={s().editMode}
+            onChange={(v) => update("editMode", v)}
+            options={["standard", "hashline"]}
+          />
+        </Field>
+        <Field label="Timestamp format">
+          <SelectField<TimestampFormat>
+            value={s().timestampFormat}
+            onChange={(v) => update("timestampFormat", v)}
+            options={["date-time-iso", "date-time-us"]}
+          />
+        </Field>
+        <Field label="Double-escape action">
+          <SelectField<DoubleEscapeAction>
+            value={s().doubleEscapeAction}
+            onChange={(v) => update("doubleEscapeAction", v)}
+            options={["tree", "fork", "none"]}
+          />
+        </Field>
+        <Field label="Tree filter mode">
+          <SelectField<TreeFilterMode>
+            value={s().treeFilterMode}
+            onChange={(v) => update("treeFilterMode", v)}
+            options={["default", "no-tools", "user-only", "labeled-only", "all"]}
+          />
+        </Field>
+        <Field label="Editor padding X">
+          <NumberField value={s().editorPaddingX} onChange={(v) => update("editorPaddingX", v)} min={0} />
+        </Field>
+        <Field label="Autocomplete max visible">
+          <NumberField
+            value={s().autocompleteMaxVisible}
+            onChange={(v) => update("autocompleteMaxVisible", v)}
+            min={1}
+            placeholder="5"
+          />
+        </Field>
+        <Field label="Respect .gitignore in @ picker">
+          <Toggle
+            checked={s().respectGitignoreInPicker !== false}
+            onChange={(b) => update("respectGitignoreInPicker", b ? undefined : false)}
+          />
+        </Field>
+        <StringListField
+          label="Search exclude dirs"
+          values={s().searchExcludeDirs}
+          onChange={(v) => update("searchExcludeDirs", v)}
+          placeholder="node_modules"
+        />
+        <Field label="Show hardware cursor">
+          <Toggle
+            checked={s().showHardwareCursor ?? false}
+            onChange={(b) => update("showHardwareCursor", b || undefined)}
+          />
+        </Field>
+        <Field label="Markdown code block indent">
+          <TextField
+            value={markdown.codeBlockIndent}
+            onChange={(v) => onChange(patchNested(value, "markdown", { codeBlockIndent: v }))}
+            placeholder="  "
+          />
+        </Field>
+        <Field label="Collapse changelog">
+          <Toggle
+            checked={s().collapseChangelog ?? false}
+            onChange={(b) => update("collapseChangelog", b || undefined)}
+          />
+        </Field>
+        <Field label="Last changelog version">
+          <TextField
+            value={s().lastChangelogVersion}
+            onChange={(v) => update("lastChangelogVersion", v)}
+            className="w-40"
+          />
+        </Field>
+      </SettingsGroup>
+
+      <SettingsGroup title="Thinking budgets">
+        {(["minimal", "low", "medium", "high"] as const).map((level) => (
+          <Field key={level} label={level}>
+            <NumberField
+              value={thinkingBudgets[level]}
+              onChange={(v) => onChange(patchNested(value, "thinkingBudgets", { [level]: v }))}
+              min={0}
+            />
+          </Field>
+        ))}
+      </SettingsGroup>
+
+      <SettingsGroup title="Resources (packages &amp; paths)">
+        <Field label="Enable skill commands">
+          <Toggle
+            checked={s().enableSkillCommands !== false}
+            onChange={(b) => update("enableSkillCommands", b ? undefined : false)}
+          />
+        </Field>
+        <Field
+          label="Package sources"
+          description="npm/git package sources (string paths). Filtered object packages are preserved on save."
+        >
+          <TagInput
+            values={packageSourceLabels(s().packages)}
+            onChange={(labels) => onChange(setPackageSourcesFromLabels(value, labels))}
+            placeholder="npm package or git URL"
+          />
+        </Field>
+        <StringListField
+          label="Extensions"
+          values={s().extensions}
+          onChange={(v) => update("extensions", v)}
+          placeholder="/path/to/extension"
+          wide
+        />
+        <StringListField
+          label="Skills paths"
+          values={s().skills}
+          onChange={(v) => update("skills", v)}
+          wide
+        />
+        <StringListField label="Prompts paths" values={s().prompts} onChange={(v) => update("prompts", v)} wide />
+        <StringListField label="Themes paths" values={s().themes} onChange={(v) => update("themes", v)} wide />
+      </SettingsGroup>
+
+      <SettingsGroup title="Memory &amp; async jobs">
+        <Field label="Memory rollouts enabled">
+          <Toggle
+            checked={memory.enabled ?? false}
+            onChange={(b) => onChange(patchNested(value, "memory", { enabled: b || undefined }))}
+          />
+        </Field>
+        <Field label="Max rollouts per startup">
+          <NumberField
+            value={memory.maxRolloutsPerStartup}
+            onChange={(v) => onChange(patchNested(value, "memory", { maxRolloutsPerStartup: v }))}
+            min={0}
+          />
+        </Field>
+        <Field label="Max rollout age (days)">
+          <NumberField
+            value={memory.maxRolloutAgeDays}
+            onChange={(v) => onChange(patchNested(value, "memory", { maxRolloutAgeDays: v }))}
+            min={0}
+          />
+        </Field>
+        <Field label="Min rollout idle (hours)">
+          <NumberField
+            value={memory.minRolloutIdleHours}
+            onChange={(v) => onChange(patchNested(value, "memory", { minRolloutIdleHours: v }))}
+            min={0}
+          />
+        </Field>
+        <Field label="Stage-1 concurrency">
+          <NumberField
+            value={memory.stage1Concurrency}
+            onChange={(v) => onChange(patchNested(value, "memory", { stage1Concurrency: v }))}
+            min={1}
+          />
+        </Field>
+        <Field label="Summary injection token limit">
+          <NumberField
+            value={memory.summaryInjectionTokenLimit}
+            onChange={(v) => onChange(patchNested(value, "memory", { summaryInjectionTokenLimit: v }))}
+            min={0}
+          />
+        </Field>
+        <Field label="Async jobs enabled">
+          <Toggle
+            checked={asyncCfg.enabled ?? false}
+            onChange={(b) => onChange(patchNested(value, "async", { enabled: b || undefined }))}
+          />
+        </Field>
+        <Field label="Max async jobs">
+          <NumberField
+            value={asyncCfg.maxJobs}
+            onChange={(v) => onChange(patchNested(value, "async", { maxJobs: v }))}
+            min={1}
+          />
+        </Field>
+      </SettingsGroup>
+
+      <SettingsGroup title="Task isolation (pi runtime)">
+        <p className="text-xs text-gsd-text-dim py-2">
+          pi-coding-agent task isolation. GSD workflow git isolation is configured under Git in preferences.
+        </p>
+        <Field label="Isolation mode">
+          <SelectField<TaskIsolationMode>
+            value={taskIsolation.mode}
+            onChange={(v) => onChange(patchNested(value, "taskIsolation", { mode: v }))}
+            options={["none", "worktree", "fuse-overlay"]}
+          />
+        </Field>
+        <Field label="Merge mode">
+          <SelectField<TaskIsolationMerge>
+            value={taskIsolation.merge}
+            onChange={(v) => onChange(patchNested(value, "taskIsolation", { merge: v }))}
+            options={["patch", "branch"]}
+          />
+        </Field>
+      </SettingsGroup>
+
+      <SettingsGroup title="Fallback chains">
+        <Field label="Fallback enabled">
+          <Toggle
+            checked={fallback.enabled ?? false}
+            onChange={(b) => onChange(patchNested(value, "fallback", { enabled: b || undefined }))}
+          />
+        </Field>
+        <FallbackChainsEditor
+          chains={fallback.chains ?? {}}
+          onChange={(chains) => onChange(patchNested(value, "fallback", { chains }))}
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title="Model discovery">
+        <Field label="Discovery enabled">
+          <Toggle
+            checked={modelDiscovery.enabled ?? false}
+            onChange={(b) => onChange(patchNested(value, "modelDiscovery", { enabled: b || undefined }))}
+          />
+        </Field>
+        <StringListField
+          label="Providers"
+          values={modelDiscovery.providers}
+          onChange={(v) => onChange(patchNested(value, "modelDiscovery", { providers: v }))}
+        />
+        <Field label="TTL (minutes)">
+          <NumberField
+            value={modelDiscovery.ttlMinutes}
+            onChange={(v) => onChange(patchNested(value, "modelDiscovery", { ttlMinutes: v }))}
+            min={1}
+          />
+        </Field>
+        <Field label="Auto-refresh on model select">
+          <Toggle
+            checked={modelDiscovery.autoRefreshOnModelSelect ?? false}
+            onChange={(b) =>
+              onChange(patchNested(value, "modelDiscovery", { autoRefreshOnModelSelect: b || undefined }))
+            }
+          />
+        </Field>
+      </SettingsGroup>
+
+      <SettingsGroup title="Bash interceptor">
+        <Field label="Interceptor enabled">
+          <Toggle
+            checked={bashInterceptor.enabled !== false}
+            onChange={(b) =>
+              onChange(patchNested(value, "bashInterceptor", { enabled: b ? undefined : false }))
+            }
+          />
+        </Field>
+        <BashInterceptorRulesEditor
+          rules={bashInterceptor.rules ?? []}
+          onChange={(rules) => onChange(patchNested(value, "bashInterceptor", { rules }))}
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title="Shell hooks">
+        <p className="text-xs text-gsd-text-dim py-2 mb-2">
+          Layer 0 shell-command hooks. Project hooks require <code className="font-mono">.gsd/hooks.trusted</code>.
+        </p>
+        <HooksEditor
+          hooks={hooks}
+          onChangeEvent={(event: HookEventName, entries) =>
+            onChange(setHookEvent(value, event, entries))
+          }
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title="Security overrides (global only)">
+        <p className="text-xs text-gsd-text-dim py-2">
+          Only applied from global <code className="font-mono">~/.gsd/agent/settings.json</code>; ignored in project settings.
+        </p>
+        <StringListField
+          label="Allowed command prefixes"
+          values={s().allowedCommandPrefixes}
+          onChange={(v) => update("allowedCommandPrefixes", v)}
+          placeholder="!npm"
+          wide
+        />
+        <StringListField
+          label="Fetch allowed URLs"
+          values={s().fetchAllowedUrls}
+          onChange={(v) => update("fetchAllowedUrls", v)}
+          placeholder="example.com"
+          wide
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title="Claude Code extensions">
+        <Field label="Default permission mode">
+          <SelectField
             value={permissions.defaultMode}
-            onChange={(v) => updatePermissions({ defaultMode: v })}
+            onChange={(v) => {
+              const next = { ...permissions, defaultMode: v };
+              update("permissions", Object.keys(next).length ? next : undefined);
+            }}
             options={PERMISSION_MODES}
-            placeholder="default"
           />
         </Field>
         <StringListField
           label="Allow list"
-          description="Tool patterns auto-approved without prompting."
           values={permissions.allow}
-          onChange={(next) => updatePermissions({ allow: next })}
-          placeholder='e.g. Bash(git status) or Edit(**/*.md)'
+          onChange={(allow) => update("permissions", { ...permissions, allow })}
         />
         <StringListField
           label="Deny list"
-          description="Tool patterns blocked outright."
           values={permissions.deny}
-          onChange={(next) => updatePermissions({ deny: next })}
-          placeholder='e.g. Bash(rm -rf *)'
+          onChange={(deny) => update("permissions", { ...permissions, deny })}
         />
         <StringListField
           label="Ask list"
-          description="Tool patterns that always prompt, even in acceptEdits."
           values={permissions.ask}
-          onChange={(next) => updatePermissions({ ask: next })}
-          placeholder='e.g. Bash(git push*)'
+          onChange={(ask) => update("permissions", { ...permissions, ask })}
         />
-      </div>
-
-      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
-        Environment Variables
-      </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border p-4">
-        <p className="text-xs text-gsd-text-dim mb-3">
-          Injected into every Claude Code session. Values are written as plain strings.
-        </p>
-        <EnvEditor
-          value={env}
-          onChange={(next) =>
-            update("env", Object.keys(next).length > 0 ? next : undefined)
-          }
-        />
-      </div>
-
-      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
-        Behavior
-      </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border px-4">
-        <Field
-          label="Include Co-Authored-By"
-          description="Append a Claude Co-Authored-By line to commits Claude generates."
-        >
-          <Toggle
-            checked={includeCoAuthoredBy === true}
-            onChange={(b) => update("includeCoAuthoredBy", b ? true : undefined)}
-          />
-        </Field>
-        <Field label="Verbose output" description="Show detailed logs in the CLI.">
-          <Toggle
-            checked={verbose === true}
-            onChange={(b) => update("verbose", b ? true : undefined)}
-          />
-        </Field>
-        <Field label="Auto-updates" description="Allow Claude Code to update itself in the background.">
-          <Toggle
-            checked={autoUpdates !== false}
-            onChange={(b) => update("autoUpdates", b ? undefined : false)}
-          />
-        </Field>
-        <Field
-          label="Always thinking"
-          description="Force extended thinking on every turn (higher latency/cost)."
-        >
-          <Toggle
-            checked={alwaysThinkingEnabled === true}
-            onChange={(b) => update("alwaysThinkingEnabled", b ? true : undefined)}
-          />
-        </Field>
-      </div>
-
-      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
-        Status Line
-      </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border px-4">
-        <Field label="Type" description="`command` runs a shell command; `static_text` shows a fixed string.">
+        <Field label="Status line type">
           <SelectField
             value={statusLine.type}
-            onChange={(v) => updateStatusLine({ type: v })}
-            options={STATUS_LINE_TYPES}
-            placeholder="off"
+            onChange={(v) => update("statusLine", { ...statusLine, type: v })}
+            options={["command", "static_text"]}
           />
         </Field>
-        <Field
-          label="Command / text"
-          description="Shell command to run (type=command) or literal text (type=static_text)."
-        >
+        <Field label="Status line command / text">
           <TextField
             value={statusLine.command}
-            onChange={(v) => updateStatusLine({ command: v })}
-            placeholder="~/.claude/statusline.sh"
+            onChange={(v) => update("statusLine", { ...statusLine, command: v })}
             className="w-80"
           />
         </Field>
-        <Field label="Padding" description="Blank lines inserted around the status line.">
+        <Field label="Status line padding">
           <NumberField
             value={statusLine.padding}
-            onChange={(v) => updateStatusLine({ padding: v })}
+            onChange={(v) => update("statusLine", { ...statusLine, padding: v })}
             min={0}
-            max={10}
-            placeholder="0"
           />
         </Field>
-      </div>
-
-      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
-        Maintenance
-      </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border px-4">
-        <Field
-          label="Cleanup period (days)"
-          description="How long Claude Code keeps old session logs before deleting them."
-        >
+        <Field label="Include Co-Authored-By">
+          <Toggle
+            checked={s().includeCoAuthoredBy === true}
+            onChange={(b) => update("includeCoAuthoredBy", b || undefined)}
+          />
+        </Field>
+        <Field label="Verbose">
+          <Toggle checked={s().verbose === true} onChange={(b) => update("verbose", b || undefined)} />
+        </Field>
+        <Field label="Auto-updates">
+          <Toggle
+            checked={s().autoUpdates !== false}
+            onChange={(b) => update("autoUpdates", b ? undefined : false)}
+          />
+        </Field>
+        <Field label="Always thinking">
+          <Toggle
+            checked={s().alwaysThinkingEnabled === true}
+            onChange={(b) => update("alwaysThinkingEnabled", b || undefined)}
+          />
+        </Field>
+        <Field label="Cleanup period (days)">
           <NumberField
-            value={cleanupPeriodDays}
+            value={s().cleanupPeriodDays}
             onChange={(v) => update("cleanupPeriodDays", v)}
             min={0}
-            placeholder="30"
           />
         </Field>
-      </div>
-    </div>
-  );
-}
+      </SettingsGroup>
 
-// ─── String list editor (inline, for permission lists) ─────────────────────
-
-interface StringListFieldProps {
-  label: string;
-  description?: string;
-  values: string[] | undefined;
-  onChange: (next: string[] | undefined) => void;
-  placeholder?: string;
-}
-
-function StringListField({
-  label,
-  description,
-  values,
-  onChange,
-  placeholder,
-}: StringListFieldProps) {
-  const [draft, setDraft] = useState("");
-  const list = values ?? [];
-
-  const commit = (next: string[]) => {
-    onChange(next.length > 0 ? next : undefined);
-  };
-
-  const add = () => {
-    const trimmed = draft.trim();
-    if (!trimmed || list.includes(trimmed)) {
-      setDraft("");
-      return;
-    }
-    commit([...list, trimmed]);
-    setDraft("");
-  };
-
-  const remove = (idx: number) => {
-    commit(list.filter((_, i) => i !== idx));
-  };
-
-  return (
-    <Field label={label} description={description}>
-      <div className="w-80">
-        <div className="flex flex-wrap gap-1 mb-1.5 min-h-[1.25rem]">
-          {list.length === 0 && (
-            <span className="text-xs text-gsd-text-dim italic">empty</span>
-          )}
-          {list.map((v, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono rounded bg-gsd-accent/20 text-gsd-accent-hover"
-            >
-              {v}
-              <button
-                onClick={() => remove(i)}
-                className="text-gsd-text-dim hover:text-gsd-danger ml-0.5"
-                aria-label={`Remove ${v}`}
-              >
-                ×
-              </button>
-            </span>
-          ))}
-        </div>
-        <div className="flex gap-1">
-          <input
-            type="text"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                add();
-              }
-            }}
-            placeholder={placeholder}
-            className="flex-1 text-xs font-mono"
-          />
-          <button
-            type="button"
-            onClick={add}
-            className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover"
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </Field>
-  );
-}
-
-// ─── Environment variable editor ────────────────────────────────────────────
-
-interface EnvEditorProps {
-  value: Record<string, string>;
-  onChange: (next: Record<string, string>) => void;
-}
-
-function EnvEditor({ value, onChange }: EnvEditorProps) {
-  const [draftKey, setDraftKey] = useState("");
-  const [draftVal, setDraftVal] = useState("");
-  const entries = Object.entries(value);
-
-  const add = () => {
-    const k = draftKey.trim();
-    if (!k) return;
-    onChange({ ...value, [k]: draftVal });
-    setDraftKey("");
-    setDraftVal("");
-  };
-
-  const updateVal = (k: string, v: string) => {
-    onChange({ ...value, [k]: v });
-  };
-
-  const remove = (k: string) => {
-    const { [k]: _drop, ...rest } = value;
-    onChange(rest);
-  };
-
-  return (
-    <div>
-      {entries.length === 0 && (
-        <div className="text-xs text-gsd-text-dim italic mb-2">
-          No environment variables set.
-        </div>
-      )}
-      {entries.map(([k, v]) => (
-        <div key={k} className="flex items-center gap-2 mb-2">
-          <input
-            type="text"
-            value={k}
-            readOnly
-            className="w-52 font-mono text-xs bg-gsd-bg"
-            title="Key (remove and re-add to rename)"
-          />
-          <input
-            type="text"
-            value={v}
-            onChange={(e) => updateVal(k, e.target.value)}
-            className="flex-1 font-mono text-xs"
-          />
-          <button
-            onClick={() => remove(k)}
-            className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-danger hover:border-gsd-danger"
-          >
-            ×
-          </button>
-        </div>
-      ))}
-      <div className="flex items-center gap-2 pt-2 border-t border-gsd-border">
-        <input
-          type="text"
-          value={draftKey}
-          onChange={(e) => setDraftKey(e.target.value)}
-          placeholder="KEY"
-          className="w-52 font-mono text-xs"
+      <SettingsGroup title="Environment variables">
+        <EnvEditor
+          value={env}
+          onChange={(next) => update("env", Object.keys(next).length > 0 ? next : undefined)}
         />
-        <input
-          type="text"
-          value={draftVal}
-          onChange={(e) => setDraftVal(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              add();
-            }
-          }}
-          placeholder="value"
-          className="flex-1 font-mono text-xs"
-        />
-        <button
-          type="button"
-          onClick={add}
-          disabled={!draftKey.trim()}
-          className="px-3 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Add
-        </button>
-      </div>
+      </SettingsGroup>
     </div>
   );
 }

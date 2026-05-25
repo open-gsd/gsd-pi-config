@@ -1,8 +1,14 @@
-// GSD Setup - Git Settings Section
+// GSD Pi Config - Git Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
-import type { GSDPreferences, GitPreferences, GitIsolation, GitMergeStrategy } from "../../types";
-import { Field, Toggle, SelectField, TextField, SectionHeader } from "../FormControls";
+import type {
+  GSDPreferences,
+  GitPreferences,
+  GitIsolation,
+  GitMergeStrategy,
+  GitCollapseCadence,
+} from "../../types";
+import { Field, Toggle, SelectField, TextField, SectionHeader, LabeledSelectField } from "../FormControls";
 import { COMMIT_TYPES } from "../../constants";
 
 interface Props {
@@ -57,19 +63,27 @@ export function GitSection({ prefs, onChange }: Props) {
       </Field>
 
       <Field path="git.pre_merge_check" label="Pre-Merge Check" description="Run pre-merge checks before merging worktree.">
-        <select
-          value={git.pre_merge_check === undefined ? "" : String(git.pre_merge_check)}
-          onChange={(e) => {
-            const v = e.target.value;
-            setGit({ pre_merge_check: v === "" ? undefined : v === "auto" ? "auto" : v === "true" });
+        <LabeledSelectField
+          value={
+            git.pre_merge_check === undefined
+              ? undefined
+              : String(git.pre_merge_check)
+          }
+          onChange={(v) => {
+            if (!v) {
+              setGit({ pre_merge_check: undefined });
+              return;
+            }
+            setGit({
+              pre_merge_check: v === "auto" ? "auto" : v === "true",
+            });
           }}
-          className="w-52"
-        >
-          <option value="">Default</option>
-          <option value="true">Enabled</option>
-          <option value="false">Disabled</option>
-          <option value="auto">Auto</option>
-        </select>
+          options={[
+            { value: "true", label: "Enabled" },
+            { value: "false", label: "Disabled" },
+            { value: "auto", label: "Auto" },
+          ]}
+        />
       </Field>
 
       <Field path="git.main_branch" label="Main Branch" description="Primary branch name for new git repos.">
@@ -104,6 +118,23 @@ export function GitSection({ prefs, onChange }: Props) {
           placeholder="None"
           className="w-52"
         />
+      </Field>
+
+      <Field path="git.absorb_snapshot_commits" label="Absorb Snapshot Commits" description="Squash gsd snapshot commits into the next real commit.">
+        <Toggle checked={git.absorb_snapshot_commits ?? true} onChange={(v) => setGit({ absorb_snapshot_commits: v })} />
+      </Field>
+
+      <Field path="git.collapse_cadence" value={git.collapse_cadence} label="Collapse Cadence" description="When worktree commits collapse back to main.">
+        <SelectField<GitCollapseCadence>
+          value={git.collapse_cadence}
+          onChange={(v) => setGit({ collapse_cadence: v })}
+          options={["milestone", "slice"]}
+          placeholder="milestone"
+        />
+      </Field>
+
+      <Field path="git.milestone_resquash" label="Milestone Resquash" description="With slice cadence, squash slice commits to one milestone commit at end.">
+        <Toggle checked={git.milestone_resquash ?? true} onChange={(v) => setGit({ milestone_resquash: v })} />
       </Field>
     </div>
   );

@@ -1,4 +1,4 @@
-// GSD Setup - Phases Settings Section
+// GSD Pi Config - Phases Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, PhaseSkipPreferences } from "../../types";
@@ -43,6 +43,14 @@ export function PhasesSection({ prefs, onChange }: Props) {
 
       <Field path="phases.require_slice_discussion" label="Require Slice Discussion" description="Pause before each slice for discussion.">
         <Toggle checked={phases.require_slice_discussion ?? false} onChange={(v) => setPhases({ require_slice_discussion: v })} />
+      </Field>
+
+      <Field path="phases.mid_execution_escalation" label="Mid-Execution Escalation" description="Honor escalation payloads from complete-task (ADR-011 P2).">
+        <Toggle checked={phases.mid_execution_escalation ?? false} onChange={(v) => setPhases({ mid_execution_escalation: v })} />
+      </Field>
+
+      <Field path="phases.progressive_planning" label="Progressive Planning" description="Plan S01 fully; later slices as sketches until refined.">
+        <Toggle checked={phases.progressive_planning ?? false} onChange={(v) => setPhases({ progressive_planning: v })} />
       </Field>
     </div>
   );

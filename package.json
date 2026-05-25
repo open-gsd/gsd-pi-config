@@ -1,13 +1,17 @@
 {
-  "name": "gsd-setup",
+  "name": "gsd-pi-config",
   "version": "1.1.0",
-  "description": "Desktop configuration manager for GSD-2 preferences",
+  "description": "Desktop configuration manager for GSD Pi preferences",
   "author": "Jeremy McSpadden <jeremy@fluxlabs.net>",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite --port 1420",
+    "dev:web": "vite --mode web",
     "build": "tsc && vite build",
+    "build:web": "tsc && vite build --mode web",
+    "preview:web": "vite preview --mode web",
+    "test": "vitest run",
     "tauri": "tauri"
   },
   "dependencies": {
@@ -18,16 +22,21 @@
     "@tauri-apps/plugin-shell": "^2.3.5",
     "@tauri-apps/plugin-updater": "^2.10.1",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "react-router-dom": "^7.13.1",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.2.2",
     "@tauri-apps/cli": "^2.10.1",
+    "@types/node": "^25.9.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vercel/node": "^5.5.27",
     "@vitejs/plugin-react": "^6.0.1",
     "tailwindcss": "^4.2.2",
     "typescript": "^6.0.2",
-    "vite": "^8.0.8"
+    "vite": "^8.0.8",
+    "vitest": "^4.0.18"
   }
 }

@@ -1,8 +1,17 @@
-// GSD Setup - General Settings Section
+// GSD Pi Config - General Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
-import type { GSDPreferences, WorkflowMode, TokenProfile, SearchProvider, WidgetMode, ContextSelectionMode, ServiceTier } from "../../types";
-import { Field, Toggle, SelectField, NumberField, SectionHeader } from "../FormControls";
+import type {
+  GSDPreferences,
+  WorkflowMode,
+  TokenProfile,
+  SearchProvider,
+  WidgetMode,
+  ContextSelectionMode,
+  ServiceTier,
+  PlanningDepth,
+} from "../../types";
+import { Field, Toggle, SelectField, NumberField, TextField, SectionHeader } from "../FormControls";
 import {
   applyModePreset,
   applyProfilePreset,
@@ -86,7 +95,7 @@ export function GeneralSection({ prefs, onChange }: Props) {
         description="Core workflow mode, profiles, and global behavior."
       />
 
-      <Field path="mode" value={prefs.mode} label="Workflow Mode" description="Solo (single dev) or Team (multi-dev). Picking a mode cascades sensible defaults for git, parallel, phases, and notifications.">
+      <Field path="mode" value={prefs.mode} label="Workflow Mode">
         <SelectField<WorkflowMode>
           value={prefs.mode}
           onChange={onModeChange}
@@ -95,16 +104,33 @@ export function GeneralSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field path="token_profile" value={prefs.token_profile} label="Token Profile" description="Picking a profile cascades phase skipping, context compression, and verification defaults. Model IDs are left alone.">
+      <Field path="token_profile" value={prefs.token_profile} label="Token Profile">
         <SelectField<TokenProfile>
           value={prefs.token_profile}
           onChange={onProfileChange}
-          options={["budget", "balanced", "quality"]}
+          options={["budget", "balanced", "quality", "burn-max"]}
           placeholder="Not set"
         />
       </Field>
 
-      <Field path="search_provider" value={prefs.search_provider} label="Search Provider" description="Search backend. 'auto' uses the default behavior.">
+      <Field path="planning_depth" value={prefs.planning_depth} label="Planning Depth" description="New project/milestone interactive planning flow depth.">
+        <SelectField<PlanningDepth>
+          value={prefs.planning_depth}
+          onChange={(v) => set("planning_depth", v)}
+          options={["light", "deep"]}
+          placeholder="light"
+        />
+      </Field>
+
+      <Field path="language" value={prefs.language} label="Response Language" description="Language for agent responses (e.g. English).">
+        <TextField
+          value={prefs.language}
+          onChange={(v) => set("language", v || undefined)}
+          placeholder="Default"
+        />
+      </Field>
+
+      <Field path="search_provider" value={prefs.search_provider} label="Search Provider">
         <SelectField<SearchProvider>
           value={prefs.search_provider}
           onChange={(v) => set("search_provider", v)}
@@ -112,7 +138,7 @@ export function GeneralSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field path="widget_mode" value={prefs.widget_mode} label="Widget Mode" description="Default widget display for auto-mode dashboard.">
+      <Field path="widget_mode" value={prefs.widget_mode} label="Widget Mode">
         <SelectField<WidgetMode>
           value={prefs.widget_mode}
           onChange={(v) => set("widget_mode", v)}
@@ -120,7 +146,7 @@ export function GeneralSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field path="context_selection" value={prefs.context_selection} label="Context Selection" description="File inlining strategy. 'full' inlines entire files, 'smart' uses semantic chunking.">
+      <Field path="context_selection" value={prefs.context_selection} label="Context Selection">
         <SelectField<ContextSelectionMode>
           value={prefs.context_selection}
           onChange={(v) => set("context_selection", v)}
@@ -129,7 +155,7 @@ export function GeneralSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field path="service_tier" value={prefs.service_tier} label="Service Tier" description="OpenAI tier. 'priority' = 2x cost/faster, 'flex' = 0.5x cost/slower. Only for gpt-5.4 models.">
+      <Field path="service_tier" value={prefs.service_tier} label="Service Tier">
         <SelectField<ServiceTier>
           value={prefs.service_tier}
           onChange={(v) => set("service_tier", v)}
@@ -138,7 +164,7 @@ export function GeneralSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field path="unique_milestone_ids" label="Unique Milestone IDs" description="Generate milestone IDs in M{seq}-{rand6} format (recommended for teams).">
+      <Field path="unique_milestone_ids" label="Unique Milestone IDs">
         <Toggle
           checked={prefs.unique_milestone_ids ?? false}
           onChange={(v) => set("unique_milestone_ids", v)}
@@ -186,6 +212,15 @@ export function GeneralSection({ prefs, onChange }: Props) {
           onChange={(v) => set("stale_commit_threshold_minutes", v)}
           min={0}
           placeholder="30"
+        />
+      </Field>
+
+      <Field path="min_request_interval_ms" value={prefs.min_request_interval_ms} label="Min Request Interval (ms)" description="Minimum ms between auto-mode LLM requests. 0 disables rate pacing.">
+        <NumberField
+          value={prefs.min_request_interval_ms}
+          onChange={(v) => set("min_request_interval_ms", v)}
+          min={0}
+          placeholder="0"
         />
       </Field>
     </div>

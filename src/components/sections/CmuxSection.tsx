@@ -1,4 +1,4 @@
-// GSD Setup - CMux Settings Section
+// GSD Pi Config - CMux Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, CmuxPreferences } from "../../types";

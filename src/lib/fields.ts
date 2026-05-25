@@ -1,4 +1,4 @@
-// GSD Setup - Field Registry (single source of truth for palette, dirty tracking, validation, hints)
+// GSD Pi Config - Field Registry (single source of truth for palette, dirty tracking, validation, hints)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // The registry maps a dotted JSON path (e.g. "git.auto_push") to metadata:
@@ -40,15 +40,25 @@ const registry = {
     validator: isEnum(["solo", "team"]) },
   "token_profile": { section: "general", label: "Token Profile", type: "enum",
     hint: "Coordinates model selection, phase skipping, and compression.",
-    validator: isEnum(["budget", "balanced", "quality"]) },
+    validator: isEnum(["budget", "balanced", "quality", "burn-max"]) },
+  "planning_depth": { section: "general", label: "Planning Depth", type: "enum",
+    hint: "light: single discuss session; deep: staged PROJECT → REQUIREMENTS → CONTEXT → ROADMAP.",
+    validator: isEnum(["light", "deep"]) },
+  "language": { section: "general", label: "Response Language", type: "text",
+    hint: "Language for agent responses (e.g. English, Spanish)." },
+  "min_request_interval_ms": { section: "general", label: "Min Request Interval (ms)", type: "number",
+    hint: "Minimum ms between auto-mode LLM requests. 0 disables.", validator: numInRange(0, 600_000) },
   "search_provider": { section: "general", label: "Search Provider", type: "enum",
+    hint: "Search backend. auto uses the default provider.",
     validator: isEnum(["brave", "tavily", "ollama", "native", "auto"]) },
   "widget_mode": { section: "general", label: "Widget Mode", type: "enum",
+    hint: "Widget display size for the auto-mode dashboard.",
     validator: isEnum(["full", "small", "min", "off"]) },
   "context_selection": { section: "general", label: "Context Selection", type: "enum",
+    hint: "full inlines whole files; smart uses semantic chunking.",
     validator: isEnum(["full", "smart"]) },
   "service_tier": { section: "general", label: "Service Tier", type: "enum",
-    hint: "OpenAI tier. priority = 2x cost/faster, flex = 0.5x cost/slower.",
+    hint: "Provider latency tier when supported (e.g. OpenAI priority/flex). priority costs more, flex costs less.",
     validator: isEnum(["priority", "flex"]) },
   "unique_milestone_ids": { section: "general", label: "Unique Milestone IDs", type: "bool",
     hint: "Generate milestone IDs in M{seq}-{rand6} format." },
@@ -63,7 +73,7 @@ const registry = {
 
   // ─── Models ─────────────────────────────────────────────────────────────
   "models": { section: "models", label: "Model Overrides", type: "object",
-    keywords: ["claude", "gpt", "provider"] },
+    keywords: ["openai", "gemini", "anthropic", "gpt", "provider", "model"] },
   "models.research": { section: "models", label: "Research Model", type: "text" },
   "models.planning": { section: "models", label: "Planning Model", type: "text" },
   "models.discuss": { section: "models", label: "Discussion Model", type: "text" },
@@ -79,7 +89,8 @@ const registry = {
   "git.push_branches": { section: "git", label: "Push Branches", type: "bool" },
   "git.remote": { section: "git", label: "Remote", type: "text", example: "origin" },
   "git.snapshots": { section: "git", label: "Snapshots", type: "bool" },
-  "git.pre_merge_check": { section: "git", label: "Pre-Merge Check", type: "enum" },
+  "git.pre_merge_check": { section: "git", label: "Pre-Merge Check", type: "enum",
+    validator: isEnum(["true", "false", "auto"]) },
   "git.commit_type": { section: "git", label: "Commit Type", type: "enum",
     hint: "Conventional commit prefix; inferred from diff by default." },
   "git.main_branch": { section: "git", label: "Main Branch", type: "text", example: "main" },
@@ -92,6 +103,12 @@ const registry = {
     validator: validPath },
   "git.auto_pr": { section: "git", label: "Auto PR", type: "bool" },
   "git.pr_target_branch": { section: "git", label: "PR Target Branch", type: "text", example: "main" },
+  "git.absorb_snapshot_commits": { section: "git", label: "Absorb Snapshot Commits", type: "bool",
+    hint: "Squash gsd snapshot commits into the next real commit." },
+  "git.collapse_cadence": { section: "git", label: "Collapse Cadence", type: "enum",
+    validator: isEnum(["milestone", "slice"]) },
+  "git.milestone_resquash": { section: "git", label: "Milestone Resquash", type: "bool",
+    hint: "When collapse_cadence is slice, re-squash to one commit per milestone at end." },
 
   // ─── Skills ─────────────────────────────────────────────────────────────
   "always_use_skills": { section: "skills", label: "Always Use Skills", type: "list",
@@ -113,6 +130,10 @@ const registry = {
     validator: isEnum(["warn", "pause", "halt"]) },
   "context_pause_threshold": { section: "budget", label: "Context Pause Threshold", type: "number",
     hint: "Percent of context window before pausing.", validator: numInRange(0, 100) },
+  "per_unit_cost_cap_usd": { section: "budget", label: "Per-Unit Cost Cap ($)", type: "number",
+    validator: numInRange(0, 10_000) },
+  "flat_rate_providers": { section: "routing", label: "Flat-Rate Providers", type: "list",
+    hint: "Provider IDs billed at flat rate (used with dynamic routing)." },
 
   // ─── Notifications ──────────────────────────────────────────────────────
   "notifications.enabled": { section: "notifications", label: "Notifications Enabled", type: "bool" },
@@ -138,7 +159,8 @@ const registry = {
   "reactive_execution.enabled": { section: "parallel", label: "Reactive Execution", type: "bool" },
   "reactive_execution.max_parallel": { section: "parallel", label: "Reactive Max Parallel", type: "number",
     validator: numInRange(1, 16) },
-  "reactive_execution.isolation_mode": { section: "parallel", label: "Reactive Isolation", type: "enum" },
+  "reactive_execution.isolation_mode": { section: "parallel", label: "Reactive Isolation", type: "enum",
+    validator: isEnum(["same-tree"]) },
   "reactive_execution.subagent_model": { section: "parallel", label: "Reactive Subagent Model", type: "text" },
 
   // ─── Phases ─────────────────────────────────────────────────────────────
@@ -148,6 +170,10 @@ const registry = {
   "phases.skip_milestone_validation": { section: "phases", label: "Skip Milestone Validation", type: "bool" },
   "phases.reassess_after_slice": { section: "phases", label: "Reassess After Slice", type: "bool" },
   "phases.require_slice_discussion": { section: "phases", label: "Require Slice Discussion", type: "bool" },
+  "phases.mid_execution_escalation": { section: "phases", label: "Mid-Execution Escalation", type: "bool",
+    hint: "Allow complete-task escalation payloads (ADR-011 P2)." },
+  "phases.progressive_planning": { section: "phases", label: "Progressive Planning", type: "bool",
+    hint: "Plan S01 fully; S02+ as sketches until refined." },
   "gate_evaluation.enabled": { section: "phases", label: "Gate Evaluation", type: "bool" },
   "gate_evaluation.slice_gates": { section: "phases", label: "Slice Gates", type: "list" },
   "gate_evaluation.task_gates": { section: "phases", label: "Task Gates", type: "bool" },
@@ -160,6 +186,18 @@ const registry = {
     validator: numInRange(0, 100) },
   "context_management.tool_result_max_chars": { section: "context", label: "Tool Result Max Chars", type: "number",
     validator: numInRange(0, 1_000_000) },
+  "context_window_override": { section: "context", label: "Context Window Override", type: "number",
+    hint: "Token limit for prompt budget when registry cannot resolve runtime window.",
+    validator: numInRange(1_000, 10_000_000) },
+  "context_mode.enabled": { section: "context", label: "Context Mode (gsd_exec)", type: "bool",
+    hint: "Tool-output sandboxing via subprocess digest. Default on unless false." },
+  "context_mode.exec_timeout_ms": { section: "context", label: "Exec Timeout (ms)", type: "number",
+    validator: numInRange(1_000, 600_000) },
+  "context_mode.exec_stdout_cap_bytes": { section: "context", label: "Exec Stdout Cap (bytes)", type: "number",
+    validator: numInRange(4_096, 16_777_216) },
+  "context_mode.exec_digest_chars": { section: "context", label: "Exec Digest Chars", type: "number",
+    validator: numInRange(0, 4_000) },
+  "context_mode.exec_env_allowlist": { section: "context", label: "Exec Env Allowlist", type: "list" },
 
   // ─── Dynamic Routing ────────────────────────────────────────────────────
   "dynamic_routing.enabled": { section: "routing", label: "Dynamic Routing", type: "bool" },
@@ -171,6 +209,10 @@ const registry = {
   "dynamic_routing.cross_provider": { section: "routing", label: "Cross-Provider Routing", type: "bool" },
   "dynamic_routing.hooks": { section: "routing", label: "Routing Hooks", type: "bool" },
   "dynamic_routing.capability_routing": { section: "routing", label: "Capability Routing", type: "bool" },
+  "dynamic_routing.allow_flat_rate_providers": { section: "routing", label: "Route Flat-Rate Providers", type: "bool",
+    hint: "Opt in to dynamic routing for flat-rate providers (#4386)." },
+  "modelOverrides": { section: "routing", label: "Model Capability Overrides", type: "object",
+    hint: "Per-model 7-D capability scores for routing (ADR-004)." },
 
   // ─── Safety ─────────────────────────────────────────────────────────────
   "safety_harness.enabled": { section: "safety", label: "Safety Harness", type: "bool" },
@@ -183,6 +225,8 @@ const registry = {
   "safety_harness.auto_rollback": { section: "safety", label: "Auto Rollback", type: "bool" },
   "safety_harness.timeout_scale_cap": { section: "safety", label: "Timeout Scale Cap", type: "number",
     validator: numInRange(1, 100) },
+  "safety_harness.file_change_allowlist": { section: "safety", label: "File Change Allowlist", type: "list",
+    hint: "Glob patterns exempt from file-change validation." },
 
   // ─── Verification ───────────────────────────────────────────────────────
   "enhanced_verification": { section: "verification", label: "Enhanced Verification", type: "bool" },
@@ -230,6 +274,44 @@ const registry = {
     validator: numInRange(0, 1_000_000) },
   "codebase.collapse_threshold": { section: "codebase", label: "Collapse Threshold", type: "number",
     validator: numInRange(0, 10_000) },
+
+  // ─── UOK ────────────────────────────────────────────────────────────────
+  "uok.enabled": { section: "uok", label: "UOK Enabled", type: "bool" },
+  "uok.legacy_fallback.enabled": { section: "uok", label: "Legacy Fallback", type: "bool" },
+  "uok.gates.enabled": { section: "uok", label: "Gates", type: "bool" },
+  "uok.model_policy.enabled": { section: "uok", label: "Model Policy", type: "bool" },
+  "uok.execution_graph.enabled": { section: "uok", label: "Execution Graph", type: "bool" },
+  "uok.gitops.enabled": { section: "uok", label: "GitOps", type: "bool" },
+  "uok.gitops.turn_action": { section: "uok", label: "GitOps Turn Action", type: "enum",
+    validator: isEnum(["commit", "snapshot", "status-only"]) },
+  "uok.gitops.turn_push": { section: "uok", label: "GitOps Turn Push", type: "bool" },
+  "uok.audit_unified.enabled": { section: "uok", label: "Unified Audit", type: "bool" },
+  "uok.plan_v2.enabled": { section: "uok", label: "Plan v2", type: "bool" },
+
+  // ─── GitHub sync ──────────────────────────────────────────────────────────
+  "github.enabled": { section: "github", label: "GitHub Sync Enabled", type: "bool" },
+  "github.repo": { section: "github", label: "Repository", type: "text", example: "owner/repo" },
+  "github.project": { section: "github", label: "Project Number", type: "number" },
+  "github.labels": { section: "github", label: "Issue Labels", type: "list" },
+  "github.auto_link_commits": { section: "github", label: "Auto-Link Commits", type: "bool" },
+  "github.slice_prs": { section: "github", label: "Slice PRs", type: "bool" },
+
+  // ─── Workspace ──────────────────────────────────────────────────────────
+  "workspace.mode": { section: "workspace", label: "Workspace Mode", type: "enum",
+    validator: isEnum(["project", "parent"]) },
+  "workspace.repositories": { section: "workspace", label: "Repositories", type: "object" },
+
+  // ─── Claude Code MCP ──────────────────────────────────────────────────────
+  "claude_code_mcp.per_model": { section: "mcp", label: "Per-Model MCP Filters", type: "object" },
+
+  // ─── Auto supervisor ────────────────────────────────────────────────────
+  "auto_supervisor.model": { section: "experimental", label: "Supervisor Model", type: "text" },
+  "auto_supervisor.soft_timeout_minutes": { section: "experimental", label: "Supervisor Soft Timeout", type: "number",
+    validator: numInRange(1, 1440) },
+  "auto_supervisor.idle_timeout_minutes": { section: "experimental", label: "Supervisor Idle Timeout", type: "number",
+    validator: numInRange(1, 1440) },
+  "auto_supervisor.hard_timeout_minutes": { section: "experimental", label: "Supervisor Hard Timeout", type: "number",
+    validator: numInRange(1, 1440) },
 
   // ─── Experimental ───────────────────────────────────────────────────────
   "experimental.rtk": { section: "experimental", label: "RTK", type: "bool",

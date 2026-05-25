@@ -1,18 +1,24 @@
-// GSD Setup - Application Entry Point
+// GSD Pi Config - Application Entry Point
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import "./index.css";
+import { migrateLegacyStorageKeys } from "./lib/storageMigration";
 import { bootstrapTheme } from "./lib/theme";
 
-// Apply the stored theme before React mounts so light-theme users don't
-// see a dark flash on first paint.
+migrateLegacyStorageKeys();
 bootstrapTheme();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+const loadApp = () =>
+  import.meta.env.VITE_PLATFORM === "web"
+    ? import("./App.web")
+    : import("./App.desktop");
+
+void loadApp().then(({ default: App }) => {
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  );
+});

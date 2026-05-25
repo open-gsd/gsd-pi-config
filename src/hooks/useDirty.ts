@@ -1,4 +1,4 @@
-// GSD Setup - Per-section dirty tracking hook
+// GSD Pi Config - Per-section dirty tracking hook
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Compares current prefs against the last-saved snapshot and reports which

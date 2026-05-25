@@ -1,16 +1,17 @@
-// GSD Setup - Experimental Settings Section
+// GSD Pi Config - Experimental Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, ReactiveExecutionConfig, GateEvaluationConfig } from "../../types";
-import { Field, Toggle, NumberField, ModelPicker, TagInput, SectionHeader } from "../FormControls";
-import { MODEL_CATALOG } from "../../constants";
+import { Field, Toggle, NumberField, ModelPicker, SectionHeader, MultiSelectField, SelectField } from "../FormControls";
+import { KNOWN_SLICE_GATES, REACTIVE_ISOLATION_MODES, type ProviderCatalog } from "../../constants";
 
 interface Props {
   prefs: GSDPreferences;
   onChange: (prefs: GSDPreferences) => void;
+  modelCatalog?: readonly ProviderCatalog[];
 }
 
-export function ExperimentalSection({ prefs, onChange }: Props) {
+export function ExperimentalSection({ prefs, onChange, modelCatalog = [] }: Props) {
   const exp = prefs.experimental ?? {};
   const reactive = prefs.reactive_execution ?? {};
   const gate = prefs.gate_evaluation ?? {};
@@ -47,8 +48,17 @@ export function ExperimentalSection({ prefs, onChange }: Props) {
         <NumberField value={reactive.max_parallel} onChange={(v) => setReactive({ max_parallel: v })} min={1} max={16} placeholder="2" />
       </Field>
 
+      <Field path="reactive_execution.isolation_mode" value={reactive.isolation_mode} label="Isolation Mode" description="How reactive tasks share the working tree.">
+        <SelectField
+          value={reactive.isolation_mode}
+          onChange={(v) => setReactive({ isolation_mode: v })}
+          options={REACTIVE_ISOLATION_MODES}
+          placeholder="Default"
+        />
+      </Field>
+
       <Field path="reactive_execution.subagent_model" label="Subagent Model" description="Optional model override for reactive subagents.">
-        <ModelPicker value={reactive.subagent_model} onChange={(v) => setReactive({ subagent_model: v })} catalog={MODEL_CATALOG} placeholder="Default" />
+        <ModelPicker value={reactive.subagent_model} onChange={(v) => setReactive({ subagent_model: v })} catalog={modelCatalog} placeholder="Default" />
       </Field>
 
       <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Gate Evaluation</h3>
@@ -58,10 +68,10 @@ export function ExperimentalSection({ prefs, onChange }: Props) {
       </Field>
 
       <Field path="gate_evaluation.slice_gates" label="Slice Gates" description="Which slice-scoped gates to evaluate in parallel.">
-        <TagInput
+        <MultiSelectField
           values={gate.slice_gates ?? []}
           onChange={(v) => setGate({ slice_gates: v.length > 0 ? v : undefined })}
-          placeholder="e.g. Q3, Q4"
+          options={KNOWN_SLICE_GATES.map((g) => ({ value: g, label: g }))}
         />
       </Field>
 
@@ -71,16 +81,16 @@ export function ExperimentalSection({ prefs, onChange }: Props) {
 
       <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Auto Supervisor</h3>
 
-      <Field label="Model" description="Model ID for the auto-mode supervisor.">
+      <Field path="auto_supervisor.model" label="Model" description="Model ID for the auto-mode supervisor.">
         <ModelPicker
           value={prefs.auto_supervisor?.model}
           onChange={(v) => onChange({ ...prefs, auto_supervisor: { ...prefs.auto_supervisor, model: v } })}
-          catalog={MODEL_CATALOG}
+          catalog={modelCatalog}
           placeholder="Current model"
         />
       </Field>
 
-      <Field label="Soft Timeout (min)" description="Minutes before soft warning.">
+      <Field path="auto_supervisor.soft_timeout_minutes" value={prefs.auto_supervisor?.soft_timeout_minutes} label="Soft Timeout (min)" description="Minutes before soft warning.">
         <NumberField
           value={prefs.auto_supervisor?.soft_timeout_minutes}
           onChange={(v) => onChange({ ...prefs, auto_supervisor: { ...prefs.auto_supervisor, soft_timeout_minutes: v } })}
@@ -89,7 +99,7 @@ export function ExperimentalSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field label="Idle Timeout (min)" description="Minutes of inactivity before intervention.">
+      <Field path="auto_supervisor.idle_timeout_minutes" value={prefs.auto_supervisor?.idle_timeout_minutes} label="Idle Timeout (min)" description="Minutes of inactivity before intervention.">
         <NumberField
           value={prefs.auto_supervisor?.idle_timeout_minutes}
           onChange={(v) => onChange({ ...prefs, auto_supervisor: { ...prefs.auto_supervisor, idle_timeout_minutes: v } })}
@@ -98,7 +108,7 @@ export function ExperimentalSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <Field label="Hard Timeout (min)" description="Minutes before forced termination.">
+      <Field path="auto_supervisor.hard_timeout_minutes" value={prefs.auto_supervisor?.hard_timeout_minutes} label="Hard Timeout (min)" description="Minutes before forced termination.">
         <NumberField
           value={prefs.auto_supervisor?.hard_timeout_minutes}
           onChange={(v) => onChange({ ...prefs, auto_supervisor: { ...prefs.auto_supervisor, hard_timeout_minutes: v } })}

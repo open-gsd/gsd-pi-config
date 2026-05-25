@@ -1,4 +1,4 @@
-// GSD Setup - Custom provider merge + collision detection
+// GSD Pi Config - Custom provider merge + collision detection
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // `models.json` lets users register custom providers alongside the built-in

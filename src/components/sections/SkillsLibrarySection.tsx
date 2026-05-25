@@ -1,9 +1,20 @@
-// GSD2 Config - Skills Library Section
+// GSD Pi Config - Skills Library Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import { SectionHeader } from "../FormControls";
+import {
+  btn,
+  btnPrimary,
+  btnSegment,
+  btnSegmentActive,
+  choiceBtn,
+  choiceBtnActive,
+  segmentGroup,
+  bannerDanger,
+  btnDanger,
+} from "../../lib/uiClasses";
+import { useConfigBackend } from "../../platform/backend";
 
 export interface SkillInfo {
   id: string;
@@ -21,6 +32,7 @@ interface Props {
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 export function SkillsLibrarySection({ projectPath }: Props) {
+  const backend = useConfigBackend();
   const [skills, setSkills] = useState<SkillInfo[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
@@ -36,8 +48,7 @@ export function SkillsLibrarySection({ projectPath }: Props) {
   const loadSkills = useCallback(async () => {
     try {
       setError("");
-      const args = projectPath ? { projectPath } : {};
-      const list = await invoke<SkillInfo[]>("list_skills", args);
+      const list = await backend.listSkills(projectPath);
       setSkills(list);
     } catch (e) {
       setError(String(e));
@@ -60,7 +71,7 @@ export function SkillsLibrarySection({ projectPath }: Props) {
     }
     (async () => {
       try {
-        const text = await invoke<string>("read_skill", { path: selected.path });
+        const text = await backend.readSkill(selected.path);
         setContent(text);
         setOriginalContent(text);
         setSaveState("idle");
@@ -91,7 +102,7 @@ export function SkillsLibrarySection({ projectPath }: Props) {
     if (!selected) return;
     setSaveState("saving");
     try {
-      await invoke("write_skill", { path: selected.path, content });
+      await backend.writeSkill(selected.path, content);
       setOriginalContent(content);
       setSaveState("saved");
       setTimeout(() => setSaveState("idle"), 1500);
@@ -109,7 +120,7 @@ export function SkillsLibrarySection({ projectPath }: Props) {
     if (!selected) return;
     if (!confirm(`Delete skill "${selected.name}"? This removes the entire skill folder.`)) return;
     try {
-      await invoke("delete_skill", { path: selected.path });
+      await backend.deleteSkill(selected.path);
       setSelectedId(null);
       await loadSkills();
     } catch (e) {
@@ -125,7 +136,11 @@ export function SkillsLibrarySection({ projectPath }: Props) {
         scope: newSkillScope,
       };
       if (newSkillScope === "project" && projectPath) args.projectPath = projectPath;
-      const created = await invoke<SkillInfo>("create_skill", args);
+      const created = await backend.createSkill(
+        args.name,
+        args.scope,
+        args.projectPath,
+      );
       setShowNewDialog(false);
       setNewSkillName("");
       await loadSkills();
@@ -142,20 +157,19 @@ export function SkillsLibrarySection({ projectPath }: Props) {
       <div className="flex items-start justify-between mb-4">
         <SectionHeader
           title="Skills Library"
-          description="View and edit Claude Code / GSD skills. Skills are markdown files with YAML frontmatter that Claude loads on demand."
+          description="View and edit agent skills (GSD + Claude Code layout). Skills are markdown files with YAML frontmatter loaded on demand by the agent runtime."
         />
-        <button
-          onClick={() => setShowNewDialog(true)}
-          className="px-3 py-1.5 text-xs rounded-md bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover transition-colors shrink-0"
-        >
+        <button type="button" onClick={() => setShowNewDialog(true)} className={`${btnPrimary} shrink-0`}>
           + New Skill
         </button>
       </div>
 
       {error && (
-        <div className="mb-3 px-3 py-2 bg-gsd-danger/10 border border-gsd-danger/30 text-gsd-danger text-xs rounded flex items-center justify-between">
+        <div className={`${bannerDanger} mb-3 flex items-center justify-between text-xs`}>
           <span>{error}</span>
-          <button onClick={() => setError("")} className="ml-2 hover:text-red-300">dismiss</button>
+          <button type="button" onClick={() => setError("")} className={`${btn} ml-2`}>
+            Dismiss
+          </button>
         </div>
       )}
 
@@ -177,25 +191,19 @@ export function SkillsLibrarySection({ projectPath }: Props) {
             </div>
             <div>
               <label className="text-xs text-gsd-text-dim block mb-1">Scope</label>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
+                  type="button"
                   onClick={() => setNewSkillScope("global")}
-                  className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                    newSkillScope === "global"
-                      ? "border-gsd-accent text-gsd-accent bg-gsd-accent-dim"
-                      : "border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-                  }`}
+                  className={newSkillScope === "global" ? choiceBtnActive : choiceBtn}
                 >
                   Global (~/.claude/skills)
                 </button>
                 <button
+                  type="button"
                   onClick={() => setNewSkillScope("project")}
                   disabled={!hasProject}
-                  className={`px-3 py-1.5 text-xs rounded-md border transition-colors ${
-                    newSkillScope === "project"
-                      ? "border-gsd-accent text-gsd-accent bg-gsd-accent-dim"
-                      : "border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-                  } ${!hasProject ? "opacity-40 cursor-not-allowed" : ""}`}
+                  className={newSkillScope === "project" ? choiceBtnActive : choiceBtn}
                 >
                   Project (.claude/skills)
                 </button>
@@ -206,16 +214,16 @@ export function SkillsLibrarySection({ projectPath }: Props) {
             </div>
             <div className="flex gap-2 justify-end">
               <button
-                onClick={() => { setShowNewDialog(false); setNewSkillName(""); }}
-                className="px-3 py-1.5 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
+                type="button"
+                onClick={() => {
+                  setShowNewDialog(false);
+                  setNewSkillName("");
+                }}
+                className={btn}
               >
                 Cancel
               </button>
-              <button
-                onClick={createNew}
-                disabled={!newSkillName.trim()}
-                className="px-3 py-1.5 text-xs rounded-md bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover disabled:opacity-40 disabled:cursor-not-allowed"
-              >
+              <button type="button" onClick={createNew} disabled={!newSkillName.trim()} className={btnPrimary}>
                 Create
               </button>
             </div>
@@ -235,15 +243,14 @@ export function SkillsLibrarySection({ projectPath }: Props) {
               placeholder="Search skills..."
               className="w-full text-xs"
             />
-            <div className="flex rounded-md border border-gsd-border overflow-hidden text-[10px]">
+            <div className={`${segmentGroup} text-[10px]`}>
               {(["all", "global", "project"] as const).map((s) => (
                 <button
                   key={s}
+                  type="button"
                   onClick={() => setScopeFilter(s)}
-                  className={`flex-1 px-2 py-1 uppercase tracking-wider font-medium transition-colors ${
-                    scopeFilter === s
-                      ? "bg-gsd-accent text-gsd-on-accent"
-                      : "text-gsd-text-dim hover:text-gsd-text"
+                  className={`flex-1 uppercase tracking-wider font-medium ${
+                    scopeFilter === s ? btnSegmentActive : btnSegment
                   }`}
                 >
                   {s}
@@ -304,28 +311,23 @@ export function SkillsLibrarySection({ projectPath }: Props) {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={remove}
-                    className="px-2 py-1 text-[10px] rounded border border-gsd-danger/40 text-gsd-danger hover:bg-gsd-danger/10"
-                  >
+                  <button type="button" onClick={remove} className={btnDanger}>
                     Delete
                   </button>
                   {isDirty && (
-                    <button
-                      onClick={discard}
-                      className="px-2 py-1 text-[10px] rounded border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-                    >
+                    <button type="button" onClick={discard} className={btn}>
                       Discard
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={save}
                     disabled={!isDirty || saveState === "saving"}
-                    className={`px-3 py-1 text-[11px] rounded font-medium transition-colors ${
+                    className={
                       isDirty
-                        ? "bg-gsd-accent text-gsd-on-accent hover:bg-gsd-accent-hover"
-                        : "bg-gsd-border text-gsd-text-dim cursor-not-allowed"
-                    }`}
+                        ? btnPrimary
+                        : `${btn} !bg-gsd-border !text-gsd-text-dim !border-transparent`
+                    }
                   >
                     {saveState === "saving" ? "Saving..." : saveState === "saved" ? "Saved" : "Save"}
                   </button>

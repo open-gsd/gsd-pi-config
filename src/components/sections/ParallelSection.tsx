@@ -1,16 +1,17 @@
-// GSD Setup - Parallel Execution Settings Section
+// GSD Pi Config - Parallel Execution Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, ParallelConfig, MergeStrategy, AutoMergeMode } from "../../types";
 import { Field, Toggle, SelectField, NumberField, ModelPicker, SectionHeader } from "../FormControls";
-import { MODEL_CATALOG } from "../../constants";
+import type { ProviderCatalog } from "../../constants";
 
 interface Props {
   prefs: GSDPreferences;
   onChange: (prefs: GSDPreferences) => void;
+  modelCatalog?: readonly ProviderCatalog[];
 }
 
-export function ParallelSection({ prefs, onChange }: Props) {
+export function ParallelSection({ prefs, onChange, modelCatalog = [] }: Props) {
   const par = prefs.parallel ?? {};
   const setPar = (update: Partial<ParallelConfig>) =>
     onChange({ ...prefs, parallel: { ...par, ...update } });
@@ -59,7 +60,7 @@ export function ParallelSection({ prefs, onChange }: Props) {
       </Field>
 
       <Field path="parallel.worker_model" label="Worker Model" description="Optional model override for parallel workers.">
-        <ModelPicker value={par.worker_model} onChange={(v) => setPar({ worker_model: v })} catalog={MODEL_CATALOG} placeholder="Default" />
+        <ModelPicker value={par.worker_model} onChange={(v) => setPar({ worker_model: v })} catalog={modelCatalog} placeholder="Default" />
       </Field>
 
       <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Slice Parallel</h3>

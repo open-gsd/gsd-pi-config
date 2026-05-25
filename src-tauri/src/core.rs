@@ -1,8 +1,8 @@
-// GSD2 Config - Core preferences/filesystem primitives
+// GSD Pi Config - Core preferences/filesystem primitives
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Pure (non-Tauri) logic that both the GUI command layer and the future
-// `gsd-setup-cli` binary depend on. Kept free of tauri types on purpose.
+// `gsd-pi-config-cli` binary depend on. Kept free of tauri types on purpose.
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -218,9 +218,9 @@ pub fn save_preferences_at(path: &Path, prefs: &Value) -> Result<(), String> {
 // settings.json and models.json are plain JSON (not YAML frontmatter), but
 // they share the same safety needs as preferences.md: atomic write, per-path
 // mutex, `.bak` sibling, and protection against silently clobbering edits
-// made by GSD2 itself while the editor was open.
+// made by GSD Pi itself while the editor was open.
 //
-// Cross-process safety: `with_file_lock` only guards in-process races. GSD2
+// Cross-process safety: `with_file_lock` only guards in-process races. GSD Pi
 // can write to these files too, so we compare the on-disk mtime to an
 // `expected_mtime_ms` captured at load time and refuse the save on mismatch
 // with a `STALE:` prefix the UI can detect.
@@ -234,7 +234,7 @@ pub enum ConfigDoc {
 
 /// Typed resolver for every config file the editor touches.
 ///
-/// Path asymmetry is intentional and matches what GSD2 actually reads:
+/// Path asymmetry is intentional and matches what GSD Pi actually reads:
 ///   - project settings.json lives at `<p>/.gsd/settings.json`
 ///   - project models.json lives at `<p>/.gsd/agent/models.json`
 /// Centralising the table here keeps the asymmetry explicit and testable.
@@ -376,12 +376,12 @@ mod tests {
         ],
         "custom_instructions": ["line 1", "line 2"],
         "models": {
-            "research": "claude-sonnet-4-5",
-            "planning": "claude-sonnet-4-5",
+            "research": "gpt-4o-mini",
+            "planning": "gpt-4o",
             "execution": {
-                "model": "claude-opus-4-6",
-                "provider": "anthropic",
-                "fallbacks": ["claude-sonnet-4-5"]
+                "model": "gpt-4o",
+                "provider": "openai",
+                "fallbacks": ["gpt-4o-mini"]
             }
         },
         "budget_ceiling": 10.5,
@@ -412,7 +412,7 @@ mod tests {
         "context_management": { "observation_masking": true, "observation_mask_turns": 3, "compaction_threshold_percent": 75, "tool_result_max_chars": 20000 },
         "dynamic_routing": {
             "enabled": true,
-            "tier_models": { "light": "haiku", "standard": "sonnet", "heavy": "opus" },
+            "tier_models": { "light": "openai/gpt-4o-mini", "standard": "openai/gpt-4o", "heavy": "anthropic/claude-opus-4-6" },
             "escalate_on_failure": true,
             "budget_pressure": true,
             "cross_provider": false,
@@ -593,7 +593,7 @@ mod tests {
         let path = tmp.path().join("models.json");
         save_json_at(&path, &json!({ "providers": {} }), None).unwrap();
         let doc = load_json_at(&path).unwrap();
-        // Simulate GSD2 writing to the file externally.
+        // Simulate GSD Pi writing to the file externally.
         std::thread::sleep(std::time::Duration::from_millis(20));
         fs::write(&path, b"{\"providers\":{\"ext\":{}}}").unwrap();
         let err = save_json_at(&path, &json!({ "providers": { "ours": {} } }), Some(doc.mtime_ms))

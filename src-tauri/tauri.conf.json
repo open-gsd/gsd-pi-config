@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "GSD2 Config",
+  "productName": "GSD Pi Config",
   "version": "1.1.0",
-  "identifier": "net.fluxlabs.gsd2-config",
+  "identifier": "net.fluxlabs.gsd-pi-config",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "GSD2 Config",
+        "title": "GSD Pi Config",
         "width": 1100,
         "height": 750,
         "minWidth": 800,
@@ -44,7 +44,7 @@
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/jeremymcs/gsd2-config/releases/latest/download/latest.json"
+        "https://github.com/open-gsd/gsd-pi-config/releases/latest/download/latest.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDhCRTYxNjg4MzYzMjM1RTEKUldUaE5USTJpQmJtaXpjd1hTcTg0bnhCaHM0QzNPdzBzd0J5d2JCS1JsLytWbFlvS052VkxJS2oK"
     }

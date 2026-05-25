@@ -1,4 +1,4 @@
-// GSD Setup - Tauri window event listener helpers
+// GSD Pi Config - Tauri window event listener helpers
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Wraps Tauri v2 window event subscriptions so the React component that

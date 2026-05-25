@@ -1,10 +1,10 @@
 [package]
-name = "gsd2-config"
+name = "gsd-pi-config"
 version = "1.1.0"
-description = "Desktop configuration manager for GSD-2 preferences"
+description = "Desktop configuration manager for GSD Pi preferences"
 authors = ["Jeremy McSpadden <jeremy@fluxlabs.net>"]
 license = "MIT"
-repository = "https://github.com/jeremymcs/gsd2-config"
+repository = "https://github.com/open-gsd/gsd-pi-config"
 edition = "2021"
 rust-version = "1.77.2"
 

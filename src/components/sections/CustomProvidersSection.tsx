@@ -1,4 +1,4 @@
-// GSD Setup - Custom Providers (models.json) Section
+// GSD Pi Config - Custom Providers (models.json) Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // CRUD editor for `~/.gsd/agent/models.json` (or `<project>/.gsd/agent/models.json`).
@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import { SectionHeader, Field, TextField, NumberField, Toggle } from "../FormControls";
+import { btn, btnPrimary, btnDanger } from "../../lib/uiClasses";
 import { MODEL_CATALOG } from "../../constants";
 import type {
   GSDModelsConfig,
@@ -76,10 +77,7 @@ export function CustomProvidersSection({ value, onChange }: Props) {
         <div className="text-xs text-gsd-text-dim">
           {entries.length} provider{entries.length === 1 ? "" : "s"}
         </div>
-        <button
-          onClick={addProvider}
-          className="px-3 py-1.5 text-xs rounded-md bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover transition-colors"
-        >
+        <button type="button" onClick={addProvider} className={btnPrimary}>
           + Add provider
         </button>
       </div>
@@ -162,11 +160,7 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
             </p>
           )}
         </div>
-        <button
-          onClick={onDelete}
-          title="Delete provider"
-          className="shrink-0 px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-danger hover:border-gsd-danger transition-colors"
-        >
+        <button type="button" onClick={onDelete} title="Delete provider" className={`${btnDanger} shrink-0`}>
           Delete
         </button>
       </div>
@@ -200,11 +194,7 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
             autoComplete="off"
             spellCheck={false}
           />
-          <button
-            type="button"
-            onClick={() => setShowKey((s) => !s)}
-            className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
-          >
+          <button type="button" onClick={() => setShowKey((s) => !s)} className={btn}>
             {showKey ? "Hide" : "Show"}
           </button>
         </div>
@@ -215,10 +205,7 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
           <h4 className="text-xs font-semibold tracking-wide text-gsd-text uppercase">
             Models ({models.length})
           </h4>
-          <button
-            onClick={addModel}
-            className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover"
-          >
+          <button type="button" onClick={addModel} className={btn}>
             + Add model
           </button>
         </div>
@@ -240,10 +227,7 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
                 placeholder="model-id (required)"
                 className="flex-1 font-mono text-xs"
               />
-              <button
-                onClick={() => removeModel(idx)}
-                className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-danger hover:border-gsd-danger"
-              >
+              <button type="button" onClick={() => removeModel(idx)} className={btnDanger}>
                 Remove
               </button>
             </div>
@@ -251,7 +235,7 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
               <TextField
                 value={m.name}
                 onChange={(v) => updateModel(idx, { name: v })}
-                placeholder="Claude Sonnet 4 (OpenRouter)"
+                placeholder="Display name (e.g. Sonnet 4 via OpenRouter)"
                 className="w-72"
               />
             </Field>

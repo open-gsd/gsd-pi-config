@@ -1,4 +1,4 @@
-// GSD Setup - Notifications Settings Section
+// GSD Pi Config - Notifications Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, NotificationPreferences } from "../../types";

@@ -1,11 +1,13 @@
 <!--
-GSD2 Config — README
+GSD Pi Config — README
 Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 -->
 
-# GSD2 Config
+# GSD Pi Config
 
-Desktop configuration manager for [GSD-2](https://github.com/jmcspadden/gsd) preferences. A native Tauri app that gives you a structured GUI over the YAML preferences file you'd otherwise hand-edit, plus a library view for skills, agents, and API keys.
+Desktop configuration manager for [GSD Pi](https://github.com/open-gsd/gsd-pi) preferences. A native Tauri app that gives you a structured GUI over the YAML preferences file you'd otherwise hand-edit, plus a library view for skills, agents, and API keys.
+
+**Web app:** Cloud-hosted editor — upload or create a configuration, edit in the browser, then download `preferences.md`, `models.json`, and `settings.json` for your machine. Preset gallery and wizard included (see [Web vs desktop](#web-vs-desktop)).
 
 ## Screenshots
 
@@ -39,7 +41,7 @@ Desktop configuration manager for [GSD-2](https://github.com/jmcspadden/gsd) pre
 - Rust toolchain (stable)
 - Tauri 2 prerequisites for your platform — see [tauri.app/start/prerequisites](https://tauri.app/start/prerequisites/)
 
-### Install & run
+### Install & run (desktop)
 
 ```bash
 npm install
@@ -47,6 +49,64 @@ npm run tauri dev
 ```
 
 The dev server runs on port `1420`. The app window opens automatically once the Rust backend compiles.
+
+### Web (local)
+
+```bash
+npm install
+npm run dev:web
+```
+
+Opens the gallery + editor on port `5173`. Copy `.env.web.example` to `.env.web.local` to override preset repo URLs.
+
+```bash
+npm run build:web    # static dist/ for GitHub Pages
+npm run preview:web
+npm test             # preferencesCore unit tests
+```
+
+Preset gallery data lives in [`gsd-pi-presets/`](gsd-pi-presets/) (publish as [open-gsd/gsd-pi-presets](https://github.com/open-gsd/gsd-pi-presets)).
+
+### Deploy to Vercel (`pi.opengsd.net`)
+
+Production uses root path `/` (see `.env.web.production`). GitHub Pages builds use `/gsd-pi-config/` via the Pages workflow.
+
+1. Import the repo in [Vercel](https://vercel.com) (team **fluxlabs-projects** or your org).
+2. Framework preset: **Other** — `vercel.json` sets `buildCommand`, `outputDirectory`, and SPA rewrites.
+3. **Environment variables** (Project → Settings → Environment Variables):
+
+   | Variable | Required | Notes |
+   |----------|----------|--------|
+   | `GITHUB_CLIENT_ID` | For preset submit | GitHub OAuth App |
+   | `GITHUB_CLIENT_SECRET` | For preset submit | Server only |
+   | `PRESETS_REPO` | Optional | Default `open-gsd/gsd-pi-presets` |
+
+   Build-time `VITE_*` vars come from `.env.web.production` in the repo.
+
+4. **Domain:** Project → Settings → Domains → add `pi.opengsd.net`. At your DNS host, add a CNAME (or Vercel’s recommended A/ALIAS records) pointing to Vercel.
+5. **GitHub OAuth App** (if using Submit preset): set callback URL to `https://pi.opengsd.net/oauth/callback`.
+
+```bash
+npm i -g vercel   # optional CLI
+vercel link       # link to project
+vercel --prod     # production deploy
+```
+
+### Web vs desktop
+
+The web app is a **cloud editor**: it cannot read or write files on your computer. Import existing configs (or start from a preset/wizard), edit in the session, then **Download files** to install under `~/.gsd/` locally. A browser draft is kept so you can refresh without losing work in that session.
+
+| Feature | Web | Desktop |
+|---------|-----|---------|
+| Preference sections (editor) | Yes | Yes |
+| Edit `~/.gsd/` or project files in place | No — upload + download | Yes |
+| Global / project scope | Global only | Global + real project folders |
+| `models.json` / `settings.json` | Import + download | On disk |
+| Skills / agents libraries | No | Yes (`~/.claude`, project) |
+| API keys | Browser session; export `env.sh` | OS keychain |
+| CLI auth detection (`gcloud`, `gh`) | No | Yes |
+| Preset gallery / wizard | Yes | Import/export files |
+| Auto-update installer | No | Yes |
 
 ### Build a release bundle
 
@@ -73,7 +133,7 @@ src/                 React frontend
   components/sections/  One file per preferences section
   hooks/             useDirty (change tracking)
   lib/               keyboard, presets, theme, validators, tauri listeners
-  types.ts           TypeScript mirror of the GSD-2 preferences schema
+  types.ts           TypeScript mirror of the GSD Pi preferences schema
 src-tauri/           Rust backend
   src/lib.rs         Tauri command handlers (preferences, skills, agents, keys)
   src/core.rs        YAML serialization, frontmatter parsing, atomic writes

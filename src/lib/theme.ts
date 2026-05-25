@@ -1,4 +1,4 @@
-// GSD2 Config - Theme preference (system / dark / light)
+// GSD Pi Config - Theme preference (system / dark / light)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // Theme is a UI-only preference that persists in localStorage, NOT in the
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 export type ThemePreference = "system" | "dark" | "light";
 export type EffectiveTheme = "dark" | "light";
 
-const STORAGE_KEY = "gsd2-config.theme";
+const STORAGE_KEY = "gsd-pi-config.theme";
 
 /** Read the saved preference, defaulting to "system". */
 export function getStoredTheme(): ThemePreference {

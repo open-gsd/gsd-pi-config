@@ -1,7 +1,8 @@
-// GSD2 Config - Share Modal (redacted preset copy-to-clipboard)
+// GSD Pi Config - Share Modal (redacted preset copy-to-clipboard)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import { useEffect, useState } from "react";
+import { btn, btnPrimary, modalPanel } from "../lib/uiClasses";
 
 interface ShareModalProps {
   open: boolean;
@@ -59,21 +60,22 @@ export function ShareModal({ open, content, onClose }: ShareModalProps) {
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl max-h-[80vh] flex flex-col rounded-lg border border-gsd-border bg-gsd-surface-solid shadow-xl"
+        className={`w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden ${modalPanel}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 px-5 py-4 border-b border-gsd-border">
           <div>
-            <h2 className="text-sm font-semibold text-gsd-text">Share preset</h2>
-            <p className="mt-1 text-xs text-gsd-text-dim">
+            <h2 className="gsd-heading text-sm font-semibold text-gsd-text">Share preset</h2>
+            <p className="gsd-prose mt-1 text-xs text-gsd-text-dim">
               Values under keys containing <code>key</code>, <code>token</code>,{" "}
               <code>secret</code>, or <code>password</code> are redacted. Review the block
               below before copying — this is exactly what will land on your clipboard.
             </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="text-gsd-text-dim hover:text-gsd-text text-lg leading-none"
+            className={`${btn} min-w-10 !px-0 text-lg leading-none`}
             aria-label="Close"
           >
             ×
@@ -87,16 +89,10 @@ export function ShareModal({ open, content, onClose }: ShareModalProps) {
         </div>
 
         <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-gsd-border">
-          <button
-            onClick={onClose}
-            className="px-3 py-1.5 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover transition-colors"
-          >
+          <button type="button" onClick={onClose} className={btn}>
             Cancel
           </button>
-          <button
-            onClick={copy}
-            className="px-4 py-1.5 text-xs rounded-md font-medium bg-gsd-accent text-gsd-on-accent hover:bg-gsd-accent-hover transition-colors"
-          >
+          <button type="button" onClick={() => void copy()} className={btnPrimary}>
             {copied ? "Copied!" : "Copy to clipboard"}
           </button>
         </div>

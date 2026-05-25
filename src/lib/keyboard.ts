@@ -1,4 +1,4 @@
-// GSD Setup - Global keyboard shortcut manager
+// GSD Pi Config - Global keyboard shortcut manager
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 //
 // A tiny hook-based shortcut system. Handlers are registered by id so that

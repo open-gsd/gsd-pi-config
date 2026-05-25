@@ -1,7 +1,7 @@
-// GSD2 Config - Sidebar Navigation
+// GSD Pi Config - Sidebar Navigation
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
-import gsdLogo from "../assets/gsd-logo.svg";
+import { BrandMark } from "./BrandMark";
 
 export const SECTION_GROUPS = [
   {
@@ -54,6 +54,10 @@ export const SECTION_GROUPS = [
     items: [
       { id: "cmux", label: "CMux" },
       { id: "remote", label: "Remote Questions" },
+      { id: "github", label: "GitHub Sync" },
+      { id: "uok", label: "UOK" },
+      { id: "workspace", label: "Workspace" },
+      { id: "mcp", label: "Claude MCP" },
     ],
   },
   {
@@ -72,28 +76,69 @@ export const SECTIONS: readonly AllItems[] = SECTION_GROUPS.flatMap(
 
 export type SectionId = AllItems["id"];
 
+export type SectionGroup = {
+  label: string;
+  items: readonly { id: SectionId; label: string }[];
+};
+
+export function sectionLabel(
+  id: SectionId,
+  groups: readonly SectionGroup[],
+): string {
+  for (const group of groups) {
+    const item = group.items.find((i) => i.id === id);
+    if (item) return item.label;
+  }
+  return id;
+}
+
 interface SidebarProps {
   active: SectionId;
   onSelect: (id: SectionId) => void;
+  /** Web: no logo block (branding lives in WebShell). */
+  variant?: "desktop" | "web";
+  /** Extra classes (e.g. mobile drawer positioning). */
+  className?: string;
   /** Sections with unsaved changes — render a dirty dot next to each. */
   dirtySections?: Set<SectionId>;
+  /** Override groups (e.g. web hides desktop-only sections). */
+  sectionGroups?: readonly SectionGroup[] | typeof SECTION_GROUPS;
+  /** Optional footer link (web: back to gallery). */
+  footerLink?: { label: string; href: string };
 }
 
-export function Sidebar({ active, onSelect, dirtySections }: SidebarProps) {
+export function Sidebar({
+  active,
+  onSelect,
+  variant = "desktop",
+  dirtySections,
+  sectionGroups = SECTION_GROUPS,
+  footerLink,
+  className = "",
+}: SidebarProps) {
+  const isWeb = variant === "web";
+
   return (
-    <nav className="w-56 shrink-0 bg-gsd-bg border-r border-gsd-border overflow-y-auto relative z-10">
-      <div className="px-5 pt-6 pb-5 border-b border-gsd-border flex flex-col items-center">
-        <img
-          src={gsdLogo}
-          alt="GSD2"
-          className="h-11 w-auto mb-2 drop-shadow-[0_0_24px_rgba(125,207,255,0.35)]"
-        />
-        <p className="text-[10px] text-gsd-text-dim tracking-[0.2em] uppercase font-medium">
-          Config Manager
-        </p>
-      </div>
+    <nav
+      className={`w-56 shrink-0 bg-gsd-surface-solid/95 border-r border-gsd-border overflow-y-auto z-40 backdrop-blur-sm ${className}`}
+      aria-label={isWeb ? "Settings sections" : "Navigation"}
+    >
+      {isWeb ? (
+        <div className="gsd-local-chrome px-4">
+          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted">
+            Sections
+          </p>
+        </div>
+      ) : (
+        <div className="gsd-local-chrome flex min-h-[4.5rem] flex-col items-start justify-center gap-1.5 px-4">
+          <BrandMark size="md" subtitle="Pi Config" />
+          <p className="text-[9px] text-gsd-text-muted tracking-wide pl-[2.75rem]">
+            Git · Ship · Done
+          </p>
+        </div>
+      )}
       <div className="px-2 py-3">
-        {SECTION_GROUPS.map((group) => (
+        {sectionGroups.map((group) => (
           <div key={group.label} className="mb-4">
             <div className="px-3 py-1 text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted">
               {group.label}
@@ -104,11 +149,10 @@ export function Sidebar({ active, onSelect, dirtySections }: SidebarProps) {
                 return (
                   <li key={s.id}>
                     <button
+                      type="button"
                       onClick={() => onSelect(s.id)}
-                      className={`w-full text-left px-3 py-1.5 rounded-md text-sm transition-all flex items-center justify-between ${
-                        active === s.id
-                          ? "bg-gsd-accent-dim text-gsd-accent font-medium"
-                          : "text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover"
+                      className={`gsd-nav-item ${
+                        active === s.id ? "gsd-nav-item-active" : "gsd-nav-item-idle"
                       }`}
                     >
                       <span>{s.label}</span>
@@ -126,6 +170,16 @@ export function Sidebar({ active, onSelect, dirtySections }: SidebarProps) {
             </ul>
           </div>
         ))}
+        {footerLink && (
+          <div className="px-3 pt-2 mt-2 border-t border-gsd-border">
+            <a
+              href={footerLink.href}
+              className="text-xs text-gsd-accent hover:text-gsd-accent-hover"
+            >
+              {footerLink.label}
+            </a>
+          </div>
+        )}
       </div>
     </nav>
   );

@@ -1,10 +1,10 @@
-// GSD2 Config - API Keys Manager
+// GSD Pi Config - API Keys Manager
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import { useState, useEffect, useCallback } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { SectionHeader } from "../FormControls";
+import { useConfigBackend } from "../../platform/backend";
+import { btn, btnPrimary, bannerDanger } from "../../lib/uiClasses";
 
 interface KeyStatus {
   name: string;
@@ -28,25 +28,6 @@ interface KeyGroup {
 
 const KEY_GROUPS: KeyGroup[] = [
   {
-    id: "anthropic",
-    label: "Anthropic",
-    description: "Direct Claude API access",
-    keys: [
-      {
-        name: "ANTHROPIC_API_KEY",
-        label: "Anthropic API Key",
-        description: "Direct Claude API access (Opus, Sonnet, Haiku)",
-        url: "https://console.anthropic.com/settings/keys",
-      },
-      {
-        name: "ANTHROPIC_AUTH_TOKEN",
-        label: "Anthropic Auth Token",
-        description: "Alternative auth token for Anthropic API",
-        url: "https://console.anthropic.com/",
-      },
-    ],
-  },
-  {
     id: "openai",
     label: "OpenAI",
     description: "GPT-5, GPT-4, o-series",
@@ -62,6 +43,25 @@ const KEY_GROUPS: KeyGroup[] = [
         label: "OpenAI Organization ID",
         description: "Optional org ID for billing/routing",
         url: "https://platform.openai.com/settings/organization/general",
+      },
+    ],
+  },
+  {
+    id: "anthropic",
+    label: "Anthropic",
+    description: "Anthropic API (Opus, Sonnet, Haiku)",
+    keys: [
+      {
+        name: "ANTHROPIC_API_KEY",
+        label: "Anthropic API Key",
+        description: "Direct Anthropic API access",
+        url: "https://console.anthropic.com/settings/keys",
+      },
+      {
+        name: "ANTHROPIC_AUTH_TOKEN",
+        label: "Anthropic Auth Token",
+        description: "Alternative auth token for Anthropic API",
+        url: "https://console.anthropic.com/",
       },
     ],
   },
@@ -280,31 +280,13 @@ interface OAuthProvider {
 
 const OAUTH_PROVIDERS: OAuthProvider[] = [
   {
-    id: "claude-code",
-    label: "Claude Code CLI",
-    description: "Anthropic's official CLI. Uses Anthropic subscription auth — zero API cost.",
-    binary: "claude",
-    installCmd: "npm install -g @anthropic-ai/claude-code",
-    authCmd: "claude /login",
-    docsUrl: "https://docs.claude.com/en/docs/claude-code",
-  },
-  {
     id: "gemini-cli",
     label: "Gemini CLI",
-    description: "Google's Gemini CLI with subscription auth.",
+    description: "Google Gemini CLI with subscription auth.",
     binary: "gemini",
     installCmd: "npm install -g @google/gemini-cli",
     authCmd: "gemini auth",
     docsUrl: "https://github.com/google-gemini/gemini-cli",
-  },
-  {
-    id: "gcloud",
-    label: "Google Cloud (Vertex AI)",
-    description: "Use gcloud application-default login for Vertex AI (Claude & Gemini via GCP).",
-    binary: "gcloud",
-    installCmd: "brew install --cask google-cloud-sdk",
-    authCmd: "gcloud auth application-default login",
-    docsUrl: "https://cloud.google.com/sdk/docs/install",
   },
   {
     id: "github",
@@ -315,12 +297,31 @@ const OAUTH_PROVIDERS: OAuthProvider[] = [
     authCmd: "gh auth login",
     docsUrl: "https://cli.github.com/",
   },
+  {
+    id: "gcloud",
+    label: "Google Cloud (Vertex AI)",
+    description: "gcloud application-default login for Vertex AI (multi-vendor models via GCP).",
+    binary: "gcloud",
+    installCmd: "brew install --cask google-cloud-sdk",
+    authCmd: "gcloud auth application-default login",
+    docsUrl: "https://cloud.google.com/sdk/docs/install",
+  },
+  {
+    id: "claude-code",
+    label: "Claude Code CLI",
+    description: "Anthropic CLI with subscription auth (no per-token API billing when using subscription).",
+    binary: "claude",
+    installCmd: "npm install -g @anthropic-ai/claude-code",
+    authCmd: "claude /login",
+    docsUrl: "https://docs.claude.com/en/docs/claude-code",
+  },
 ];
 
 // Flatten all key names for bulk status fetch
 const ALL_KEY_NAMES = KEY_GROUPS.flatMap((g) => g.keys.map((k) => k.name));
 
 export function ApiKeysSection() {
+  const backend = useConfigBackend();
   const [statuses, setStatuses] = useState<Record<string, KeyStatus>>({});
   const [editing, setEditing] = useState<Record<string, string>>({});
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
@@ -332,7 +333,7 @@ export function ApiKeysSection() {
   const refreshStatuses = useCallback(async () => {
     try {
       setError("");
-      const list = await invoke<KeyStatus[]>("list_key_statuses", { names: ALL_KEY_NAMES });
+      const list = await backend.listKeyStatuses(ALL_KEY_NAMES);
       const map: Record<string, KeyStatus> = {};
       for (const s of list) map[s.name] = s;
       setStatuses(map);
@@ -342,23 +343,26 @@ export function ApiKeysSection() {
   }, []);
 
   const refreshCliStatus = useCallback(async () => {
+    if (!backend.canCheckCli()) {
+      setCliStatus({});
+      return;
+    }
     const entries: Record<string, boolean> = {};
     for (const p of OAUTH_PROVIDERS) {
       try {
-        const ok = await invoke<boolean>("check_cli_installed", { binary: p.binary });
-        entries[p.id] = ok;
+        entries[p.id] = await backend.checkCliInstalled(p.binary);
       } catch {
         entries[p.id] = false;
       }
     }
     setCliStatus(entries);
-  }, []);
+  }, [backend]);
 
   useEffect(() => { refreshStatuses(); refreshCliStatus(); }, [refreshStatuses, refreshCliStatus]);
 
   const startEdit = async (name: string) => {
     try {
-      const v = await invoke<string | null>("get_key", { name });
+      const v = await backend.getKey(name);
       setEditing((p) => ({ ...p, [name]: v ?? "" }));
     } catch (e) {
       setError(String(e));
@@ -369,9 +373,9 @@ export function ApiKeysSection() {
     try {
       const value = editing[name] ?? "";
       if (value) {
-        await invoke("set_key", { name, value });
+        await backend.setKey(name, value);
       } else {
-        await invoke("delete_key", { name });
+        await backend.deleteKey(name);
       }
       setEditing((p) => {
         const next = { ...p };
@@ -395,7 +399,7 @@ export function ApiKeysSection() {
   const clearKey = async (name: string) => {
     if (!confirm(`Delete key ${name}?`)) return;
     try {
-      await invoke("delete_key", { name });
+      await backend.deleteKey(name);
       setEditing((p) => {
         const next = { ...p };
         delete next[name];
@@ -413,7 +417,7 @@ export function ApiKeysSection() {
 
   const exportEnv = async () => {
     try {
-      const path = await invoke<string>("export_env_file", { names: ALL_KEY_NAMES });
+      const path = await backend.exportEnvFile(ALL_KEY_NAMES);
       setExportMsg(`Exported to ${path}`);
       setTimeout(() => setExportMsg(""), 4000);
     } catch (e) {
@@ -423,7 +427,7 @@ export function ApiKeysSection() {
 
   const openExternal = async (url: string) => {
     try {
-      await openUrl(url);
+      await backend.openUrl(url);
     } catch (e) {
       setError(String(e));
     }
@@ -451,25 +455,28 @@ export function ApiKeysSection() {
       <div className="flex items-start justify-between gap-4 mb-4">
         <SectionHeader
           title="API Keys & Auth"
-          description="Store provider keys securely in the macOS Keychain. Export to ~/.gsd/env.sh to source into your shell."
+          description={
+            backend.isWeb()
+              ? "Store keys in this browser workspace (export env.sh to copy to your machine). CLI detection requires the desktop app."
+              : "Store provider keys securely in the macOS Keychain. Export to ~/.gsd/env.sh to source into your shell."
+          }
         />
         <div className="flex items-center gap-2 shrink-0">
           <span className="text-xs text-gsd-text-dim">
             {setCount} / {ALL_KEY_NAMES.length} set
           </span>
-          <button
-            onClick={exportEnv}
-            className="px-3 py-1.5 text-xs rounded-md bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover transition-colors"
-          >
+          <button type="button" onClick={exportEnv} className={btnPrimary}>
             Export env.sh
           </button>
         </div>
       </div>
 
       {error && (
-        <div className="mb-3 px-3 py-2 bg-gsd-danger/10 border border-gsd-danger/30 text-gsd-danger text-xs rounded flex items-center justify-between">
+        <div className={`${bannerDanger} mb-3 flex items-center justify-between text-xs`}>
           <span>{error}</span>
-          <button onClick={() => setError("")} className="ml-2 hover:text-red-300">dismiss</button>
+          <button type="button" onClick={() => setError("")} className={`${btn} ml-2`}>
+            Dismiss
+          </button>
         </div>
       )}
       {exportMsg && (
@@ -491,6 +498,12 @@ export function ApiKeysSection() {
         <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted mb-2 px-1">
           OAuth / CLI Auth (subscription-based)
         </h3>
+        {!backend.canCheckCli() && (
+          <p className="text-[11px] text-gsd-text-dim mb-2 px-1">
+            Install and run these CLIs on your machine — the web app cannot detect them. Use the
+            desktop app for live CLI status.
+          </p>
+        )}
         <div className="grid grid-cols-2 gap-3">
           {OAUTH_PROVIDERS.map((p) => {
             const installed = cliStatus[p.id];

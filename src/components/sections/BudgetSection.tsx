@@ -1,4 +1,4 @@
-// GSD Setup - Budget & Cost Settings Section
+// GSD Pi Config - Budget & Cost Settings Section
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { GSDPreferences, BudgetEnforcementMode } from "../../types";
@@ -45,6 +45,15 @@ export function BudgetSection({ prefs, onChange }: Props) {
           min={0}
           max={100}
           placeholder="0"
+        />
+      </Field>
+
+      <Field path="per_unit_cost_cap_usd" value={prefs.per_unit_cost_cap_usd} label="Per-Unit Cost Cap ($)" description="Maximum USD per dispatched unit.">
+        <NumberField
+          value={prefs.per_unit_cost_cap_usd}
+          onChange={(v) => set("per_unit_cost_cap_usd", v)}
+          min={0}
+          placeholder="5"
         />
       </Field>
     </div>
