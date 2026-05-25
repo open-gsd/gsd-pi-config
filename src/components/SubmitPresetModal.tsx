@@ -13,8 +13,21 @@ import { readWebDraftMeta } from "../platform/web";
 import type { GSDPreferences } from "../types";
 import { btn, btnPrimary, heading, modalPanel, prose } from "../lib/uiClasses";
 
-const GITHUB_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID ?? "";
+const BUILD_TIME_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID ?? "";
 const SUBMIT_API_URL = import.meta.env.VITE_SUBMIT_PRESET_API_URL ?? "/api/submit-preset";
+const OAUTH_CONFIG_URL = "/api/oauth-config";
+
+async function resolveGitHubClientId(): Promise<string> {
+  if (BUILD_TIME_CLIENT_ID) return BUILD_TIME_CLIENT_ID;
+  try {
+    const res = await fetch(OAUTH_CONFIG_URL);
+    if (!res.ok) return "";
+    const data = (await res.json()) as { clientId?: string };
+    return data.clientId ?? "";
+  } catch {
+    return "";
+  }
+}
 
 interface SubmitPresetModalProps {
   open: boolean;
@@ -55,8 +68,9 @@ export function SubmitPresetModal({ open, prefs, onClose }: SubmitPresetModalPro
 
   if (!open) return null;
 
-  const startOAuth = () => {
-    if (!GITHUB_CLIENT_ID) {
+  const startOAuth = async () => {
+    const githubClientId = await resolveGitHubClientId();
+    if (!githubClientId) {
       setError("GitHub OAuth is not configured. Use the manual PR link below.");
       return;
     }
@@ -80,7 +94,7 @@ export function SubmitPresetModal({ open, prefs, onClose }: SubmitPresetModalPro
       }),
     );
     const params = new URLSearchParams({
-      client_id: GITHUB_CLIENT_ID,
+      client_id: githubClientId,
       redirect_uri: redirect,
       scope: "public_repo",
       state,
@@ -161,7 +175,7 @@ export function SubmitPresetModal({ open, prefs, onClose }: SubmitPresetModalPro
               <button
                 type="button"
                 disabled={busy}
-                onClick={() => startOAuth()}
+                onClick={() => void startOAuth()}
                 className={btnPrimary}
               >
                 {busy ? "Submitting…" : "Sign in with GitHub"}
