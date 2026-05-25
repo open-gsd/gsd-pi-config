@@ -1,0 +1,28 @@
+# GSD Pi Config — production deploy to Vercel (fallback when Git webhooks are missing)
+# Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
+#
+# Requires repo secret VERCEL_TOKEN (https://vercel.com/account/settings/tokens).
+# Remove this workflow once Project → Git shows open-gsd/gsd-pi-config and GitHub
+# repo Settings → Webhooks lists a Vercel hook.
+
+name: Vercel Production
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: team_3mmW7cTDUx6x6GkRV9FNKYMK
+          vercel-project-id: prj_j4ONUfHcPo1eTTmSc5zsxrLpSDLX
+          vercel-args: "--prod"
