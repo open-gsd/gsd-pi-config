@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Background gradient: deep black with subtle cyan tint at top -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a1420"/>
+      <stop offset="40%" stop-color="#000000"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+
+    <!-- Cyan glow filter -->
+    <filter id="cyanGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="28" result="blur"/>
+      <feFlood flood-color="#7dcfff" flood-opacity="0.6"/>
+      <feComposite in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Inner stroke highlight -->
+    <linearGradient id="strokeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(125, 207, 255, 0.3)"/>
+      <stop offset="100%" stop-color="rgba(125, 207, 255, 0.05)"/>
+    </linearGradient>
+
+    <style>
+      .wordmark {
+        font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Menlo', monospace;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        fill: #7dcfff;
+      }
+    </style>
+  </defs>
+
+  <!-- Rounded square background (macOS convention ~22% corner radius) -->
+  <rect x="0" y="0" width="1024" height="1024" rx="224" ry="224" fill="url(#bgGrad)"/>
+
+  <!-- Inner stroke for depth -->
+  <rect x="4" y="4" width="1016" height="1016" rx="220" ry="220"
+        fill="none" stroke="url(#strokeGrad)" stroke-width="2"/>
+
+  <!-- Giant "2" with glow, perfectly centered -->
+  <g filter="url(#cyanGlow)">
+    <text class="wordmark" x="512" y="720" font-size="760" text-anchor="middle">
+      2
+    </text>
+  </g>
+</svg>

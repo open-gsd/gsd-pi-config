@@ -966,7 +966,18 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
-        .setup(|app| {
+        .plugin(tauri_plugin_localhost::Builder::new(5173).build())
+        .setup(move |app| {
+            #[cfg(not(dev))]
+            {
+                let url: tauri::Url = "http://localhost:5173".parse().unwrap();
+                tauri::WebviewWindowBuilder::new(app, "main".to_string(), tauri::WebviewUrl::External(url))
+                    .title("GSD Pi Config")
+                    .inner_size(1100.0, 750.0)
+                    .min_inner_size(800.0, 600.0)
+                    .resizable(true)
+                    .build()?;
+            }
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()
