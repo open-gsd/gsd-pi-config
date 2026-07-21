@@ -8,12 +8,12 @@
  * Token values: official shadcn neutral OKLCH scaffold (baseColor: neutral).
  * Do NOT map legacy GSD cyan accent into --primary this phase (THM-01 clean defaults).
  *
- * `@import "shadcn/tailwind.css"` deferred to Plan 03 after the `shadcn` package
- * legitimacy gate — structure below is ready for that single-line addition.
+ * `@import "shadcn/tailwind.css"` added after Plan 03 package legitimacy gate.
  */
 
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 

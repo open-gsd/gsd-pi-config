@@ -3,7 +3,7 @@
 
 /// <reference types="node" />
 
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -11,6 +11,12 @@ import { describe, expect, it } from "vitest";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const webCss = readFileSync(path.join(root, "src/index.web.css"), "utf8");
 const desktopCss = readFileSync(path.join(root, "src/index.desktop.css"), "utf8");
+
+/** FND-03: only Button (plus its import-only test) under components/ui. */
+const UI_ALLOWLIST = new Set([
+  "button.tsx",
+  "button.import.test.ts",
+]);
 
 /** Required THM-01 semantic token names on the web entry. */
 const REQUIRED_WEB_TOKENS = [
@@ -51,6 +57,10 @@ describe("web CSS semantic tokens (THM-01)", () => {
 
   it("imports tw-animate-css", () => {
     expect(webCss).toMatch(/@import\s+["']tw-animate-css["']/);
+  });
+
+  it("imports shadcn/tailwind.css after legitimacy gate", () => {
+    expect(webCss).toMatch(/@import\s+["']shadcn\/tailwind\.css["']/);
   });
 
   it("maps tokens through @theme inline", () => {
@@ -138,5 +148,46 @@ describe("components.json lock (FND-02)", () => {
       hooks: "@/hooks",
     });
     expect(componentsJson.iconLibrary).toBe("lucide");
+  });
+});
+
+describe("ui primitive allowlist (FND-03)", () => {
+  const uiDir = path.join(root, "src/components/ui");
+
+  it("only contains Button walking-skeleton files", () => {
+    expect(existsSync(uiDir)).toBe(true);
+    const basenames = readdirSync(uiDir).filter((name) => !name.startsWith("."));
+    for (const name of basenames) {
+      expect(UI_ALLOWLIST.has(name), `unexpected ui file: ${name}`).toBe(true);
+    }
+    expect(basenames).toContain("button.tsx");
+  });
+
+  it("does not dump card/dialog/input/select/command registry files", () => {
+    const basenames = existsSync(uiDir)
+      ? readdirSync(uiDir).map((n) => n.toLowerCase())
+      : [];
+    for (const forbidden of ["card", "dialog", "input", "select", "command"]) {
+      expect(
+        basenames.some((n) => n === `${forbidden}.tsx` || n.startsWith(`${forbidden}.`)),
+        `forbidden primitive present: ${forbidden}`,
+      ).toBe(false);
+    }
+  });
+
+  it("button source declares required CVA variants", () => {
+    const buttonSrc = readFileSync(path.join(uiDir, "button.tsx"), "utf8");
+    for (const variant of [
+      "default",
+      "secondary",
+      "destructive",
+      "outline",
+      "ghost",
+      "link",
+    ]) {
+      expect(buttonSrc).toMatch(new RegExp(`${variant}\\s*:`));
+    }
+    expect(buttonSrc).toContain("@base-ui/react");
+    expect(buttonSrc).not.toMatch(/@radix-ui\//);
   });
 });
