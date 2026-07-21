@@ -26,12 +26,12 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
   2. Web loads shadcn semantic tokens (background, foreground, primary, muted, destructive, border, ring) with a clean neutral default look; desktop build still runs with current non-shadcn styling
   3. Auto / Dark / Light theme still works (storage + system preference + no-flash boot) and GSD theme attributes stay in sync with shadcn dark mode (e.g. `data-theme` + `.dark`)
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans executed
 Plans:
 
 - [x] 01-01-PLAN.md — Wave 0 tests, `@/*` + `cn`, theme dual-write (`data-theme` + `.dark`)
 - [x] 01-02-PLAN.md — Platform CSS split, web semantic tokens, isolation tests + dual builds
-- [ ] 01-03-PLAN.md — Lock `components.json`, legitimacy gate, Button-only skeleton, phase smoke
+- [x] 01-03-PLAN.md — Lock `components.json`, legitimacy gate, Button-only skeleton, phase smoke
 
 **UI hint**: yes
 
@@ -105,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation, Isolation & Theme Bridge | 2/3 | In Progress|  |
+| 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
 | 2. Web Chrome & Standalone Pages | 0/TBD | Not started | - |
 | 3. Modals, Palette & Overlays | 0/TBD | Not started | - |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |

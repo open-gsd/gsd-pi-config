@@ -9,8 +9,8 @@
 ### Foundation
 
 - [x] **FND-01**: Web build has shadcn/ui initialized (CLI config, `@/*` aliases, `cn` util, baseline primitives under `src/components/ui/`)
-- [ ] **FND-02**: shadcn is configured for this Vite + React + Tailwind 4 stack (`components.json` locked: CSS variables, neutral base, `rsc: false`, single primitive base)
-- [ ] **FND-03**: Only primitives needed by web routes/chrome/forms are added (no full-registry dump)
+- [x] **FND-02**: shadcn is configured for this Vite + React + Tailwind 4 stack (`components.json` locked: CSS variables, neutral base, `rsc: false`, single primitive base)
+- [x] **FND-03**: Only primitives needed by web routes/chrome/forms are added (no full-registry dump)
 - [x] **FND-04**: Platform CSS is split so web loads shadcn tokens/base styles and desktop keeps legacy visual styling this milestone
 
 ### Theme
@@ -81,8 +81,8 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | FND-01 | Phase 1 | Complete |
-| FND-02 | Phase 1 | Pending |
-| FND-03 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Complete |
+| FND-03 | Phase 1 | Complete |
 | FND-04 | Phase 1 | Complete |
 | THM-01 | Phase 1 | Complete |
 | THM-02 | Phase 1 | Complete |
