@@ -15,7 +15,7 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
 ## Phase Details
 
 ### Phase 1: Foundation, Isolation & Theme Bridge
-**Goal**: Web build has a locked shadcn foundation and theme bridge; desktop keeps legacy visuals
+**Goal:** As a dual-platform GSD Pi Config maintainer, I want the web build on a locked shadcn foundation with dual-write theme isolation from desktop, so that web restyles can use shadcn tokens without changing desktop visuals or product behavior.
 **Mode:** mvp
 **Depends on**: Nothing (first phase)
 **Requirements**: FND-01, FND-02, FND-03, FND-04, THM-01, THM-02, THM-03, ISO-01
@@ -23,7 +23,11 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
   1. Web build has shadcn initialized (`components.json` locked for Vite + React + Tailwind 4, `@/*` aliases, `cn` util, baseline primitives under `src/components/ui/` — only primitives needed, not a full registry dump)
   2. Web loads shadcn semantic tokens (background, foreground, primary, muted, destructive, border, ring) with a clean neutral default look; desktop build still runs with current non-shadcn styling
   3. Auto / Dark / Light theme still works (storage + system preference + no-flash boot) and GSD theme attributes stay in sync with shadcn dark mode (e.g. `data-theme` + `.dark`)
-**Plans**: TBD
+**Plans:** 3 plans
+Plans:
+- [ ] 01-01-PLAN.md — Wave 0 tests, `@/*` + `cn`, theme dual-write (`data-theme` + `.dark`)
+- [ ] 01-02-PLAN.md — Platform CSS split, web semantic tokens, isolation tests + dual builds
+- [ ] 01-03-PLAN.md — Lock `components.json`, legitimacy gate, Button-only skeleton, phase smoke
 **UI hint**: yes
 
 ### Phase 2: Web Chrome & Standalone Pages
@@ -84,7 +88,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation, Isolation & Theme Bridge | 0/TBD | Not started | - |
+| 1. Foundation, Isolation & Theme Bridge | 0/3 | Not started | - |
 | 2. Web Chrome & Standalone Pages | 0/TBD | Not started | - |
 | 3. Modals, Palette & Overlays | 0/TBD | Not started | - |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |
