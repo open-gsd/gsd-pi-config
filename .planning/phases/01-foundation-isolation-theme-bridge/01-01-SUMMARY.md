@@ -112,7 +112,7 @@ Each task was committed atomically:
 2. **Task 2: Path aliases + cn util (FND-01 partial)** - `2e97574` (feat)
 3. **Task 3: Theme dual-write data-theme + .dark (THM-02, THM-03)** - `5319e27` (feat)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `e788550` (docs: complete plan)
 
 _Note: TDD tasks used RED → GREEN commits as specified._
 
