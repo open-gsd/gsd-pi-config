@@ -602,18 +602,16 @@ Ordered plan the planner should turn into tasks:
 
 **If empty:** N/A — table above lists residual assumptions for planner confirmation.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **CSS split mechanism: env branch vs Vite alias?**  
-   - What we know: both can work; alias is FOUC-safer.  
-   - What's unclear: which pattern this team prefers in `vite.config.ts`.  
-   - Recommendation: **`@platform-css` resolve.alias** gated by `isWeb` + static `import "@platform-css"` in `main.tsx`.
+1. **CSS split mechanism: env branch vs Vite alias?** — **RESOLVED**  
+   - Decision: **`@platform-css` resolve.alias** gated by `VITE_PLATFORM` / `isWeb` + static `import "@platform-css"` in `main.tsx` (FOUC-safe). Implemented in plan `01-02`.
 
-2. **Visible Button smoke vs import-only?**  
-   - Recommendation: import-only + unit/build gates for Phase 1; Phase 2 mounts Button in WebShell.
+2. **Visible Button smoke vs import-only?** — **RESOLVED**  
+   - Decision: **import-only** Button (+ unit/build gates) for Phase 1; no product mount / no `gsd-btn` replacement. Temporary smoke only if needed with label `shadcn Button proof`. Phase 2 mounts Button in WebShell. Implemented in plan `01-03` + UI-SPEC.
 
-3. **Keep `src/index.css` as shim?**  
-   - Recommendation: remove direct use; leave a short comment file or delete after split to avoid accidental dual imports.
+3. **Keep `src/index.css` as shim?** — **RESOLVED**  
+   - Decision: **delete or shim** after split so nothing imports legacy shared entry dual-loading both platforms; desktop content lives in `index.desktop.css`, web in `index.web.css`. Implemented in plan `01-02`.
 
 ## Environment Availability
 
