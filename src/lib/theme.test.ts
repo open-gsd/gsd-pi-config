@@ -46,7 +46,7 @@ function installMatchMedia(prefersLight: boolean) {
     addListener: vi.fn(),
     removeListener: vi.fn(),
   }));
-  (globalThis as { window?: { matchMedia: typeof matchMedia } }).window = {
+  (globalThis as unknown as { window?: { matchMedia: typeof matchMedia } }).window = {
     matchMedia,
   };
   return matchMedia;

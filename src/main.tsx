@@ -3,7 +3,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "@platform-css";
 import { migrateLegacyStorageKeys } from "./lib/storageMigration";
 import { bootstrapTheme } from "./lib/theme";
 

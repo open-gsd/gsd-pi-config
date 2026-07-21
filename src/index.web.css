@@ -1,0 +1,17 @@
+/* GSD Pi Config - Web platform styles (shadcn semantic tokens) */
+/* Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net> */
+
+@import "tailwindcss";
+
+/* Task 2 fills: tw-animate-css, neutral OKLCH tokens, @custom-variant dark,
+ * @theme inline semantic bindings, and @layer base body rules.
+ * Do not import shadcn/tailwind.css until Plan 03 installs the package.
+ * Do not copy legacy global input/select/textarea form chrome here. */
+
+body {
+  margin: 0;
+  font-family: "Geist", "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}

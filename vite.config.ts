@@ -22,6 +22,11 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
+        // FOUC-safe static CSS entry: web → shadcn tokens, desktop → legacy gsd-*
+        "@platform-css": path.resolve(
+          __dirname,
+          isWeb ? "./src/index.web.css" : "./src/index.desktop.css",
+        ),
       },
     },
     build: {
