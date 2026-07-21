@@ -94,3 +94,49 @@ describe("desktop CSS isolation (ISO-01 / FND-04)", () => {
     expect(desktopCss).toMatch(/(?:^|\n)\s*textarea\s*\{/);
   });
 });
+
+describe("components.json lock (FND-02)", () => {
+  const componentsJson = JSON.parse(
+    readFileSync(path.join(root, "components.json"), "utf8"),
+  ) as {
+    style: string;
+    rsc: boolean;
+    tsx: boolean;
+    iconLibrary: string;
+    tailwind: {
+      config: string;
+      css: string;
+      baseColor: string;
+      cssVariables: boolean;
+      prefix: string;
+    };
+    aliases: Record<string, string>;
+  };
+
+  it("locks irreversible style/baseColor/cssVariables/rsc fields", () => {
+    expect(componentsJson.style).toBe("base-nova");
+    expect(componentsJson.rsc).toBe(false);
+    expect(componentsJson.tsx).toBe(true);
+    expect(componentsJson.tailwind.baseColor).toBe("neutral");
+    expect(componentsJson.tailwind.cssVariables).toBe(true);
+  });
+
+  it("points CLI CSS at web entry only with blank TW4 config", () => {
+    expect(componentsJson.tailwind.css).toBe("src/index.web.css");
+    expect(componentsJson.tailwind.config).toBe("");
+    expect(componentsJson.tailwind.prefix).toBe("");
+    expect(componentsJson.tailwind.css).not.toContain("desktop");
+    expect(componentsJson.tailwind.css).not.toBe("src/index.css");
+  });
+
+  it("maps aliases to @/* paths matching tsconfig", () => {
+    expect(componentsJson.aliases).toEqual({
+      components: "@/components",
+      utils: "@/lib/utils",
+      ui: "@/components/ui",
+      lib: "@/lib",
+      hooks: "@/hooks",
+    });
+    expect(componentsJson.iconLibrary).toBe("lucide");
+  });
+});
