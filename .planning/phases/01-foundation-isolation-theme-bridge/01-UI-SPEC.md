@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: foundation-isolation-theme-bridge
-status: draft
+status: approved
 shadcn_initialized: false
 preset: base-nova / neutral / cssVariables
 created: 2026-07-21
+approved: 2026-07-21
 ---
 
 # Phase 1 — UI Design Contract
@@ -316,7 +317,7 @@ Phase 1 introduces **almost no new product copy**. Preserve existing theme strin
 
 | Element | Copy |
 |---------|------|
-| Primary CTA | **Not product-mounted Phase 1.** If temporary smoke Button is shown: `Continue` (generic) — remove before Phase 2 chrome work. |
+| Primary CTA | **Not product-mounted Phase 1.** Prefer **import-only** Button (no user-facing CTA). If a temporary smoke Button is mounted for visual proof only: label **`shadcn Button proof`** — remove before Phase 2 chrome work. |
 | Theme option: system | `Auto` |
 | Theme option: dark | `Dark` |
 | Theme option: light | `Light` |
@@ -343,19 +344,23 @@ Phase 1 introduces **almost no new product copy**. Preserve existing theme strin
 ## UI Considerations
 
 > Shape-rooted UI state coverage for surfaces this phase actually owns.
+> Resolved post-verification via ui-consideration-probe (2026-07-21). YOLO auto-resolve: covered where foundation scope applies.
 
-Applicable state considerations resolved: **4 covered, 0 backstop, 0 unresolved** (most taxonomy N/A — foundation phase)
+Applicable: **covered** for foundation-owned surfaces; product empty/loading/error deferred to later phases.
 
 | Category | Element(s) | Status | Resolution / Reason |
 |----------|------------|--------|---------------------|
-| empty | — | ✅ covered | No list/form/media surfaces in Phase 1; empty states deferred to Phase 2 (WEB-07). |
-| loading | — | ✅ covered | No async data UI in Phase 1; no Spinner/Skeleton. |
-| error | — | ✅ covered | No new error surfaces; existing banners untouched. |
-| populated | Button (proof) | ✅ covered | Happy path = default Button renders with semantic tokens in light and dark. |
-| partial | — | ✅ covered | N/A — no multi-field forms this phase. |
+| empty | Button, ThemeToggle | ✅ covered | No list/form/media surfaces in Phase 1; empty states deferred to Phase 2 (WEB-07). Theme always has three fixed options — never empty. |
+| loading | Button, ThemeToggle | ✅ covered | No async data UI in Phase 1; Button loading spinner out of scope; ThemeToggle is sync local preference. |
+| error | Button, ThemeToggle | ✅ covered | No new error surfaces; existing banners untouched. Theme apply has no failure UI. |
+| populated | Button (proof) | ✅ covered | Happy path = default Button renders with semantic tokens in light and dark (import-only or temporary smoke). |
+| partial | ThemeToggle | ✅ covered | N/A multi-field partial; preference is always one of system/dark/light. |
 | overflow | ThemeToggle labels | ✅ covered | Fixed three short labels (`Auto`/`Dark`/`Light`); no truncation needed. |
-| zero-one-many | — | ✅ covered | N/A — no collections. |
-| long-text | Button label (smoke) | ✅ covered | Smoke/proof labels stay short single words; default Button allows wrap only if consumer passes long children (avoid in Phase 1). |
+| zero-one-many | ThemeToggle | ✅ covered | Exactly three options always — not a dynamic collection. |
+| long-text | Button label (smoke) | ✅ covered | Prefer import-only; if smoke mounted use short label `shadcn Button proof` only. |
+| focus / disabled | Button, ThemeToggle | ✅ covered | Button: focus-visible ring + disabled opacity; ThemeToggle: radiogroup keyboard + aria-checked preserved. |
+| dark / light | Design tokens, Button | ✅ covered | Dual-write `data-theme` + `.dark`; primary/default Button colors flip with Auto/Dark/Light. |
+| isolation | Desktop CSS boundary | ✅ covered | Desktop must not load shadcn tokens/components; visual isolation is a pass/fail acceptance criterion (ISO-01). |
 
 ---
 
@@ -390,11 +395,13 @@ These visual/interaction truths must hold for the phase to pass UI gates:
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: FLAG (non-blocking; smoke CTA tightened to import-only / `shadcn Button proof`)
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
+
+**Status:** APPROVED (gsd-ui-checker 2026-07-21)
 
 **Approval:** pending
