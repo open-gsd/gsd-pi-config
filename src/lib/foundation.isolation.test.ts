@@ -72,11 +72,26 @@ describe("web CSS semantic tokens (THM-01)", () => {
   it("does not map GSD cyan into --primary", () => {
     // Official neutral scaffold uses OKLCH, never #22d3ee as primary
     expect(webCss).not.toMatch(/--primary\s*:\s*#22d3ee/i);
-    expect(webCss).not.toContain("--gsd-accent");
+    // Brand cyan may live on --bridge-accent / --color-gsd-accent only (not --primary)
   });
 
-  it("does not use legacy gsd-bg as the primary token system", () => {
-    expect(webCss).not.toContain("--gsd-bg");
+  it("keeps shadcn as the primary token system (no bare --gsd-* primary vars)", () => {
+    // Primary system remains --background / --foreground / --primary
+    expect(webCss).toMatch(/--background\s*:/);
+    expect(webCss).toMatch(/--primary\s*:/);
+    // Forbid bare legacy primary-system declarations (allow --color-gsd-* bridge only)
+    expect(webCss).not.toMatch(/(?:^|[^-\w])--gsd-bg\s*:/m);
+    expect(webCss).not.toMatch(/(?:^|[^-\w])--gsd-accent\s*:/m);
+  });
+
+  it("bridges transitional product color utilities + button chrome until Phase 2", () => {
+    // uiClasses / WebShell still use gsd-* Tailwind colors and .gsd-btn until restyle
+    expect(webCss).toMatch(/--color-gsd-bg\s*:/);
+    expect(webCss).toMatch(/--color-gsd-accent\s*:/);
+    expect(webCss).toMatch(/--bridge-accent\s*:/);
+    expect(webCss).toContain(".gsd-btn");
+    expect(webCss).toContain(".gsd-btn-segment");
+    expect(webCss).toContain(".gsd-btn-primary");
   });
 
   it("does not copy legacy form tag chrome selectors", () => {
