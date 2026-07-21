@@ -4,16 +4,17 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 1
 current_phase_name: Foundation, Isolation & Theme Bridge
-status: ready_to_execute
-stopped_at: Phase 1 plans verified — ready to execute
-last_updated: "2026-07-21T23:06:37.506Z"
+status: executing
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-07-21T23:13:06.674Z"
 last_activity: 2026-07-21
-last_activity_desc: Roadmap created for v1.0 web-only shadcn restyle
+last_activity_desc: Phase 1 execution started
 progress:
-  total_phases: 1
+  total_phases: 5
   completed_phases: 0
   total_plans: 3
-  completed_plans: 0
+  completed_plans: 1
+  percent: 0
 ---
 
 # Project State
@@ -27,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 
 ## Current Position
 
-Phase: 1 of 5 (Foundation, Isolation & Theme Bridge)
-Plan: 0 of 3 in current phase
-Status: Plans verified — ready to execute
-Last activity: 2026-07-21 — Phase 1 plans verified (3 plans, walking skeleton)
+Phase: 1 (Foundation, Isolation & Theme Bridge) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
+Last activity: 2026-07-21 — Phase 1 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -54,6 +55,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01 P01 | 1min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -66,6 +68,8 @@ Recent decisions affecting current work:
 - Presentation isolation via platform CSS + form adapters (not forking ConfigApp)
 - Clean shadcn defaults (neutral); no custom brand system in v1
 - Research-backed phase order: foundation → web leaves → overlays → forms/editor → gates
+- [Phase ?]: Dual-write applyTheme for data-theme + .dark; no next-themes
+- [Phase ?]: cn via clsx+tailwind-merge; @/* alias in tsconfig and Vite
 
 ### Pending Todos
 
@@ -87,6 +91,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T23:06:37.499Z
-Stopped at: Phase 1 plans verified — ready to execute
-Resume file: .planning/phases/01-foundation-isolation-theme-bridge/01-01-PLAN.md
+Last session: 2026-07-21T23:13:06.667Z
+Stopped at: Completed 01-01-PLAN.md
+Resume file: None
