@@ -1,6 +1,8 @@
 // GSD Pi Config - Platform CSS isolation + web semantic token gates
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
+/// <reference types="node" />
+
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
