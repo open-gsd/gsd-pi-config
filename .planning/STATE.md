@@ -5,16 +5,15 @@ milestone_name: milestone
 current_phase: 1
 current_phase_name: Foundation, Isolation & Theme Bridge
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-07-21T23:13:06.674Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-07-21T23:18:52.370Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 1 execution started
 progress:
-  total_phases: 5
+  total_phases: 1
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
-  percent: 0
+  completed_plans: 2
 ---
 
 # Project State
@@ -29,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 1 (Foundation, Isolation & Theme Bridge) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-07-21 — Phase 1 execution started
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -56,6 +55,11 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01 P01 | 1min | 3 tasks | 8 files |
+**Per-Plan Metrics:**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| Phase 01 P02 | 4min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -70,6 +74,10 @@ Recent decisions affecting current work:
 - Research-backed phase order: foundation → web leaves → overlays → forms/editor → gates
 - [Phase ?]: Dual-write applyTheme for data-theme + .dark; no next-themes
 - [Phase ?]: cn via clsx+tailwind-merge; @/* alias in tsconfig and Vite
+- [Phase ?]: Prefer @platform-css static alias over async CSS import (FOUC-safe)
+- [Phase ?]: Delete shared index.css after split — no dual-loading shim
+- [Phase ?]: Defer @import shadcn/tailwind.css to Plan 03 until shadcn package legitimacy gate
+- [Phase ?]: Clean neutral OKLCH primary — no GSD cyan mapped into --primary
 
 ### Pending Todos
 
@@ -91,6 +99,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T23:13:06.667Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-07-21T23:18:52.363Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None

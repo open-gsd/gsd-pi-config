@@ -11,11 +11,11 @@
 - [x] **FND-01**: Web build has shadcn/ui initialized (CLI config, `@/*` aliases, `cn` util, baseline primitives under `src/components/ui/`)
 - [ ] **FND-02**: shadcn is configured for this Vite + React + Tailwind 4 stack (`components.json` locked: CSS variables, neutral base, `rsc: false`, single primitive base)
 - [ ] **FND-03**: Only primitives needed by web routes/chrome/forms are added (no full-registry dump)
-- [ ] **FND-04**: Platform CSS is split so web loads shadcn tokens/base styles and desktop keeps legacy visual styling this milestone
+- [x] **FND-04**: Platform CSS is split so web loads shadcn tokens/base styles and desktop keeps legacy visual styling this milestone
 
 ### Theme
 
-- [ ] **THM-01**: Semantic design tokens power web UI (background, foreground, primary, muted, destructive, border, ring) with a clean default neutral look
+- [x] **THM-01**: Semantic design tokens power web UI (background, foreground, primary, muted, destructive, border, ring) with a clean default neutral look
 - [x] **THM-02**: Existing Auto / Dark / Light theme behavior is preserved (storage + system preference + no-flash boot)
 - [x] **THM-03**: Theme bridge keeps GSD theme attributes and shadcn dark-mode class in sync (e.g. `data-theme` + `.dark`)
 - [ ] **THM-04**: Theme toggle on web uses shadcn-styled controls without changing theme semantics
@@ -45,7 +45,7 @@
 
 ### Isolation & quality
 
-- [ ] **ISO-01**: Desktop build continues to run with current (non-shadcn) visual styling for this milestone
+- [x] **ISO-01**: Desktop build continues to run with current (non-shadcn) visual styling for this milestone
 - [ ] **ISO-02**: Shared domain logic (preferences core, backends, Tauri/web APIs) stays behavior-stable — UI wiring only unless unavoidable
 - [ ] **ISO-03**: Behavior smoke gates pass on web: import/draft, edit, download workspace, share/redact path, dirty/save affordances, OAuth submit path as applicable
 - [ ] **ISO-04**: Focus/a11y parity is maintained (labels, invalid states, keyboard nav, focus rings, hit targets)
@@ -83,8 +83,8 @@
 | FND-01 | Phase 1 | Complete |
 | FND-02 | Phase 1 | Pending |
 | FND-03 | Phase 1 | Pending |
-| FND-04 | Phase 1 | Pending |
-| THM-01 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Complete |
+| THM-01 | Phase 1 | Complete |
 | THM-02 | Phase 1 | Complete |
 | THM-03 | Phase 1 | Complete |
 | THM-04 | Phase 2 | Pending |
@@ -102,7 +102,7 @@
 | OVL-01 | Phase 3 | Pending |
 | OVL-02 | Phase 3 | Pending |
 | OVL-03 | Phase 3 | Pending |
-| ISO-01 | Phase 1 | Pending |
+| ISO-01 | Phase 1 | Complete |
 | ISO-02 | Phase 5 | Pending |
 | ISO-03 | Phase 5 | Pending |
 | ISO-04 | Phase 5 | Pending |
