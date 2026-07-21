@@ -136,7 +136,7 @@ Each task was committed atomically:
 2. **Task 2: Package legitimacy gate before shadcn/lucide install** - human-approved (no code commit)
 3. **Task 3: Install deps, add Button only, dual-build proof** - `bdf6a19` (feat)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `3528226` (docs: complete plan)
 
 ## Files Created/Modified
 
