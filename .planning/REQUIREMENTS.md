@@ -80,33 +80,33 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FND-01 | — | Pending |
-| FND-02 | — | Pending |
-| FND-03 | — | Pending |
-| FND-04 | — | Pending |
-| THM-01 | — | Pending |
-| THM-02 | — | Pending |
-| THM-03 | — | Pending |
-| THM-04 | — | Pending |
-| WEB-01 | — | Pending |
-| WEB-02 | — | Pending |
-| WEB-03 | — | Pending |
-| WEB-04 | — | Pending |
-| WEB-05 | — | Pending |
-| WEB-06 | — | Pending |
-| WEB-07 | — | Pending |
-| FRM-01 | — | Pending |
-| FRM-02 | — | Pending |
-| FRM-03 | — | Pending |
-| FRM-04 | — | Pending |
-| OVL-01 | — | Pending |
-| OVL-02 | — | Pending |
-| OVL-03 | — | Pending |
-| ISO-01 | — | Pending |
-| ISO-02 | — | Pending |
-| ISO-03 | — | Pending |
-| ISO-04 | — | Pending |
-| ISO-05 | — | Pending |
+| FND-01 | Phase 1 | Pending |
+| FND-02 | Phase 1 | Pending |
+| FND-03 | Phase 1 | Pending |
+| FND-04 | Phase 1 | Pending |
+| THM-01 | Phase 1 | Pending |
+| THM-02 | Phase 1 | Pending |
+| THM-03 | Phase 1 | Pending |
+| THM-04 | Phase 2 | Pending |
+| WEB-01 | Phase 2 | Pending |
+| WEB-02 | Phase 2 | Pending |
+| WEB-03 | Phase 2 | Pending |
+| WEB-04 | Phase 4 | Pending |
+| WEB-05 | Phase 2 | Pending |
+| WEB-06 | Phase 2 | Pending |
+| WEB-07 | Phase 2 | Pending |
+| FRM-01 | Phase 4 | Pending |
+| FRM-02 | Phase 4 | Pending |
+| FRM-03 | Phase 4 | Pending |
+| FRM-04 | Phase 4 | Pending |
+| OVL-01 | Phase 3 | Pending |
+| OVL-02 | Phase 3 | Pending |
+| OVL-03 | Phase 3 | Pending |
+| ISO-01 | Phase 1 | Pending |
+| ISO-02 | Phase 5 | Pending |
+| ISO-03 | Phase 5 | Pending |
+| ISO-04 | Phase 5 | Pending |
+| ISO-05 | Phase 5 | Pending |
 
 ---
 *Requirements defined 2026-07-21 during `/gsd-new-project`. Traceability filled by roadmap.*
