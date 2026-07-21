@@ -122,7 +122,7 @@ Each task was committed atomically:
 2. **Task 2 RED: Isolation static tests** - `f534d3c` (test)
 3. **Task 2 GREEN: Web semantic tokens + tw-animate** - `a109d72` (feat)
 
-**Plan metadata:** _(pending final docs commit)_
+**Plan metadata:** `03ae001` (docs: complete plan)
 
 _Note: TDD Task 2 used RED → GREEN commit pair._
 
