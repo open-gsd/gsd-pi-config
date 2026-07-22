@@ -382,6 +382,40 @@ export function ConfigApp({ variant }: ConfigAppProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [shareContent, setShareContent] = useState("");
 
+  // D-16: single open product overlay — close all before opening one.
+  const closeAllOverlays = useCallback(() => {
+    setPaletteOpen(false);
+    setShareOpen(false);
+    setImportPrefsOpen(false);
+    setLoadPresetOpen(false);
+    setSubmitOpen(false);
+  }, []);
+
+  const openPalette = useCallback(() => {
+    closeAllOverlays();
+    setPaletteOpen(true);
+  }, [closeAllOverlays]);
+
+  const openShare = useCallback(() => {
+    closeAllOverlays();
+    setShareOpen(true);
+  }, [closeAllOverlays]);
+
+  const openImport = useCallback(() => {
+    closeAllOverlays();
+    setImportPrefsOpen(true);
+  }, [closeAllOverlays]);
+
+  const openLoad = useCallback(() => {
+    closeAllOverlays();
+    setLoadPresetOpen(true);
+  }, [closeAllOverlays]);
+
+  const openSubmit = useCallback(() => {
+    closeAllOverlays();
+    setSubmitOpen(true);
+  }, [closeAllOverlays]);
+
   const applyLoadedPreset = (
     loaded: GSDPreferences,
     meta?: { title?: string; slug?: string; description?: string },
@@ -464,7 +498,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
       setError("");
       const content = await backend.buildShareablePreset(prefs);
       setShareContent(content);
-      setShareOpen(true);
+      openShare();
     } catch (e) {
       setError(String(e));
     }
@@ -481,11 +515,11 @@ export function ConfigApp({ variant }: ConfigAppProps) {
   const shortcutCtx = useRef<{
     section: SectionId;
     setSection: (s: SectionId) => void;
-    setPaletteOpen: (v: boolean) => void;
+    openPalette: () => void;
     filePath: string;
-  }>({ section, setSection, setPaletteOpen, filePath: "" });
+  }>({ section, setSection, openPalette, filePath: "" });
   useEffect(() => {
-    shortcutCtx.current = { section, setSection, setPaletteOpen, filePath };
+    shortcutCtx.current = { section, setSection, openPalette, filePath };
   });
 
   // ⌘K palette · ⌘S save · ⌘⇧Z discard · [/] section prev/next
@@ -497,7 +531,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
       allowInInput: true,
       handler: (ev) => {
         ev.preventDefault();
-        shortcutCtx.current.setPaletteOpen(true);
+        shortcutCtx.current.openPalette();
       },
     },
     {
@@ -821,7 +855,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
               )}
               <button
                 type="button"
-                onClick={() => setImportPrefsOpen(true)}
+                onClick={openImport}
                 disabled={needsProjectSelection}
                 title="Import preferences.md and optional models.json and settings.json from your computer"
                 className={btn}
@@ -830,7 +864,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
               </button>
               <button
                 type="button"
-                onClick={() => setLoadPresetOpen(true)}
+                onClick={openLoad}
                 disabled={needsProjectSelection}
                 title="Load a preset from the gallery or a .preset.md file"
                 className={btn}
@@ -870,7 +904,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setSubmitOpen(true)}
+                    onClick={openSubmit}
                     disabled={needsProjectSelection}
                     className={btn}
                   >
@@ -966,8 +1000,8 @@ export function ConfigApp({ variant }: ConfigAppProps) {
         >
           {isWeb && !webWorkspaceReady ? (
             <WebStartPanel
-              onUpload={() => setImportPrefsOpen(true)}
-              onLoadPreset={() => setLoadPresetOpen(true)}
+              onUpload={openImport}
+              onLoadPreset={openLoad}
             />
           ) : needsProjectSelection && !isLibrarySection ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
