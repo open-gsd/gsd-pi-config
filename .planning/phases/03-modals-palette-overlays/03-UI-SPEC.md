@@ -1,9 +1,10 @@
 ---
 phase: 3
 slug: modals-palette-overlays
-status: draft
+status: approved
 shadcn_initialized: true
 preset: base-nova (neutral, cssVariables, Base UI)
+reviewed_at: 2026-07-22
 created: 2026-07-22
 ---
 
