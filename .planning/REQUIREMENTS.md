@@ -23,10 +23,10 @@
 ### Web chrome & pages
 
 - [x] **WEB-01**: Shared web chrome (header/nav/workspace strip) is restyled with shadcn components
-- [ ] **WEB-02**: Gallery route (`/gallery`) is fully restyled on shadcn (loading, empty, error, list/cards)
+- [x] **WEB-02**: Gallery route (`/gallery`) is fully restyled on shadcn (loading, empty, error, list/cards)
 - [x] **WEB-03**: Wizard route (`/new`) is fully restyled on shadcn
 - [ ] **WEB-04**: Cloud editor route (`/`) shell is fully restyled on shadcn (sidebar, toolbar, status, banners)
-- [ ] **WEB-05**: OAuth callback route (`/oauth/callback`) is fully restyled on shadcn
+- [x] **WEB-05**: OAuth callback route (`/oauth/callback`) is fully restyled on shadcn
 - [x] **WEB-06**: Consistent Button language site-wide (primary / secondary / destructive; no mixed old/new button systems on web)
 - [x] **WEB-07**: Loading, empty, and error states on restyled pages use consistent shadcn patterns
 
@@ -89,10 +89,10 @@
 | THM-03 | Phase 1 | Complete |
 | THM-04 | Phase 2 | Complete |
 | WEB-01 | Phase 2 | Complete |
-| WEB-02 | Phase 2 | Pending |
+| WEB-02 | Phase 2 | Complete |
 | WEB-03 | Phase 2 | Complete |
 | WEB-04 | Phase 4 | Pending |
-| WEB-05 | Phase 2 | Pending |
+| WEB-05 | Phase 2 | Complete |
 | WEB-06 | Phase 2 | Complete |
 | WEB-07 | Phase 2 | Complete |
 | FRM-01 | Phase 4 | Pending |
