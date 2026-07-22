@@ -3,6 +3,21 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { getField, type FieldPath } from "../lib/fields";
+import type { ProviderCatalog } from "../constants";
+import { isWebPlatform } from "@/platform";
+import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+
+/** Internal Select empty sentinel — never emitted into prefs (D-06 / RESEARCH Q1). */
+const SELECT_EMPTY_SENTINEL = "__gsd_select_empty__";
 
 interface FieldProps {
   label: string;
@@ -28,27 +43,50 @@ export function Field({ label, description, children, path, value }: FieldProps)
       ? meta.validator(value)
       : null;
 
+  const web = isWebPlatform();
+
   return (
     <div
-      className="flex flex-col gap-3 py-3 border-b border-gsd-border last:border-b-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
+      className={
+        web
+          ? cn(
+              "flex flex-col gap-3 py-3 border-b border-border last:border-b-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4",
+              error && "border-destructive/40",
+            )
+          : "flex flex-col gap-3 py-3 border-b border-gsd-border last:border-b-0 sm:flex-row sm:items-start sm:justify-between sm:gap-4"
+      }
       data-invalid={error ? "" : undefined}
       data-field-path={path}
     >
       <div className="min-w-0 flex-1">
-        <label className="inline-flex max-w-full items-center gap-1.5 text-sm font-medium text-gsd-text">
+        <label
+          className={
+            web
+              ? "inline-flex max-w-full items-center gap-1.5 text-sm font-semibold text-foreground"
+              : "inline-flex max-w-full items-center gap-1.5 text-sm font-medium text-gsd-text"
+          }
+        >
           <span className="min-w-0">{label}</span>
           {meta?.hint && (
             <span className="group relative shrink-0">
               <button
                 type="button"
                 aria-label={meta.hint}
-                className="gsd-hint-trigger relative z-[1] flex h-4 w-4 items-center justify-center rounded-full border border-gsd-border text-[9px] font-bold leading-none text-gsd-text-dim cursor-help hover:border-gsd-border-strong hover:text-gsd-text transition-[color,border-color,transform] active:scale-[0.96] focus:outline-none focus-visible:ring-0"
+                className={
+                  web
+                    ? "relative z-[1] flex h-5 w-5 items-center justify-center rounded-none border border-border text-xs font-semibold leading-none text-muted-foreground cursor-help hover:border-foreground/30 hover:text-foreground transition-colors focus:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                    : "gsd-hint-trigger relative z-[1] flex h-4 w-4 items-center justify-center rounded-full border border-gsd-border text-[9px] font-bold leading-none text-gsd-text-dim cursor-help hover:border-gsd-border-strong hover:text-gsd-text transition-[color,border-color,transform] active:scale-[0.96] focus:outline-none focus-visible:ring-0"
+                }
               >
                 ?
               </button>
               <span
                 role="tooltip"
-                className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 w-64 max-w-[min(16rem,calc(100vw-2rem))] rounded-md border border-gsd-border-strong bg-gsd-surface-solid px-2.5 py-1.5 text-xs font-normal leading-snug text-gsd-text shadow-xl opacity-0 translate-y-[-2px] transition-[opacity,transform] duration-100 origin-top-left group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0"
+                className={
+                  web
+                    ? "pointer-events-none absolute left-0 top-full z-50 mt-1.5 w-64 max-w-[min(16rem,calc(100vw-2rem))] rounded-none border border-border bg-popover px-2.5 py-1.5 text-xs font-normal leading-snug text-popover-foreground shadow-md opacity-0 translate-y-[-2px] transition-[opacity,transform] duration-100 origin-top-left group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0"
+                    : "pointer-events-none absolute left-0 top-full z-50 mt-1.5 w-64 max-w-[min(16rem,calc(100vw-2rem))] rounded-md border border-gsd-border-strong bg-gsd-surface-solid px-2.5 py-1.5 text-xs font-normal leading-snug text-gsd-text shadow-xl opacity-0 translate-y-[-2px] transition-[opacity,transform] duration-100 origin-top-left group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:translate-y-0"
+                }
               >
                 {meta.hint}
               </span>
@@ -56,11 +94,35 @@ export function Field({ label, description, children, path, value }: FieldProps)
           )}
         </label>
         {description && (
-          <p className="gsd-prose mt-0.5 text-xs leading-relaxed text-gsd-text-dim">{description}</p>
+          <p
+            className={
+              web
+                ? "mt-0.5 text-xs leading-relaxed text-muted-foreground"
+                : "gsd-prose mt-0.5 text-xs leading-relaxed text-gsd-text-dim"
+            }
+          >
+            {description}
+          </p>
         )}
-        {error && <p className="mt-1 text-xs text-gsd-danger">{error}</p>}
+        {error && (
+          <p
+            className={
+              web
+                ? "mt-1 text-xs text-destructive"
+                : "mt-1 text-xs text-gsd-danger"
+            }
+          >
+            {error}
+          </p>
+        )}
       </div>
-      <div className="gsd-field-control [&_select]:w-full [&_input]:w-full [&_input]:max-w-full sm:[&_select]:w-52 sm:[&_input]:w-52">
+      <div
+        className={
+          web
+            ? "w-full min-w-0 sm:w-52 [&_[data-slot=select-trigger]]:w-full [&_[data-slot=input]]:w-full"
+            : "gsd-field-control [&_select]:w-full [&_input]:w-full [&_input]:max-w-full sm:[&_select]:w-52 sm:[&_input]:w-52"
+        }
+      >
         {children}
       </div>
     </div>
@@ -73,6 +135,18 @@ interface ToggleProps {
 }
 
 export function Toggle({ checked, onChange }: ToggleProps) {
+  if (isWebPlatform()) {
+    return (
+      <div className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center self-start sm:self-center">
+        <Switch
+          checked={checked}
+          onCheckedChange={onChange}
+          className="h-5 w-9"
+        />
+      </div>
+    );
+  }
+
   return (
     <button
       type="button"
@@ -113,6 +187,42 @@ export function SelectField<T extends string>({
   allowEmpty = true,
   className = "w-full sm:w-52",
 }: SelectFieldProps<T>) {
+  if (isWebPlatform()) {
+    const selectValue =
+      value === undefined || value === ""
+        ? allowEmpty
+          ? SELECT_EMPTY_SENTINEL
+          : (value ?? null)
+        : value;
+
+    return (
+      <Select
+        value={selectValue as string | null}
+        onValueChange={(next) => {
+          if (next == null || next === "" || next === SELECT_EMPTY_SENTINEL) {
+            onChange(undefined);
+            return;
+          }
+          onChange(next as T);
+        }}
+      >
+        <SelectTrigger className={cn("min-h-10 h-10 rounded-none", className)}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="rounded-none">
+          {allowEmpty && (
+            <SelectItem value={SELECT_EMPTY_SENTINEL}>{placeholder}</SelectItem>
+          )}
+          {options.map((opt) => (
+            <SelectItem key={opt} value={opt}>
+              {opt}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    );
+  }
+
   return (
     <select
       value={value ?? ""}
@@ -150,6 +260,36 @@ export function LabeledSelectField({
   placeholder = "Default",
   className = "w-full sm:w-52",
 }: LabeledSelectFieldProps) {
+  if (isWebPlatform()) {
+    const selectValue =
+      value === undefined || value === "" ? SELECT_EMPTY_SENTINEL : value;
+
+    return (
+      <Select
+        value={selectValue}
+        onValueChange={(next) => {
+          if (next == null || next === "" || next === SELECT_EMPTY_SENTINEL) {
+            onChange(undefined);
+            return;
+          }
+          onChange(next);
+        }}
+      >
+        <SelectTrigger className={cn("min-h-10 h-10 rounded-none", className)}>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent className="rounded-none">
+          <SelectItem value={SELECT_EMPTY_SENTINEL}>{placeholder}</SelectItem>
+          {options.map((opt) => (
+            <SelectItem key={opt.value} value={opt.value}>
+              {opt.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    );
+  }
+
   return (
     <select
       value={value ?? ""}
@@ -334,8 +474,6 @@ export function ComboField({
  * model ID. The emitted value is a `provider/model` qualified string that
  * GSD Pi understands.
  */
-import type { ProviderCatalog } from "../constants";
-
 interface ModelPickerProps {
   value: string | undefined;
   onChange: (value: string | undefined) => void;
@@ -553,6 +691,23 @@ export function NumberField({
   max,
   placeholder,
 }: NumberFieldProps) {
+  if (isWebPlatform()) {
+    return (
+      <Input
+        type="number"
+        value={value ?? ""}
+        onChange={(e) => {
+          const v = e.target.value;
+          onChange(v === "" ? undefined : Number(v));
+        }}
+        min={min}
+        max={max}
+        placeholder={placeholder}
+        className="w-full sm:w-52 rounded-none"
+      />
+    );
+  }
+
   return (
     <input
       type="number"
@@ -588,6 +743,19 @@ export function TextField({
   // check `typeof value === "string"`. Coerce here so the displayed value and
   // the type the user sees are always aligned.
   const display = value == null ? "" : typeof value === "string" ? value : String(value);
+
+  if (isWebPlatform()) {
+    return (
+      <Input
+        type="text"
+        value={display}
+        onChange={(e) => onChange(e.target.value || undefined)}
+        placeholder={placeholder}
+        className={cn("rounded-none", className)}
+      />
+    );
+  }
+
   return (
     <input
       type="text"
@@ -655,6 +823,17 @@ interface SectionHeaderProps {
 }
 
 export function SectionHeader({ title, description }: SectionHeaderProps) {
+  if (isWebPlatform()) {
+    return (
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+        {description && (
+          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="mb-4">
       <h2 className="gsd-heading text-lg font-semibold text-gsd-text">{title}</h2>
