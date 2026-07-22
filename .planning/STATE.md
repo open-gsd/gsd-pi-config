@@ -6,7 +6,7 @@ current_phase: 02
 current_phase_name: web-chrome-standalone-pages
 status: executing
 stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-07-22T01:06:13.644Z"
+last_updated: "2026-07-22T01:06:20.944Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 02 execution started
 progress:
@@ -96,6 +96,7 @@ Recent decisions affecting current work:
 - [Phase ?]: Hand-install @base-ui/react when CLI add wrote Button but omitted the peer dep
 - [Phase ?]: Mist Sky locked palette applied as hex on web only (D-00a)
 - [Phase ?]: Keep .gsd-btn* class chrome until Phase 4; bridge aliases Mist Sky (D-22)
+- [Phase ?]: radius 0 both themes D-23; color-gsd-accent maps to primary D-21
 
 ### Pending Todos
 

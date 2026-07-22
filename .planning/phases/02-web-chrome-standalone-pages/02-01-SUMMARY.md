@@ -109,7 +109,7 @@ Each task was committed atomically:
 1. **Task 1: Wave 0 isolation contracts for Mist Sky tokens** - `26a49e5` (test)
 2. **Task 2: Mist Sky token cutover + radius 0 + bridge remap** - `3f132ee` (feat)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `4c05dbd` (docs: complete plan)
 
 _Note: TDD tasks used RED (test) → GREEN (feat) commits_
 
