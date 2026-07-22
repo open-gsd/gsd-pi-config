@@ -39,8 +39,8 @@
 
 ### Overlays
 
-- [ ] **OVL-01**: Existing modals (import, share, load preset, submit preset, and related) use shadcn Dialog/AlertDialog patterns with preserved handlers
-- [ ] **OVL-02**: Command palette (⌘K) is restyled with shadcn Command/Dialog and keeps field-jump / keyboard behavior
+- [x] **OVL-01**: Existing modals (import, share, load preset, submit preset, and related) use shadcn Dialog/AlertDialog patterns with preserved handlers
+- [x] **OVL-02**: Command palette (⌘K) is restyled with shadcn Command/Dialog and keeps field-jump / keyboard behavior
 - [ ] **OVL-03**: Overlay focus management (trap, ESC, restore) remains usable; no broken nested Select/Dialog focus
 
 ### Isolation & quality
@@ -99,8 +99,8 @@
 | FRM-02 | Phase 4 | Pending |
 | FRM-03 | Phase 4 | Pending |
 | FRM-04 | Phase 4 | Pending |
-| OVL-01 | Phase 3 | Pending |
-| OVL-02 | Phase 3 | Pending |
+| OVL-01 | Phase 3 | Complete |
+| OVL-02 | Phase 3 | Complete |
 | OVL-03 | Phase 3 | Pending |
 | ISO-01 | Phase 1 | Complete |
 | ISO-02 | Phase 5 | Pending |
