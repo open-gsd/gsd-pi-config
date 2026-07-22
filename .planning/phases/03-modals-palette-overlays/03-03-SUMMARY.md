@@ -103,7 +103,7 @@ Each task was committed atomically:
 1. **Task 1: SubmitPresetModal Dialog shell + form fields (D-08)** - `a1dacbd` (feat)
 2. **Task 2: Submit security source smoke (D-20, ASVS L1)** - no code change (verification-only; suite green)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `334029a` (docs: complete plan)
 
 ## Files Created/Modified
 
