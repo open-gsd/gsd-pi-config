@@ -111,7 +111,7 @@ Each task was committed atomically:
 2. **Task 1 GREEN: ConfigApp exclusive openers** - `107273a` (feat)
 3. **Task 2: dual-build + full contracts verification** - no extra commit (contracts shipped in RED; dual builds green without `index.desktop.css` bridge)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `8ba0d8c` (docs: complete plan)
 
 _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 
