@@ -126,7 +126,7 @@ Each task was committed atomically:
 1. **Task 1: phase04.forms source contracts (FRM-01–04, WEB-04)** - `3af5463` (test)
 2. **Task 2: Isolation bridge update + dual builds** - `a8fede1` (test)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `1bcf7cd` (docs: complete plan)
 
 ## Files Created/Modified
 
