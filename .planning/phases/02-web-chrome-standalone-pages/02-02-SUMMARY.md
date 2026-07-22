@@ -125,7 +125,7 @@ Each task was committed atomically:
 3. **Task 2 RED: Assert Button linear radius and 40px hit target** - `5ba41aa` (test)
 4. **Task 2 GREEN: Lock linear Button language for Phase 2** - `a3d49c3` (feat)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `ba37607` (docs: complete plan)
 
 _Note: TDD tasks used RED (test) → GREEN (feat) commits_
 
