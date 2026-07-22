@@ -10,7 +10,9 @@ import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -654,6 +656,66 @@ export function ModelPicker({
   }
 
   const isCustom = value !== undefined && value !== "" && !knownQualified.has(value);
+  const hasModels = catalog.some((prov) => prov.models.length > 0);
+
+  const applySelectValue = (v: string | null | undefined) => {
+    if (v == null || v === "" || v === SELECT_EMPTY_SENTINEL) {
+      onChange(undefined);
+    } else if (v === CUSTOM_SENTINEL) {
+      onChange("");
+    } else {
+      onChange(v);
+    }
+  };
+
+  if (isWebPlatform()) {
+    const selectValue = isCustom
+      ? CUSTOM_SENTINEL
+      : value === undefined || value === ""
+        ? SELECT_EMPTY_SENTINEL
+        : value;
+
+    return (
+      <div className="flex flex-col gap-1 items-end">
+        {!hasModels && (
+          <p className="self-stretch text-xs text-muted-foreground sm:text-right">
+            No models available
+          </p>
+        )}
+        <Select value={selectValue} onValueChange={applySelectValue}>
+          <SelectTrigger
+            className={cn("min-h-10 h-10 rounded-none", className)}
+            title={value}
+          >
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
+          <SelectContent className="rounded-none">
+            <SelectItem value={SELECT_EMPTY_SENTINEL}>{placeholder}</SelectItem>
+            {catalog.map((prov) => (
+              <SelectGroup key={prov.id}>
+                <SelectLabel>{prov.label}</SelectLabel>
+                {prov.models.map((m) => (
+                  <SelectItem key={`${prov.id}/${m}`} value={`${prov.id}/${m}`}>
+                    {m}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            ))}
+            <SelectItem value={CUSTOM_SENTINEL}>— Custom (provider/model) —</SelectItem>
+          </SelectContent>
+        </Select>
+        {isCustom && (
+          <Input
+            type="text"
+            value={value ?? ""}
+            onChange={(e) => onChange(e.target.value || undefined)}
+            placeholder="provider/model-id"
+            className={cn("min-h-10 h-10 rounded-none", className)}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-1 items-end">
