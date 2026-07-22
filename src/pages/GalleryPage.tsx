@@ -100,6 +100,7 @@ export function GalleryPage() {
         open={previewOpen}
         content={previewContent}
         onClose={() => setPreviewOpen(false)}
+        title="Preview preset"
       />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">

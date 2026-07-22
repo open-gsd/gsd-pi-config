@@ -2,12 +2,22 @@
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import { useEffect, useState } from "react";
-import { btn, btnPrimary, modalPanel } from "../lib/uiClasses";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ShareModalProps {
   open: boolean;
   content: string;
   onClose: () => void;
+  /** Defaults to "Share preset"; Gallery preview passes "Preview preset" (D-07). */
+  title?: string;
 }
 
 /**
@@ -15,22 +25,19 @@ interface ShareModalProps {
  * bytes that will be written to the clipboard so the user can review what
  * leaves the app before pasting it anywhere public.
  */
-export function ShareModal({ open, content, onClose }: ShareModalProps) {
+export function ShareModal({
+  open,
+  content,
+  onClose,
+  title = "Share preset",
+}: ShareModalProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!open) {
       setCopied(false);
-      return;
     }
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
+  }, [open]);
 
   const copy = async () => {
     try {
@@ -55,48 +62,40 @@ export function ShareModal({ open, content, onClose }: ShareModalProps) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onClose();
+      }}
     >
-      <div
-        className={`w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden ${modalPanel}`}
-        onClick={(e) => e.stopPropagation()}
+      <DialogContent
+        showCloseButton
+        className="flex max-h-[80vh] w-full max-w-2xl flex-col gap-0 overflow-hidden rounded-none p-0 sm:max-w-2xl"
       >
-        <div className="flex items-start justify-between gap-4 px-5 py-4 border-b border-gsd-border">
-          <div>
-            <h2 className="gsd-heading text-sm font-semibold text-gsd-text">Share preset</h2>
-            <p className="gsd-prose mt-1 text-xs text-gsd-text-dim">
-              Values under keys containing <code>key</code>, <code>token</code>,{" "}
-              <code>secret</code>, or <code>password</code> are redacted. Review the block
-              below before copying — this is exactly what will land on your clipboard.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className={`${btn} min-w-10 !px-0 text-lg leading-none`}
-            aria-label="Close"
-          >
-            ×
-          </button>
-        </div>
+        <DialogHeader className="shrink-0 border-b border-border px-5 py-4 text-left">
+          <DialogTitle className="text-sm font-semibold">{title}</DialogTitle>
+          <DialogDescription className="text-xs text-muted-foreground">
+            Values under keys containing <code>key</code>, <code>token</code>,{" "}
+            <code>secret</code>, or <code>password</code> are redacted. Review the block
+            below before copying — this is exactly what will land on your clipboard.
+          </DialogDescription>
+        </DialogHeader>
 
-        <div className="flex-1 overflow-auto px-5 py-4">
-          <pre className="text-xs font-mono text-gsd-text bg-gsd-bg border border-gsd-border rounded-md p-3 whitespace-pre-wrap break-words">
+        <div className="min-h-0 flex-1 overflow-auto px-5 py-4">
+          <pre className="whitespace-pre-wrap break-words rounded-none border border-border bg-background p-3 font-mono text-xs text-foreground">
             {content}
           </pre>
         </div>
 
-        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-gsd-border">
-          <button type="button" onClick={onClose} className={btn}>
+        <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 rounded-none border-t border-border px-5 py-3 sm:justify-end">
+          <Button type="button" variant="outline" onClick={onClose}>
             Cancel
-          </button>
-          <button type="button" onClick={() => void copy()} className={btnPrimary}>
+          </Button>
+          <Button type="button" onClick={() => void copy()}>
             {copied ? "Copied!" : "Copy to clipboard"}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

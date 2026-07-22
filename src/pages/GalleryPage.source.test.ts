@@ -55,4 +55,9 @@ describe("GalleryPage Mist Sky linear list (WEB-02 / WEB-07 / D-09–D-12)", () 
     expect(src).toMatch(/buildShareablePreset/);
     expect(src).toMatch(/ShareModal/);
   });
+
+  it("passes Preview preset title to ShareModal (D-07)", () => {
+    expect(src).toMatch(/ShareModal/);
+    expect(src).toMatch(/title=["']Preview preset["']/);
+  });
 });
