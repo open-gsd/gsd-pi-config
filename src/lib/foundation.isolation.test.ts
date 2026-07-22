@@ -12,10 +12,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const webCss = readFileSync(path.join(root, "src/index.web.css"), "utf8");
 const desktopCss = readFileSync(path.join(root, "src/index.desktop.css"), "utf8");
 
-/** FND-03: only Button (plus its import-only test) under components/ui. */
+/** FND-03: Button + Input + Textarea (plus import-only tests) under components/ui. */
 const UI_ALLOWLIST = new Set([
   "button.tsx",
   "button.import.test.ts",
+  "input.tsx",
+  "input.import.test.ts",
+  "textarea.tsx",
+  "textarea.import.test.ts",
 ]);
 
 /** Required THM-01 semantic token names on the web entry. */
@@ -186,7 +190,7 @@ describe("components.json lock (FND-02)", () => {
 describe("ui primitive allowlist (FND-03)", () => {
   const uiDir = path.join(root, "src/components/ui");
 
-  it("only contains Button walking-skeleton files", () => {
+  it("only contains allowlisted Button/Input/Textarea files", () => {
     expect(existsSync(uiDir)).toBe(true);
     const basenames = readdirSync(uiDir).filter((name) => !name.startsWith("."));
     for (const name of basenames) {
@@ -195,11 +199,12 @@ describe("ui primitive allowlist (FND-03)", () => {
     expect(basenames).toContain("button.tsx");
   });
 
-  it("does not dump card/dialog/input/select/command registry files", () => {
+  it("does not dump card/dialog/select/command registry files", () => {
+    // input/textarea are Phase 2 approved primitives (D-15); keep forbidding dump targets
     const basenames = existsSync(uiDir)
       ? readdirSync(uiDir).map((n) => n.toLowerCase())
       : [];
-    for (const forbidden of ["card", "dialog", "input", "select", "command"]) {
+    for (const forbidden of ["card", "dialog", "select", "command"]) {
       expect(
         basenames.some((n) => n === `${forbidden}.tsx` || n.startsWith(`${forbidden}.`)),
         `forbidden primitive present: ${forbidden}`,
