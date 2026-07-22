@@ -5,16 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: modals-palette-overlays
 status: executing
-stopped_at: Completed 03-03-PLAN.md
-last_updated: "2026-07-22T03:54:09.353Z"
+stopped_at: Completed 03-04-PLAN.md
+last_updated: "2026-07-22T03:59:49.819Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 03 execution started
 progress:
-  total_phases: 5
+  total_phases: 3
   completed_phases: 1
   total_plans: 14
-  completed_plans: 10
-  percent: 20
+  completed_plans: 11
 ---
 
 # Project State
@@ -29,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 03 (modals-palette-overlays) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-07-21 — Phase 03 execution started
 
-Progress: [█████████░] 88%
+Progress: [████████░░] 79%
 
 ## Performance Metrics
 
@@ -69,6 +68,7 @@ Progress: [█████████░] 88%
 | Phase 03 P01 | 4min | 2 tasks | 9 files |
 | Phase 03 P02 | 3min | 2 tasks | 5 files |
 | Phase 03 P03 | 2min | 2 tasks | 1 files |
+| Phase 03 P04 | 2min | 2 tasks | 2 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -122,6 +122,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Load rows use left primary edge + soft wash instead of active:scale press theater
 - [Phase ?]: SubmitPresetModal restyle only (D-08): Dialog + Input/Textarea/Button; OAuth/scan handlers unchanged
 - [Phase ?]: Submit secret-scan errors stay soft-danger role=alert (D-20); no OAuth code console logging
+- [Phase ?]: Palette Command shouldFilter=false keeps scoreField/scoreSection/MAX_RESULTS authoritative (D-10)
+- [Phase ?]: Palette uses CommandDialog; Dialog+cmdk own dismiss/keyboard (D-09, D-13)
 
 ### Pending Todos
 
@@ -143,8 +145,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T03:54:09.349Z
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-07-22T03:59:49.813Z
+Stopped at: Completed 03-04-PLAN.md
 Resume file: None
 
 ## Phase 3
