@@ -75,7 +75,7 @@ Declared values (multiples of 4 only):
 
 - **List row vertical pad 20px at `sm+`** (`p-5`) — not on 8-pt scale; allowed for row readability between 16 and 24.
 - **Header controls may sit at 40px inside 56px bar** with vertical centering; do not grow bar.
-- **Tag chips** may use 2–4px vertical pad (compact meta, not primary hit targets).
+- **Tag chips** use **4px** vertical pad (`py-1`) only — compact meta, not primary hit targets; never 2px.
 
 ---
 
@@ -99,9 +99,9 @@ Exactly four sizes, two weights.
 | Page title | Heading 20px / 600 / tracking tight; color `--foreground` |
 | Start H1 | Display 24px / 600 |
 | Section label | 12px / 600 / uppercase / `tracking-wider` / `--muted-foreground` |
-| Kicker | 11–12px / 600 / uppercase / `tracking-[0.2em]` / **primary** (not logo cyan) |
+| Kicker | **12px** (Label role) / 600 / uppercase / `tracking-[0.2em]` / **primary** (not logo cyan) — never 10px or 11px |
 | Nav link | 12px / 600 when active, 400 or 600 idle muted |
-| Mono meta | Geist Mono 10–12px / 400 / `--muted-foreground` (author, paths, `~/.gsd/`) |
+| Mono meta | Geist Mono **12px** (Label role) / 400 / `--muted-foreground` (author, paths, `~/.gsd/`) — never 10px or 11px |
 | Links in body | Primary color; underline on hover; no neon cyan |
 
 ---
@@ -184,7 +184,7 @@ On every surface Phase 2 restyles, **only** `Button` from `@/components/ui/butto
 | Role | Variant | Visual | Used for |
 |------|---------|--------|----------|
 | Primary | `default` | Filled `--primary` / `--primary-foreground`; hover primary-hover | Use preset, Open editor, Import files, Create new preset |
-| Secondary | `outline` | 1px `--border`, transparent/bg surface, foreground on hover muted wash | Preview, Refresh, Load preset, New preset (start), Skip (blank), Submit via PR, opengsd.net |
+| Secondary | `outline` | 1px `--border`, transparent/bg surface, foreground on hover muted wash | Preview, Refresh list, Load preset, New preset (start), Skip (blank), Submit via PR, opengsd.net |
 | Destructive | soft outline | 1px soft rose border + `--destructive` text; transparent fill; hover soft wash — **not** solid red | Destructive actions if any appear on these routes (none primary this phase; reserve for future cancel-with-loss) |
 | Ghost / link | `ghost` or `link` | Text-only; optional | Header external link if not outline; OAuth “Back to editor” |
 
@@ -228,14 +228,14 @@ Disabled: opacity 50%, `pointer-events-none`; loading label swap (e.g. “Loadin
 |---------|----------|
 | Layout | Single column `max-w-3xl`; header + search row + state region + **linear list** |
 | Search | Single full-width `Input type="search"`; placeholder “Search presets…”; no tag-chip filters (D-10) |
-| Refresh | Outline `Button` |
+| Refresh list | Outline `Button` |
 | Header CTAs | Primary: “Create new preset” → `/new`; Secondary: “Submit via PR” external |
 | List | Rows with 1px dividers; title, description, tags (quiet chips), author mono, actions |
 | Row actions | Primary “Use preset”; Outline “Preview” (D-12) |
 | Preview | Existing `ShareModal` handlers; visual restyle depth = light Mist Sky if touched; full modal system Phase 3 |
 | Loading | Quiet inline: text “Loading presets…” (no skeleton required — discretion: plain text) |
 | Empty | Quiet text + link to seed repo and/or New preset (see copy) |
-| Error | Soft danger text `role="alert"` + optional Retry via Refresh |
+| Error | Soft danger text `role="alert"` + optional Retry via **Refresh list** |
 | No results (filtered) | Distinct from catalog empty — see copy |
 
 ### WizardPage (WEB-03)
@@ -250,7 +250,7 @@ Disabled: opacity 50%, `pointer-events-none`; loading label swap (e.g. “Loadin
 
 **Choice row visual:**
 
-- Idle: 1px border, muted text, transparent bg, min-height 48px, pad 12×16
+- Idle: 1px border, muted text, transparent bg, min-height 48px, pad **16×16** (`p-4`) — spacing scale only; not 12×16
 - Hover: foreground text, subtle muted wash
 - Active: left border 2–3px `--primary`, soft primary wash bg, primary or foreground text
 - Keyboard: focus-visible ring; Space/Enter selects
@@ -286,13 +286,13 @@ Preserve product meaning; tighten only for consistency. Verbs stay concrete.
 | Gallery primary CTA | **Create new preset** |
 | Gallery secondary | **Submit via PR** |
 | Gallery search placeholder | **Search presets…** |
-| Gallery refresh | **Refresh** |
+| Gallery refresh | **Refresh list** |
 | Gallery row primary | **Use preset** (loading: **Loading…**) |
 | Gallery row secondary | **Preview** |
 | Gallery loading | **Loading presets…** |
 | Gallery empty (no catalog / zero entries, no error) | **No presets found.** Body: seed the gsd-pi-presets repository or check your network. Include link to repo; offer path to **Create new preset**. |
 | Gallery empty (query, no matches) | **No presets match your search.** Suggest clearing search or **Create new preset**. |
-| Gallery error | Problem string from fetch (as today) + user path: **Refresh** or try again later. `role="alert"`. Soft danger color. |
+| Gallery error | Problem string from fetch (as today) + user path: **Refresh list** or try again later. `role="alert"`. Soft danger color. |
 | Wizard title | **New preset** |
 | Wizard intro | Choose workflow and token profile. You can refine every field in the editor, then download files for GSD Pi on your machine. |
 | Wizard section: mode | **Workflow mode** |
@@ -361,7 +361,7 @@ Applicable state considerations resolved: **14 covered, 2 backstop, 0 unresolved
 | loading | Gallery index fetch | ✅ covered | Inline “Loading presets…”; list not shown as fake rows |
 | loading | Gallery Use preset | ✅ covered | Row button disabled + “Loading…”; `loadingSlug` gate |
 | loading | OAuth callback | ✅ covered | “Completing sign-in…” inside shell |
-| error | Gallery index / preset fetch | ✅ covered | Soft danger `role="alert"` + Refresh retry |
+| error | Gallery index / preset fetch | ✅ covered | Soft danger `role="alert"` + **Refresh list** retry |
 | error | OAuth | ✅ covered | Soft danger message + Back to editor |
 | error | Wizard | ✅ covered | No async load; create failures would surface via navigation/draft — no extra banner required this phase |
 | populated | Gallery list | ✅ covered | Linear rows: title, description, tags, author, Use/Preview |
