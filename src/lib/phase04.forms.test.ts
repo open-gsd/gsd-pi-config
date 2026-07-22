@@ -75,3 +75,28 @@ describe("phase04 FormControls FRM-01 core kit contracts", () => {
     expect(src).toMatch(/font-semibold/);
   });
 });
+
+describe("phase04 FormControls FRM-01 multi/combo/tag contracts", () => {
+  const src = readSrc(FORM_CONTROLS);
+
+  it("composes MultiSelect with Popover + Checkbox on web", () => {
+    expect(src).toMatch(/from\s+["']@\/components\/ui\/popover["']/);
+    expect(src).toMatch(/from\s+["']@\/components\/ui\/checkbox["']/);
+    expect(src).toMatch(/\bPopover\b/);
+    expect(src).toMatch(/\bCheckbox\b/);
+  });
+
+  it("does not use native multi listbox", () => {
+    expect(src).not.toMatch(/select\s+multiple|multiple\s*=\s*\{?true/);
+  });
+
+  it("keeps Remove {label} chip aria-labels", () => {
+    expect(src).toMatch(/Remove \$\{/);
+  });
+
+  it("uses Input for TagInput and Combo free text on web", () => {
+    expect(src).toMatch(/from\s+["']@\/components\/ui\/input["']/);
+    // Web TagInput path should use Input primitive (not only bare <input>)
+    expect(src).toMatch(/function TagInput[\s\S]*?<Input[\s\S]*?function SectionHeader/);
+  });
+});
