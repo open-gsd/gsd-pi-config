@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GSD Pi Config — Palette options</title>
+  <title>GSD Pi Config — Full rethink palettes</title>
   <style>
     :root {
-      --page: #0a0a0c;
-      --ink: #e8e8ef;
-      --muted: #8b8ca6;
-      --line: #22222e;
-      --card: #12121a;
-      --focus: #22d3ee;
+      --page: #111110;
+      --ink: #f2f0ea;
+      --muted: #9a968c;
+      --line: #2a2926;
+      --card: #1a1917;
+      --focus: #e8a54b;
       font-family: "Geist", "Segoe UI", system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
@@ -27,32 +27,50 @@
       top: 0;
       z-index: 20;
       backdrop-filter: blur(12px);
-      background: color-mix(in srgb, var(--page) 88%, transparent);
+      background: color-mix(in srgb, var(--page) 90%, transparent);
       border-bottom: 1px solid var(--line);
-      padding: 1rem 1.5rem;
+      padding: 1rem 1.5rem 1.1rem;
     }
     header.page h1 {
-      margin: 0 0 0.25rem;
-      font-size: 1.15rem;
+      margin: 0 0 0.3rem;
+      font-size: 1.2rem;
       font-weight: 600;
+      letter-spacing: -0.02em;
     }
     header.page p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.85rem;
-      max-width: 52rem;
+      font-size: 0.88rem;
+      max-width: 48rem;
+    }
+    .ban {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.75rem;
+    }
+    .ban span {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #3a3530;
+      color: #c4b8a8;
+      background: #1c1916;
+    }
+    .ban span.x {
+      text-decoration: line-through;
+      opacity: 0.55;
     }
     .controls {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
-      margin-top: 0.85rem;
+      margin-top: 0.9rem;
       align-items: center;
     }
     .controls label {
       font-size: 0.75rem;
       color: var(--muted);
-      margin-right: 0.25rem;
     }
     .seg {
       display: inline-flex;
@@ -64,14 +82,14 @@
       border: 0;
       background: transparent;
       color: var(--muted);
-      padding: 0.45rem 0.85rem;
+      padding: 0.45rem 0.9rem;
       font: inherit;
       font-size: 0.8rem;
       font-weight: 500;
       cursor: pointer;
     }
     .seg button[aria-pressed="true"] {
-      background: #1b1b28;
+      background: #2a2824;
       color: var(--ink);
     }
     main {
@@ -80,9 +98,7 @@
       gap: 1.25rem;
     }
     @media (min-width: 1100px) {
-      main.grid-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
+      main.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     .option {
       border: 1px solid var(--line);
@@ -97,44 +113,44 @@
       outline-offset: 2px;
     }
     .option-head {
-      padding: 1rem 1.1rem 0.75rem;
+      padding: 1rem 1.1rem 0.8rem;
       border-bottom: 1px solid var(--line);
-    }
-    .option-head h2 {
-      margin: 0 0 0.2rem;
-      font-size: 1rem;
     }
     .option-head .tag {
       display: inline-block;
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--muted);
       margin-bottom: 0.35rem;
     }
+    .option-head h2 {
+      margin: 0 0 0.25rem;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
     .option-head p {
       margin: 0;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--muted);
     }
     .swatches {
       display: flex;
       gap: 0.35rem;
-      margin-top: 0.65rem;
+      margin-top: 0.7rem;
       flex-wrap: wrap;
     }
     .swatch {
-      width: 1.35rem;
-      height: 1.35rem;
+      width: 1.4rem;
+      height: 1.4rem;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.1);
     }
     .preview-wrap {
       padding: 0.85rem;
-      background: #08080c;
+      background: #0c0c0b;
       flex: 1;
     }
-    /* ─── Theme scope for each mock ───────────────────────────── */
     .mock {
       --radius: 0.625rem;
       border-radius: 12px;
@@ -143,125 +159,123 @@
       background: var(--p-bg);
       color: var(--p-text);
       font-size: 12px;
-      min-height: 420px;
+      min-height: 440px;
       display: flex;
       flex-direction: column;
-      transition: background 0.15s, color 0.15s;
     }
-    .mock * { box-sizing: border-box; }
 
-    /* Palette A — GSD Evolved */
+    /* ═══ A — Copper Paper (warm editorial) ═══ */
     .mock.p-a {
-      --p-bg: #050507;
-      --p-surface: #0d0d14;
-      --p-surface-2: #12121c;
-      --p-border: #1b1b2a;
-      --p-border-strong: #2a2a3d;
-      --p-text: #e7e8f0;
-      --p-muted: #8b8ca6;
-      --p-dim: #6b6c82;
-      --p-primary: #22d3ee;
-      --p-primary-fg: #050507;
-      --p-primary-hover: #38e0ff;
-      --p-secondary: #a855f7;
-      --p-secondary-dim: rgba(168, 85, 247, 0.14);
-      --p-danger: #f87171;
-      --p-success: #34d399;
-      --p-ring: rgba(34, 211, 238, 0.35);
+      --p-bg: #1a1612;
+      --p-surface: #241f1a;
+      --p-surface-2: #2c2620;
+      --p-border: #3d342c;
+      --p-text: #f3ebe1;
+      --p-muted: #b0a293;
+      --p-dim: #86786a;
+      --p-primary: #d97745;
+      --p-primary-fg: #1a120c;
+      --p-primary-hover: #e8915e;
+      --p-secondary: #c4a574;
+      --p-secondary-dim: rgba(196, 165, 116, 0.14);
+      --p-danger: #e07a6a;
+      --p-success: #8fbc8f;
+      --p-ring: rgba(217, 119, 69, 0.35);
+      --p-kicker: #e0b07a;
     }
     .mock.p-a.light {
-      --p-bg: #f4f5f8;
-      --p-surface: #ffffff;
-      --p-surface-2: #eceef4;
-      --p-border: #d8d9e6;
-      --p-border-strong: #c4c5d4;
-      --p-text: #12131a;
-      --p-muted: #5c5d70;
-      --p-dim: #7a7b8f;
-      --p-primary: #0891b2;
-      --p-primary-fg: #f4f5f8;
-      --p-primary-hover: #0e7490;
-      --p-secondary: #7c3aed;
-      --p-secondary-dim: rgba(124, 58, 237, 0.12);
-      --p-danger: #dc2626;
-      --p-success: #059669;
-      --p-ring: rgba(8, 145, 178, 0.3);
+      --p-bg: #f7f1e8;
+      --p-surface: #fffcf7;
+      --p-surface-2: #efe6d8;
+      --p-border: #ddd0bc;
+      --p-text: #1f1812;
+      --p-muted: #6b5d4e;
+      --p-dim: #8a7a68;
+      --p-primary: #c45c2a;
+      --p-primary-fg: #fff8f2;
+      --p-primary-hover: #a84c22;
+      --p-secondary: #8b6f47;
+      --p-secondary-dim: rgba(139, 111, 71, 0.12);
+      --p-danger: #c23b2e;
+      --p-success: #3d7a4a;
+      --p-ring: rgba(196, 92, 42, 0.28);
+      --p-kicker: #a85a2a;
     }
 
-    /* Palette B — Violet Signal */
+    /* ═══ B — Midnight Ink (deep indigo + coral, no cyan) ═══ */
     .mock.p-b {
-      --p-bg: #09090f;
-      --p-surface: #12121b;
-      --p-surface-2: #181824;
-      --p-border: #252536;
-      --p-border-strong: #34344a;
-      --p-text: #ececf4;
-      --p-muted: #9a9ab3;
-      --p-dim: #6f6f88;
-      --p-primary: #8b5cf6;
-      --p-primary-fg: #faf5ff;
-      --p-primary-hover: #a78bfa;
-      --p-secondary: #22d3ee;
-      --p-secondary-dim: rgba(34, 211, 238, 0.12);
-      --p-danger: #fb7185;
-      --p-success: #4ade80;
-      --p-ring: rgba(139, 92, 246, 0.4);
+      --p-bg: #0e1118;
+      --p-surface: #151a24;
+      --p-surface-2: #1c2330;
+      --p-border: #2a3344;
+      --p-text: #e8ecf4;
+      --p-muted: #95a0b5;
+      --p-dim: #6b7690;
+      --p-primary: #f07167;
+      --p-primary-fg: #1a0c0a;
+      --p-primary-hover: #ff8a80;
+      --p-secondary: #7b8db0;
+      --p-secondary-dim: rgba(123, 141, 176, 0.16);
+      --p-danger: #f07167;
+      --p-success: #6bbf8a;
+      --p-ring: rgba(240, 113, 103, 0.35);
+      --p-kicker: #f0a58e;
     }
     .mock.p-b.light {
-      --p-bg: #f7f6fb;
+      --p-bg: #eef1f6;
       --p-surface: #ffffff;
-      --p-surface-2: #efedf7;
-      --p-border: #ddd8eb;
-      --p-border-strong: #c8c0de;
-      --p-text: #17141f;
-      --p-muted: #5e5770;
-      --p-dim: #7a738c;
-      --p-primary: #7c3aed;
-      --p-primary-fg: #faf5ff;
-      --p-primary-hover: #6d28d9;
-      --p-secondary: #0e7490;
-      --p-secondary-dim: rgba(14, 116, 144, 0.1);
-      --p-danger: #e11d48;
-      --p-success: #16a34a;
-      --p-ring: rgba(124, 58, 237, 0.3);
+      --p-surface-2: #e2e7f0;
+      --p-border: #c8d0de;
+      --p-text: #141820;
+      --p-muted: #556074;
+      --p-dim: #74809a;
+      --p-primary: #d94b42;
+      --p-primary-fg: #fff5f4;
+      --p-primary-hover: #c23e36;
+      --p-secondary: #4a5a78;
+      --p-secondary-dim: rgba(74, 90, 120, 0.1);
+      --p-danger: #c53030;
+      --p-success: #2f7a4e;
+      --p-ring: rgba(217, 75, 66, 0.28);
+      --p-kicker: #c45a4a;
     }
 
-    /* Palette C — Graphite Mint */
+    /* ═══ C — Olive Noir (earthy, no teal/mint logo vibes) ═══ */
     .mock.p-c {
-      --p-bg: #0b0d0c;
-      --p-surface: #121614;
-      --p-surface-2: #171c19;
-      --p-border: #222a26;
-      --p-border-strong: #314038;
-      --p-text: #e8eee9;
-      --p-muted: #8f9b94;
-      --p-dim: #6a756e;
-      --p-primary: #2dd4a8;
-      --p-primary-fg: #04110c;
-      --p-primary-hover: #5eead4;
-      --p-secondary: #94a3b8;
-      --p-secondary-dim: rgba(148, 163, 184, 0.12);
-      --p-danger: #f87171;
-      --p-success: #4ade80;
-      --p-ring: rgba(45, 212, 168, 0.35);
+      --p-bg: #121410;
+      --p-surface: #1a1d16;
+      --p-surface-2: #22261c;
+      --p-border: #32382a;
+      --p-text: #eceee4;
+      --p-muted: #a3a894;
+      --p-dim: #787d6c;
+      --p-primary: #c9a227;
+      --p-primary-fg: #1a1608;
+      --p-primary-hover: #dbb73a;
+      --p-secondary: #8a9a6e;
+      --p-secondary-dim: rgba(138, 154, 110, 0.16);
+      --p-danger: #d97b6c;
+      --p-success: #8aab6a;
+      --p-ring: rgba(201, 162, 39, 0.35);
+      --p-kicker: #d4bc5a;
     }
     .mock.p-c.light {
-      --p-bg: #f3f6f4;
-      --p-surface: #ffffff;
-      --p-surface-2: #e8eeea;
-      --p-border: #d2ddd6;
-      --p-border-strong: #b8c7be;
-      --p-text: #121816;
-      --p-muted: #526059;
-      --p-dim: #6e7a73;
-      --p-primary: #0f766e;
-      --p-primary-fg: #ecfdf8;
-      --p-primary-hover: #0d9488;
-      --p-secondary: #475569;
-      --p-secondary-dim: rgba(71, 85, 105, 0.1);
-      --p-danger: #dc2626;
-      --p-success: #15803d;
-      --p-ring: rgba(15, 118, 110, 0.28);
+      --p-bg: #f3f2ea;
+      --p-surface: #fbfaf4;
+      --p-surface-2: #e8e6d8;
+      --p-border: #d0cdb8;
+      --p-text: #1a1b14;
+      --p-muted: #5c5f4e;
+      --p-dim: #787b68;
+      --p-primary: #8a7018;
+      --p-primary-fg: #faf6e8;
+      --p-primary-hover: #6f5a12;
+      --p-secondary: #5a6b42;
+      --p-secondary-dim: rgba(90, 107, 66, 0.12);
+      --p-danger: #b54538;
+      --p-success: #4a6b32;
+      --p-ring: rgba(138, 112, 24, 0.28);
+      --p-kicker: #7a6418;
     }
 
     .m-top {
@@ -270,19 +284,20 @@
       gap: 0.5rem;
       padding: 0.55rem 0.7rem;
       border-bottom: 1px solid var(--p-border);
-      background: color-mix(in srgb, var(--p-surface) 92%, transparent);
+      background: var(--p-surface);
     }
     .m-logo {
       width: 1.35rem;
       height: 1.35rem;
       border-radius: 6px;
-      background: linear-gradient(135deg, var(--p-primary), var(--p-secondary));
+      background: var(--p-primary);
       flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p-text) 12%, transparent);
     }
     .m-brand {
       font-weight: 600;
       font-size: 0.72rem;
-      margin-right: 0.25rem;
+      margin-right: 0.15rem;
     }
     .m-nav {
       display: flex;
@@ -320,7 +335,6 @@
       display: grid;
       grid-template-columns: 7.5rem 1fr;
       flex: 1;
-      min-height: 0;
     }
     .m-side {
       border-right: 1px solid var(--p-border);
@@ -343,7 +357,7 @@
     }
     .m-side .item.active {
       background: var(--p-secondary-dim);
-      color: var(--p-primary);
+      color: var(--p-kicker);
       font-weight: 500;
     }
     .m-main {
@@ -353,15 +367,16 @@
     .m-kicker {
       font-size: 0.58rem;
       font-weight: 600;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--p-primary);
+      color: var(--p-kicker);
       margin-bottom: 0.35rem;
     }
     .m-main h3 {
       margin: 0 0 0.35rem;
       font-size: 0.95rem;
       font-weight: 600;
+      letter-spacing: -0.02em;
     }
     .m-main .lead {
       margin: 0 0 0.85rem;
@@ -370,7 +385,7 @@
       max-width: 18rem;
     }
     .m-step {
-      border-left: 1px solid var(--p-border);
+      border-left: 2px solid var(--p-border);
       padding-left: 0.7rem;
       margin-bottom: 0.55rem;
     }
@@ -399,7 +414,6 @@
       font-size: 0.68rem;
       font-weight: 500;
       border: 1px solid transparent;
-      cursor: default;
     }
     .btn-primary {
       background: var(--p-primary);
@@ -413,12 +427,11 @@
     .btn-ghost {
       background: transparent;
       color: var(--p-muted);
-      border-color: transparent;
     }
     .btn-danger {
-      background: color-mix(in srgb, var(--p-danger) 18%, transparent);
+      background: color-mix(in srgb, var(--p-danger) 16%, transparent);
       color: var(--p-danger);
-      border-color: color-mix(in srgb, var(--p-danger) 35%, transparent);
+      border-color: color-mix(in srgb, var(--p-danger) 32%, transparent);
     }
     .m-card {
       margin-top: 0.75rem;
@@ -441,7 +454,7 @@
       padding: 0.15rem 0.4rem;
       border-radius: 999px;
       background: var(--p-secondary-dim);
-      color: var(--p-secondary);
+      color: var(--p-kicker);
       font-weight: 500;
     }
     .field {
@@ -450,7 +463,6 @@
       border-radius: 6px;
       border: 1px solid var(--p-border);
       background: var(--p-surface-2);
-      box-shadow: 0 0 0 2px transparent;
     }
     .field.focus {
       border-color: var(--p-primary);
@@ -465,14 +477,14 @@
     }
     .hexes {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.65rem;
+      font-size: 0.64rem;
       color: var(--muted);
       display: grid;
       gap: 0.2rem;
     }
     .pick {
       border: 1px solid var(--line);
-      background: #16161f;
+      background: #242220;
       color: var(--ink);
       border-radius: 8px;
       padding: 0.55rem 0.85rem;
@@ -481,33 +493,39 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .pick:hover { border-color: #3a3a50; }
+    .pick:hover { border-color: #4a453c; }
     .pick.active {
-      background: color-mix(in srgb, var(--focus) 18%, #16161f);
+      background: color-mix(in srgb, var(--focus) 16%, #242220);
       border-color: var(--focus);
-      color: #b8f4ff;
+      color: #f5d9a8;
     }
     footer.page {
-      padding: 0 1.5rem 2rem;
+      padding: 0 1.5rem 2.5rem;
       color: var(--muted);
-      font-size: 0.8rem;
+      font-size: 0.82rem;
     }
     footer.page code {
       font-size: 0.75rem;
-      color: #b4b5c9;
+      color: #d4cfc4;
     }
   </style>
 </head>
 <body>
   <header class="page">
-    <h1>Palette options — GSD Pi Config web redesign</h1>
+    <h1>Full rethink — nothing like logo colors</h1>
     <p>
-      Three full custom systems for the web restyle (Phases 2–4). Same mock chrome so you compare
-      color language, not layout. Pick one; we’ll lock tokens into shadcn <code>--primary</code> /
-      surfaces and plan the full redesign against it.
+      Fresh directions for the web redesign. Explicitly <strong>not</strong> cyan, violet, mint, or
+      “neon AI default.” Same layout mock so you judge color language only.
     </p>
+    <div class="ban" aria-label="Banned from these options">
+      <span class="x">#22d3ee cyan</span>
+      <span class="x">#a855f7 purple</span>
+      <span class="x">logo gradient</span>
+      <span class="x">stock shadcn neutral</span>
+      <span>new systems only</span>
+    </div>
     <div class="controls">
-      <label>Preview mode</label>
+      <label>Preview</label>
       <div class="seg" role="group" aria-label="Preview theme">
         <button type="button" id="mode-dark" aria-pressed="true">Dark</button>
         <button type="button" id="mode-light" aria-pressed="false">Light</button>
@@ -516,18 +534,18 @@
   </header>
 
   <main class="grid-3" id="options">
-    <!-- A -->
-    <article class="option" data-id="a" id="opt-a">
+    <!-- A Copper Paper -->
+    <article class="option" data-id="a">
       <div class="option-head">
-        <div class="tag">Option A · Recommended brand fit</div>
-        <h2>GSD Evolved</h2>
-        <p>Current opengsd DNA, formalized as a full design system: cyan primary, violet secondary, deep graphite surfaces.</p>
+        <div class="tag">Option A · Warm editorial</div>
+        <h2>Copper Paper</h2>
+        <p>Warm brown paper surfaces + copper primary. Feels print/tooling, not terminal-neon.</p>
         <div class="swatches" aria-hidden="true">
-          <span class="swatch" style="background:#050507"></span>
-          <span class="swatch" style="background:#0d0d14"></span>
-          <span class="swatch" style="background:#e7e8f0"></span>
-          <span class="swatch" style="background:#22d3ee"></span>
-          <span class="swatch" style="background:#a855f7"></span>
+          <span class="swatch" style="background:#1a1612"></span>
+          <span class="swatch" style="background:#241f1a"></span>
+          <span class="swatch" style="background:#f3ebe1"></span>
+          <span class="swatch" style="background:#d97745"></span>
+          <span class="swatch" style="background:#c4a574"></span>
         </div>
       </div>
       <div class="preview-wrap">
@@ -549,9 +567,9 @@
               <div class="item">Hooks</div>
             </aside>
             <div class="m-main">
-              <div class="m-kicker">Git · Ship · Done</div>
-              <h3>Configure GSD Pi in the cloud</h3>
-              <p class="lead">Import, edit, download — same jobs, new design system.</p>
+              <div class="m-kicker">Configure · Ship · Done</div>
+              <h3>Cloud preferences editor</h3>
+              <p class="lead">Import, edit, download — same jobs, entirely new visual system.</p>
               <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
               <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
               <div class="m-actions">
@@ -570,25 +588,25 @@
       </div>
       <div class="option-foot">
         <div class="hexes">
-          <div>bg #050507 · surface #0d0d14 · text #e7e8f0</div>
-          <div>primary #22d3ee · secondary #a855f7 · danger #f87171</div>
+          <div>bg #1a1612 · surface #241f1a · text #f3ebe1</div>
+          <div>primary #d97745 · secondary #c4a574 · danger #e07a6a</div>
         </div>
-        <button type="button" class="pick" data-pick="a">Select GSD Evolved</button>
+        <button type="button" class="pick" data-pick="a">Select Copper Paper</button>
       </div>
     </article>
 
-    <!-- B -->
-    <article class="option" data-id="b" id="opt-b">
+    <!-- B Midnight Ink -->
+    <article class="option" data-id="b">
       <div class="option-head">
-        <div class="tag">Option B · Modern AI product</div>
-        <h2>Violet Signal</h2>
-        <p>Violet primary with cyan as signal accent. Feels more “2026 AI tool,” less terminal-cyan default.</p>
+        <div class="tag">Option B · Cool ink + coral</div>
+        <h2>Midnight Ink</h2>
+        <p>Deep blue-ink surfaces with coral action color. Serious UI, warm hit of energy — zero cyan.</p>
         <div class="swatches" aria-hidden="true">
-          <span class="swatch" style="background:#09090f"></span>
-          <span class="swatch" style="background:#12121b"></span>
-          <span class="swatch" style="background:#ececf4"></span>
-          <span class="swatch" style="background:#8b5cf6"></span>
-          <span class="swatch" style="background:#22d3ee"></span>
+          <span class="swatch" style="background:#0e1118"></span>
+          <span class="swatch" style="background:#151a24"></span>
+          <span class="swatch" style="background:#e8ecf4"></span>
+          <span class="swatch" style="background:#f07167"></span>
+          <span class="swatch" style="background:#7b8db0"></span>
         </div>
       </div>
       <div class="preview-wrap">
@@ -610,9 +628,9 @@
               <div class="item">Hooks</div>
             </aside>
             <div class="m-main">
-              <div class="m-kicker">Git · Ship · Done</div>
-              <h3>Configure GSD Pi in the cloud</h3>
-              <p class="lead">Import, edit, download — same jobs, new design system.</p>
+              <div class="m-kicker">Configure · Ship · Done</div>
+              <h3>Cloud preferences editor</h3>
+              <p class="lead">Import, edit, download — same jobs, entirely new visual system.</p>
               <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
               <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
               <div class="m-actions">
@@ -631,25 +649,25 @@
       </div>
       <div class="option-foot">
         <div class="hexes">
-          <div>bg #09090f · surface #12121b · text #ececf4</div>
-          <div>primary #8b5cf6 · secondary #22d3ee · danger #fb7185</div>
+          <div>bg #0e1118 · surface #151a24 · text #e8ecf4</div>
+          <div>primary #f07167 · secondary #7b8db0 · danger #f07167</div>
         </div>
-        <button type="button" class="pick" data-pick="b">Select Violet Signal</button>
+        <button type="button" class="pick" data-pick="b">Select Midnight Ink</button>
       </div>
     </article>
 
-    <!-- C -->
-    <article class="option" data-id="c" id="opt-c">
+    <!-- C Olive Noir -->
+    <article class="option" data-id="c">
       <div class="option-head">
-        <div class="tag">Option C · Calm operator</div>
-        <h2>Graphite Mint</h2>
-        <p>Cool graphite + mint primary. Softer than neon cyan; reads “pro tooling” without purple drama.</p>
+        <div class="tag">Option C · Earth + gold</div>
+        <h2>Olive Noir</h2>
+        <p>Charcoal-olive fields with gold primary. Quiet luxury / instrument panel — not SaaS blue-green.</p>
         <div class="swatches" aria-hidden="true">
-          <span class="swatch" style="background:#0b0d0c"></span>
-          <span class="swatch" style="background:#121614"></span>
-          <span class="swatch" style="background:#e8eee9"></span>
-          <span class="swatch" style="background:#2dd4a8"></span>
-          <span class="swatch" style="background:#94a3b8"></span>
+          <span class="swatch" style="background:#121410"></span>
+          <span class="swatch" style="background:#1a1d16"></span>
+          <span class="swatch" style="background:#eceee4"></span>
+          <span class="swatch" style="background:#c9a227"></span>
+          <span class="swatch" style="background:#8a9a6e"></span>
         </div>
       </div>
       <div class="preview-wrap">
@@ -671,9 +689,9 @@
               <div class="item">Hooks</div>
             </aside>
             <div class="m-main">
-              <div class="m-kicker">Git · Ship · Done</div>
-              <h3>Configure GSD Pi in the cloud</h3>
-              <p class="lead">Import, edit, download — same jobs, new design system.</p>
+              <div class="m-kicker">Configure · Ship · Done</div>
+              <h3>Cloud preferences editor</h3>
+              <p class="lead">Import, edit, download — same jobs, entirely new visual system.</p>
               <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
               <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
               <div class="m-actions">
@@ -692,17 +710,20 @@
       </div>
       <div class="option-foot">
         <div class="hexes">
-          <div>bg #0b0d0c · surface #121614 · text #e8eee9</div>
-          <div>primary #2dd4a8 · secondary #94a3b8 · danger #f87171</div>
+          <div>bg #121410 · surface #1a1d16 · text #eceee4</div>
+          <div>primary #c9a227 · secondary #8a9a6e · danger #d97b6c</div>
         </div>
-        <button type="button" class="pick" data-pick="c">Select Graphite Mint</button>
+        <button type="button" class="pick" data-pick="c">Select Olive Noir</button>
       </div>
     </article>
   </main>
 
   <footer class="page">
-    <p id="choice">No selection yet. Click <strong>Select …</strong> on a card, then reply with A / B / C in chat.</p>
-    <p style="margin-top:0.5rem">File: <code>.planning/design/palette-options.html</code> — open in browser if the preview doesn’t auto-open.</p>
+    <p id="choice">No selection yet. Click <strong>Select …</strong>, then reply in chat with <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.</p>
+    <p style="margin-top:0.5rem">
+      File: <code>.planning/design/palette-options.html</code>
+      · If none fit, say what you want (e.g. “more pastel”, “almost monochrome”, “high contrast red”) and we draft a fourth.
+    </p>
   </footer>
 
   <script>
@@ -729,9 +750,9 @@
     lightBtn.addEventListener("click", () => setMode("light"));
 
     const names = {
-      a: "GSD Evolved (A)",
-      b: "Violet Signal (B)",
-      c: "Graphite Mint (C)",
+      a: "Copper Paper (A)",
+      b: "Midnight Ink (B)",
+      c: "Olive Noir (C)",
     };
 
     document.querySelectorAll("[data-pick]").forEach((btn) => {
@@ -748,17 +769,20 @@
           names[id] +
           "</strong>. Reply in chat with <code>" +
           id.toUpperCase() +
-          "</code> (or the name) to lock this palette and start Phase 2 planning.";
+          "</code> to lock this and start the redesign plan.";
         try {
           localStorage.setItem("gsd-palette-pick", id);
+          localStorage.setItem("gsd-palette-gen", "rethink-v2");
         } catch (_) {}
       });
     });
 
     try {
-      const saved = localStorage.getItem("gsd-palette-pick");
-      if (saved && names[saved]) {
-        document.querySelector('[data-pick="' + saved + '"]')?.click();
+      if (localStorage.getItem("gsd-palette-gen") === "rethink-v2") {
+        const saved = localStorage.getItem("gsd-palette-pick");
+        if (saved && names[saved]) {
+          document.querySelector('[data-pick="' + saved + '"]')?.click();
+        }
       }
     } catch (_) {}
   </script>
