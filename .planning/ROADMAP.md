@@ -70,11 +70,11 @@ Plans:
   2. Command palette (⌘K) is restyled with shadcn Command/Dialog and still supports field-jump / keyboard behavior
   3. Overlay focus management remains usable (trap, ESC, restore); nested Select/Dialog focus is not broken
 
-**Plans:** 1/5 plans executed
+**Plans:** 2/5 plans executed
 Plans:
 
 - [x] 03-01-PLAN.md — Dialog/Command CLI install + Mist Sky overrides + FND-03 allowlist
-- [ ] 03-02-PLAN.md — Share + Gallery preview + Import + Load on Dialog
+- [x] 03-02-PLAN.md — Share + Gallery preview + Import + Load on Dialog
 - [ ] 03-03-PLAN.md — Submit preset restyle (OAuth/scan handlers intact)
 - [ ] 03-04-PLAN.md — Palette Command-in-Dialog + scoring + shouldFilter false
 - [ ] 03-05-PLAN.md — ConfigApp exclusivity + phase03 contracts + dual builds
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
-| 3. Modals, Palette & Overlays | 1/5 | In Progress|  |
+| 3. Modals, Palette & Overlays | 2/5 | In Progress|  |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
 

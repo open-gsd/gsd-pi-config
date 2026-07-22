@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 03
 current_phase_name: modals-palette-overlays
 status: executing
-stopped_at: Completed 03-01-PLAN.md
-last_updated: "2026-07-22T03:46:44.431Z"
+stopped_at: Completed 03-02-PLAN.md
+last_updated: "2026-07-22T03:50:54.167Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 03 execution started
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 14
-  completed_plans: 8
+  completed_plans: 9
   percent: 20
 ---
 
@@ -29,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 03 (modals-palette-overlays) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-21 — Phase 03 execution started
 
@@ -67,6 +67,7 @@ Progress: [█████████░] 88%
 | Phase 02 P03 | 3min | 2 tasks | 4 files |
 | Phase 02 P04 | 4min | 3 tasks | 8 files |
 | Phase 03 P01 | 4min | 2 tasks | 9 files |
+| Phase 03 P02 | 3min | 2 tasks | 5 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -115,6 +116,9 @@ Recent decisions affecting current work:
 - [Phase ?]: uiClasses.ts kept intact for Phase 3/4; only Phase 2 surfaces drop button symbols
 - [Phase ?]: Install only Dialog/Command (+ input-group peer) via shadcn@4.13.1; no AlertDialog dump (D-24)
 - [Phase ?]: Mist Sky Dialog defaults: bg-black/60 scrim, no product blur, rounded-none content/footer
+- [Phase ?]: Reuse ShareModal for Gallery preview via optional title prop (D-07)
+- [Phase ?]: Drop hand-rolled Escape listeners; Dialog owns X/ESC/backdrop dismiss on product modals
+- [Phase ?]: Load rows use left primary edge + soft wash instead of active:scale press theater
 
 ### Pending Todos
 
@@ -136,8 +140,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T03:46:44.426Z
-Stopped at: Completed 03-01-PLAN.md
+Last session: 2026-07-22T03:50:54.163Z
+Stopped at: Completed 03-02-PLAN.md
 Resume file: None
 
 ## Phase 3
