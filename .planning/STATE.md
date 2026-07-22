@@ -157,3 +157,9 @@ Resume file: None
 
 - CONTEXT ready: `.planning/phases/03-modals-palette-overlays/03-CONTEXT.md`
 - Next: `/gsd-ui-phase 3` then `/gsd-plan-phase 3` (or plan with UI gate).
+
+
+## Phase 4
+
+- CONTEXT ready: `.planning/phases/04-form-kit-adapters-editor-chrome/04-CONTEXT.md`
+- Next: `/gsd-ui-phase 4` then `/gsd-plan-phase 4`.
