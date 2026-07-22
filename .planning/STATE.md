@@ -65,10 +65,13 @@ Progress: [██████████] 100%
 
 ## Redesign direction (2026-07-21)
 
-- Phase 1 automated work complete; human UAT **parked** (optional later).
-- User requested **complete web redesign with custom brand colors**, full surface (Phases 2–4).
-- Palette selection: comparing 3 options in `.planning/design/palette-options.html` (A GSD Evolved · B Violet Signal · C Graphite Mint).
-- Next: lock palette → update PROJECT decisions (drop “neutral-only”) → `/gsd-discuss-phase 2` / plan Phase 2 with brand tokens.
+- Phase 1 automated work complete; human UAT **parked**.
+- User requested **complete web redesign** with custom colors, full surface (Phases 2–4).
+- **Palette locked: Mist Sky (A)** — clean/linear + soft light sky primary `#a8c5e8` (dark) / `#5a7fa8` (light).
+- Spec: `.planning/design/PALETTE.md`
+- Explicitly **not** logo cyan/purple.
+- Next: discuss/plan Phase 2 against Mist Sky tokens.
+
 
 ## Accumulated Context
 

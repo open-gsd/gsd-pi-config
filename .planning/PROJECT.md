@@ -24,7 +24,7 @@ Every web page uses a single shadcn-based design system so the site looks cohesi
 
 - [ ] Adopt shadcn/ui as the web design system (setup, tokens, primitives)
 - [ ] Restyle all web routes/pages onto shadcn components: gallery, wizard, editor shell, OAuth callback, shared chrome
-- [ ] Clean shadcn-default visual direction (neutral, modern hierarchy; minimal custom chrome)
+- [ ] Mist Sky visual direction (clean/linear hierarchy; soft sky primary; not logo cyan) — see `.planning/design/PALETTE.md`
 - [ ] Isolate restyle to a **web-only presentation layer** so desktop can keep current styling this milestone
 - [ ] Preserve existing web flows and feature behavior (no product rethink)
 - [ ] Keep preference domain logic, backends, and APIs behavior-stable through the UI swap
@@ -69,7 +69,7 @@ Every web page uses a single shadcn-based design system so the site looks cohesi
 | Web-only scope for this milestone | User prioritizes “the site”; desktop can follow later | — Pending |
 | Visual restyle, not UX/product rethink | Maintainability + look; keep proven flows | — Pending |
 | shadcn/ui as design system | Consistency and standard primitives for future UI work | — Pending |
-| Clean shadcn default aesthetic | Fast path to modern UI without custom brand system first | — Pending |
+| Mist Sky custom palette (clean/linear + soft sky) | User rejected neutral + logo colors; locked soft light accent system | Locked 2026-07-21 |
 | Web-only presentation layer vs shared restyle | Avoid forcing desktop restyle; reduce risk to Tauri app | — Pending |
 | Done = all web pages on shadcn | Clear acceptance: gallery, wizard, editor, OAuth, chrome | — Pending |
 
