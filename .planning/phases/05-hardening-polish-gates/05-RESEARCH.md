@@ -552,7 +552,7 @@ Do **not** “simplify” by removing the desktop branch.
 
 **If empty table were ideal:** A1–A3 are low-risk process assumptions; no package or compliance assumption requires user unlock beyond CONTEXT.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **How aggressively to migrate shared-section `gsd-*` colors vs leave bridge aliases?**  
    - What we know: Bridge maps `gsd-*` to Mist Sky already (cohesion partial). D-04 asks for semantic tokens.  
