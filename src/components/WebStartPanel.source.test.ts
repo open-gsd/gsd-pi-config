@@ -26,6 +26,9 @@ describe("WebStartPanel Mist Sky start empty (D-17 / D-18)", () => {
     expect(src).toMatch(/Load preset/);
     expect(src).toMatch(/New preset/);
     expect(src).toMatch(/browse the preset gallery/);
+    // Router Link with app path — not BASE_URL+gallery replace (was /gallery/gallery)
+    expect(src).toMatch(/to=\{?["']\/gallery["']\}?/);
+    expect(src).not.toMatch(/BASE_URL\}gallery/);
   });
 
   it("uses Mist Sky primary for kicker not logo cyan utility alone", () => {

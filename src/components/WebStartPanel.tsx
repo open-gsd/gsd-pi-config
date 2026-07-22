@@ -29,8 +29,6 @@ const STEPS = [
 ] as const;
 
 export function WebStartPanel({ onUpload, onLoadPreset }: WebStartPanelProps) {
-  const galleryHref = `${import.meta.env.BASE_URL}gallery`.replace(/\/?$/, "/gallery");
-
   return (
     <div className="flex flex-1 flex-col items-center justify-center px-6 py-12">
       <div className="w-full max-w-lg">
@@ -79,9 +77,9 @@ export function WebStartPanel({ onUpload, onLoadPreset }: WebStartPanelProps) {
 
         <p className="mt-6 text-xs text-muted-foreground">
           Or{" "}
-          <a href={galleryHref} className="text-primary hover:underline">
+          <Link to="/gallery" className="text-primary hover:underline">
             browse the preset gallery
-          </a>
+          </Link>
         </p>
       </div>
     </div>
