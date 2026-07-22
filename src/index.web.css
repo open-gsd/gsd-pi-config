@@ -5,15 +5,12 @@
  * Web-only entry selected via Vite alias `@platform-css` when VITE_PLATFORM=web.
  * Desktop keeps legacy product chrome in index.desktop.css (ISO-01).
  *
- * Primary token system: official shadcn neutral OKLCH scaffold (baseColor: neutral).
- * Do NOT map brand cyan into --primary this phase (THM-01 clean defaults).
+ * Primary token system: Mist Sky (D-00a) — soft sky primary, not logo cyan/purple.
+ * Strict linear: --radius: 0 (D-23).
  *
- * Transitional chrome bridge (Phase 1→2): product still uses uiClasses / .gsd-btn*
- * and Tailwind color utilities (bg-gsd-*, text-gsd-*). Those utilities map via
- * --color-gsd-* only — bare legacy vars are not the primary system. Remove this
- * bridge when Phase 2+ replaces product chrome with shadcn primitives.
- *
- * `@import "shadcn/tailwind.css"` added after Plan 03 package legitimacy gate.
+ * Transitional chrome bridge (Phase 2→4): product still uses uiClasses / .gsd-btn*
+ * and Tailwind color utilities (bg-gsd-*, text-gsd-*). Accent utilities map to
+ * Mist Sky --primary (D-21); .gsd-btn* class rules stay until Phase 4 (D-22).
  */
 
 @import "tailwindcss";
@@ -22,47 +19,49 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Official shadcn neutral OKLCH tokens ──────────────────────────────── */
+/* ─── Mist Sky semantic tokens (locked PALETTE.md) ───────────────────────── */
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0;
+  --background: #f5f7fa;
+  --foreground: #14171c;
+  --card: #ffffff;
+  --card-foreground: #14171c;
+  --popover: #ffffff;
+  --popover-foreground: #14171c;
+  --primary: #5a7fa8;
+  --primary-foreground: #f5f7fa;
+  --secondary: #eef1f5;
+  --secondary-foreground: #14171c;
+  --muted: #eef1f5;
+  --muted-foreground: #5c6570;
+  --accent: #eef1f5;
+  --accent-foreground: #14171c;
+  --destructive: #b85c56;
+  --border: #d8dee8;
+  --input: #d8dee8;
+  --ring: color-mix(in oklab, #5a7fa8 25%, transparent);
+  --primary-hover: #4a6d94;
+  --accent-soft: rgba(90, 127, 168, 0.1);
+  --chart-1: #5a7fa8;
+  --chart-2: #8b929e;
+  --chart-3: #b85c56;
+  --chart-4: #4a6d94;
+  --chart-5: #14171c;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #14171c;
+  --sidebar-primary: #5a7fa8;
+  --sidebar-primary-foreground: #f5f7fa;
+  --sidebar-accent: #eef1f5;
+  --sidebar-accent-foreground: #14171c;
+  --sidebar-border: #d8dee8;
+  --sidebar-ring: color-mix(in oklab, #5a7fa8 25%, transparent);
 
-  /* Transitional brand chrome (not --primary). Light defaults match opengsd.net. */
-  --bridge-accent: #0891b2;
-  --bridge-accent-hover: #0e7490;
-  --bridge-accent-dim: rgba(8, 145, 178, 0.12);
-  --bridge-on-accent: #f6f6f9;
+  /* Bridge aliases → Mist Sky primary path (no logo cyan) for .gsd-btn* rules */
+  --bridge-accent: var(--primary);
+  --bridge-accent-hover: var(--primary-hover);
+  --bridge-accent-dim: var(--accent-soft);
+  --bridge-on-accent: var(--primary-foreground);
   --bridge-success: #059669;
   --bridge-warning: #d97706;
   --bridge-scrollbar: #c4c5d4;
@@ -70,14 +69,10 @@
   --bridge-shell-offset: 3.5rem;
 }
 
-/* Dual-write theme.ts sets .dark + data-theme; dark brand chrome accents */
+/* Dual-write theme.ts sets .dark + data-theme; non-semantic bridge chrome */
 .dark,
 :root:is(.dark),
 [data-theme="dark"] {
-  --bridge-accent: #22d3ee;
-  --bridge-accent-hover: #38e0ff;
-  --bridge-accent-dim: rgba(34, 211, 238, 0.14);
-  --bridge-on-accent: #050507;
   --bridge-success: #34d399;
   --bridge-warning: #fbbf24;
   --bridge-scrollbar: #2a2a3d;
@@ -85,37 +80,40 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --radius: 0;
+  --background: #0b0c0e;
+  --foreground: #f2f4f7;
+  --card: #111316;
+  --card-foreground: #f2f4f7;
+  --popover: #111316;
+  --popover-foreground: #f2f4f7;
+  --primary: #a8c5e8;
+  --primary-foreground: #0b0c0e;
+  --secondary: #181b20;
+  --secondary-foreground: #f2f4f7;
+  --muted: #181b20;
+  --muted-foreground: #8b929e;
+  --accent: #181b20;
+  --accent-foreground: #f2f4f7;
+  --destructive: #e8b4b0;
+  --border: #2a2e36;
+  --input: #2a2e36;
+  --ring: color-mix(in oklab, #a8c5e8 35%, transparent);
+  --primary-hover: #c4daf2;
+  --accent-soft: rgba(168, 197, 232, 0.12);
+  --chart-1: #a8c5e8;
+  --chart-2: #8b929e;
+  --chart-3: #e8b4b0;
+  --chart-4: #c4daf2;
+  --chart-5: #f2f4f7;
+  --sidebar: #111316;
+  --sidebar-foreground: #f2f4f7;
+  --sidebar-primary: #a8c5e8;
+  --sidebar-primary-foreground: #0b0c0e;
+  --sidebar-accent: #181b20;
+  --sidebar-accent-foreground: #f2f4f7;
+  --sidebar-border: #2a2e36;
+  --sidebar-ring: color-mix(in oklab, #a8c5e8 35%, transparent);
 }
 
 /* Bind Tailwind color utilities to runtime CSS variables (TW4 @theme inline). */
@@ -132,6 +130,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -157,9 +156,8 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   /*
-   * Product Tailwind color utilities still used until Phase 2 restyle.
-   * Bind to shadcn semantic tokens + bridge accent — never reintroduce bare
-   * primary-system vars that isolation tests forbid.
+   * Product Tailwind color utilities still used until Phase 4 form restyle.
+   * Accent maps to Mist Sky --primary (D-21) — never logo cyan as the source.
    */
   --color-gsd-bg: var(--background);
   --color-gsd-surface: var(--card);
@@ -171,10 +169,10 @@
   --color-gsd-text-secondary: var(--muted-foreground);
   --color-gsd-text-dim: var(--muted-foreground);
   --color-gsd-text-muted: var(--muted-foreground);
-  --color-gsd-accent: var(--bridge-accent);
-  --color-gsd-accent-hover: var(--bridge-accent-hover);
-  --color-gsd-accent-dim: var(--bridge-accent-dim);
-  --color-gsd-on-accent: var(--bridge-on-accent);
+  --color-gsd-accent: var(--primary);
+  --color-gsd-accent-hover: var(--primary-hover);
+  --color-gsd-accent-dim: var(--accent-soft);
+  --color-gsd-on-accent: var(--primary-foreground);
   --color-gsd-success: var(--bridge-success);
   --color-gsd-warning: var(--bridge-warning);
   --color-gsd-danger: var(--destructive);
