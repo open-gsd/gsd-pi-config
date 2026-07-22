@@ -7,7 +7,7 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
 ## Phases
 
 - [ ] **Phase 1: Foundation, Isolation & Theme Bridge** - shadcn init, platform CSS split, tokens, and dual-write theme
-- [ ] **Phase 2: Web Chrome & Standalone Pages** - restyle WebShell, gallery, wizard, OAuth, and button language
+- [x] **Phase 2: Web Chrome & Standalone Pages** - restyle WebShell, gallery, wizard, OAuth, and button language (completed 2026-07-21)
 - [ ] **Phase 3: Modals, Palette & Overlays** - Dialog/AlertDialog modals, ⌘K command palette, focus traps
 - [ ] **Phase 4: Form Kit Adapters + Editor Chrome** - FormControls.web adapters, section inheritance, editor shell
 - [ ] **Phase 5: Hardening & Polish Gates** - isolation, behavior smoke, a11y parity, residual web cleanup
@@ -48,7 +48,7 @@ Plans:
   3. Loading, empty, and error states on restyled pages use consistent shadcn patterns
   4. Primary / secondary / destructive button language is consistent site-wide on restyled web surfaces (no mixed old/new button systems)
 
-**Plans:** 4/4 plans executed
+**Plans:** 4/4 plans complete
 Plans:
 
 - [x] 02-01-PLAN.md — Mist Sky tokens + radius 0 + bridge remap + isolation contracts
@@ -113,7 +113,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
-| 2. Web Chrome & Standalone Pages | 4/4 | In Progress|  |
+| 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
 | 3. Modals, Palette & Overlays | 0/TBD | Not started | - |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
