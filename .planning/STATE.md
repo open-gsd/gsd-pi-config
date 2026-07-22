@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 01
-current_phase_name: foundation-isolation-theme-bridge
+current_phase: 02
+current_phase_name: web-chrome-standalone-pages
 status: executing
-stopped_at: Completed 01-03-PLAN.md
-last_updated: "2026-07-21T23:47:38.442Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-07-22T01:06:13.644Z"
 last_activity: 2026-07-21
-last_activity_desc: Phase 01 execution started
+last_activity_desc: Phase 02 execution started
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
-  total_plans: 3
-  completed_plans: 3
+  total_plans: 8
+  completed_plans: 4
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-21)
 
 **Core value:** Every web page uses a single shadcn-based design system so the site looks cohesive and UI work stays maintainable — without changing what users can do.
-**Current focus:** Phase 01 — foundation-isolation-theme-bridge
+**Current focus:** Phase 02 — web-chrome-standalone-pages
 
 ## Current Position
 
-Phase: 01 (foundation-isolation-theme-bridge) — EXECUTING
-Plan: 3 of 3
-Status: All phase plans complete — await phase verification
-Last activity: 2026-07-21 — Completed 01-03-PLAN.md
+Phase: 02 (web-chrome-standalone-pages) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-07-21 — Phase 02 execution started
 
-Progress: [██████████] 100%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -61,7 +61,7 @@ Progress: [██████████] 100%
 |------|----------|-------|-------|
 | Phase 01 P02 | 4min | 2 tasks | 10 files |
 | Phase 01 P03 | 8min | 3 tasks | 8 files |
-
+| Phase 02 P01 | 2min | 2 tasks | 2 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -72,7 +72,6 @@ Progress: [██████████] 100%
 - Explicitly **not** logo cyan/purple.
 - Phase 2 CONTEXT gathered: `.planning/phases/02-web-chrome-standalone-pages/02-CONTEXT.md`
 - Next: `/gsd-plan-phase 2` (or `/gsd-ui-phase 2` first for UI contract).
-
 
 ## Accumulated Context
 
@@ -95,6 +94,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Install only Button (+ CLI-required support); FND-03 allowlist enforces no registry dump
 - [Phase ?]: Add @import shadcn/tailwind.css to web CSS only after legitimacy approval
 - [Phase ?]: Hand-install @base-ui/react when CLI add wrote Button but omitted the peer dep
+- [Phase ?]: Mist Sky locked palette applied as hex on web only (D-00a)
+- [Phase ?]: Keep .gsd-btn* class chrome until Phase 4; bridge aliases Mist Sky (D-22)
 
 ### Pending Todos
 
@@ -116,6 +117,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-21T23:47:38.418Z
-Stopped at: Completed 01-03-PLAN.md
+Last session: 2026-07-22T01:06:13.622Z
+Stopped at: Completed 02-01-PLAN.md
 Resume file: None

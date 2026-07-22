@@ -27,8 +27,8 @@
 - [ ] **WEB-03**: Wizard route (`/new`) is fully restyled on shadcn
 - [ ] **WEB-04**: Cloud editor route (`/`) shell is fully restyled on shadcn (sidebar, toolbar, status, banners)
 - [ ] **WEB-05**: OAuth callback route (`/oauth/callback`) is fully restyled on shadcn
-- [ ] **WEB-06**: Consistent Button language site-wide (primary / secondary / destructive; no mixed old/new button systems on web)
-- [ ] **WEB-07**: Loading, empty, and error states on restyled pages use consistent shadcn patterns
+- [x] **WEB-06**: Consistent Button language site-wide (primary / secondary / destructive; no mixed old/new button systems on web)
+- [x] **WEB-07**: Loading, empty, and error states on restyled pages use consistent shadcn patterns
 
 ### Forms & editor
 
@@ -93,8 +93,8 @@
 | WEB-03 | Phase 2 | Pending |
 | WEB-04 | Phase 4 | Pending |
 | WEB-05 | Phase 2 | Pending |
-| WEB-06 | Phase 2 | Pending |
-| WEB-07 | Phase 2 | Pending |
+| WEB-06 | Phase 2 | Complete |
+| WEB-07 | Phase 2 | Complete |
 | FRM-01 | Phase 4 | Pending |
 | FRM-02 | Phase 4 | Pending |
 | FRM-03 | Phase 4 | Pending |
