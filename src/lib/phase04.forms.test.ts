@@ -100,3 +100,34 @@ describe("phase04 FormControls FRM-01 multi/combo/tag contracts", () => {
     expect(src).toMatch(/function TagInput[\s\S]*?<Input[\s\S]*?function SectionHeader/);
   });
 });
+
+describe("phase04 FormControls FRM-03 ModelPicker contracts", () => {
+  const src = readSrc(FORM_CONTROLS);
+
+  it("exports ModelPicker with CUSTOM_SENTINEL __custom__", () => {
+    expect(src).toMatch(/export function ModelPicker\b/);
+    expect(src).toMatch(/CUSTOM_SENTINEL\s*=\s*["']__custom__["']/);
+  });
+
+  it("keeps custom free-text provider/model-id path", () => {
+    expect(src).toMatch(/provider\/model-id/);
+    expect(src).toMatch(/— Custom \(provider\/model\) —/);
+  });
+
+  it("uses Select groups on web for ModelPicker (Select-first, not Command)", () => {
+    expect(src).toMatch(/SelectGroup/);
+    expect(src).toMatch(/SelectLabel/);
+    // ModelPicker web path must not default to Command search
+    expect(src).not.toMatch(/function ModelPicker[\s\S]*?\bCommand\b[\s\S]*?function ModelChain/);
+  });
+
+  it("shows quiet No models available for empty catalog (D-12)", () => {
+    expect(src).toMatch(/No models available/);
+  });
+
+  it("maps empty/default via sentinel without emitting CUSTOM_SENTINEL as model id", () => {
+    expect(src).toMatch(/CUSTOM_SENTINEL/);
+    // onChange rules: empty → undefined; custom sentinel → ""
+    expect(src).toMatch(/v === CUSTOM_SENTINEL|next === CUSTOM_SENTINEL/);
+  });
+});
