@@ -180,3 +180,9 @@ Resume file: None
 
 - CONTEXT ready: `.planning/phases/04-form-kit-adapters-editor-chrome/04-CONTEXT.md`
 - Next: `/gsd-ui-phase 4` then `/gsd-plan-phase 4`.
+
+
+## Phase 5
+
+- CONTEXT ready: `.planning/phases/05-hardening-polish-gates/05-CONTEXT.md`
+- Next: `/gsd-ui-phase 5` (if gate) then `/gsd-plan-phase 5`.
