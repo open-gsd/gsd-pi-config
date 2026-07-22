@@ -116,8 +116,8 @@ describe("web CSS semantic tokens (THM-01)", () => {
     expect(webCss).not.toMatch(/--radius\s*:\s*0\.625rem/);
   });
 
-  it("bridges transitional product color utilities + button chrome until Phase 4 (D-21, D-22)", () => {
-    // uiClasses / ConfigApp still use gsd-* Tailwind colors and .gsd-btn until Phase 4
+  it("bridges transitional product color utilities to Mist Sky primary (D-21, locked Q2)", () => {
+    // uiClasses gsd-* color utilities still map through semantic tokens
     expect(webCss).toMatch(/--color-gsd-bg\s*:/);
     expect(webCss).toMatch(/--color-gsd-accent\s*:/);
     // Accent utility source is Mist Sky primary path — not cyan bridge literals (D-21)
@@ -125,10 +125,10 @@ describe("web CSS semantic tokens (THM-01)", () => {
     expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*var\(--bridge-accent\)/);
     expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*#22d3ee/i);
     expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*#0891b2/i);
-    // Editor bridge class chrome retained until Phase 4 form restyle (D-22)
-    expect(webCss).toContain(".gsd-btn");
-    expect(webCss).toContain(".gsd-btn-segment");
-    expect(webCss).toContain(".gsd-btn-primary");
+    // Phase 4 shell migrated ConfigApp web toolbar + FormControls to Button language
+    // (locked RESEARCH Q2). Residual .gsd-btn* CSS may remain for library sections
+    // (ApiKeys / Skills / Agents) until Phase 5 full purge — do NOT require them for
+    // Phase 4 success, and do NOT fail if they are still present.
   });
 
   it("does not copy legacy form tag chrome selectors", () => {
