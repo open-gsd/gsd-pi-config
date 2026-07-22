@@ -60,7 +60,7 @@ Plans:
 
 ### Phase 3: Modals, Palette & Overlays
 
-**Goal**: Shared overlays use shadcn Dialog/Command patterns without breaking focus or handlers
+**Goal:** As a web user of GSD Pi Config, I want product modals and the ⌘K palette on shadcn Dialog/Command with solid focus and exclusive open, so that overlays match Mist Sky chrome without changing share, import, load, submit, or field-jump behavior.
 **Mode:** mvp
 **Depends on**: Phase 2
 **Requirements**: OVL-01, OVL-02, OVL-03
@@ -70,7 +70,15 @@ Plans:
   2. Command palette (⌘K) is restyled with shadcn Command/Dialog and still supports field-jump / keyboard behavior
   3. Overlay focus management remains usable (trap, ESC, restore); nested Select/Dialog focus is not broken
 
-**Plans**: TBD
+**Plans:** 5 plans
+Plans:
+
+- [ ] 03-01-PLAN.md — Dialog/Command CLI install + Mist Sky overrides + FND-03 allowlist
+- [ ] 03-02-PLAN.md — Share + Gallery preview + Import + Load on Dialog
+- [ ] 03-03-PLAN.md — Submit preset restyle (OAuth/scan handlers intact)
+- [ ] 03-04-PLAN.md — Palette Command-in-Dialog + scoring + shouldFilter false
+- [ ] 03-05-PLAN.md — ConfigApp exclusivity + phase03 contracts + dual builds
+
 **UI hint**: yes
 
 ### Phase 4: Form Kit Adapters + Editor Chrome
@@ -114,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
-| 3. Modals, Palette & Overlays | 0/TBD | Not started | - |
+| 3. Modals, Palette & Overlays | 0/5 | Planned | - |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
 

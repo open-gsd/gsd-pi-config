@@ -639,19 +639,19 @@ const OVERLAYS = [
 
 ## Open Questions
 
-1. **Desktop semantic bridge vs fork**  
-   - What we know: Shared overlays will import `components/ui/*`; desktop CSS lacks full shadcn tokens.  
-   - What's unclear: How broken desktop modals look after class migration without a bridge.  
-   - Recommendation: Implement shared restyle → dual visual smoke → add minimal var bridge only if needed (D-22).
+> **Planner lock (2026-07-21):** All three items resolved for Phase 3 plans. Do not re-open during execute.
 
-2. **ShareModal title API**  
-   - What we know: Gallery reuses ShareModal; UI-SPEC wants “Preview preset”.  
-   - What's unclear: none material.  
-   - Recommendation: Optional `title?: string` defaulting to “Share preset”; Gallery passes preview title. Optional `description` override if needed.
+1. **Desktop semantic bridge vs fork** — **RESOLVED**  
+   - **Decision:** Shared React overlay components first (D-22). After restyle, dual-build smoke; add **minimal** desktop CSS semantic var bridge only if shared Dialog/Command classnames lack tokens on desktop. No web/desktop overlay file fork unless bridge is proven insufficient.  
+   - **Plan:** 03-05 Task 2.
 
-3. **Busy-on-Submit**  
-   - What we know: `busy` state exists but OAuth navigates away.  
-   - Recommendation: Do not redesign; label swap remains for future/non-nav paths.
+2. **ShareModal title API** — **RESOLVED**  
+   - **Decision:** Optional `title?: string` defaulting to **Share preset**; Gallery passes **Preview preset**. Optional description override only if needed for copy parity.  
+   - **Plan:** 03-02 Task 1.
+
+3. **Busy-on-Submit** — **RESOLVED**  
+   - **Decision:** Do not redesign OAuth navigation or invent multi-step nested dialogs. Leave existing busy flag behavior as-is; restyle labels only (D-08).  
+   - **Plan:** 03-03 Task 1.
 
 ## Environment Availability
 
