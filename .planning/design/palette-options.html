@@ -3,328 +3,321 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GSD Pi Config — Full rethink palettes</title>
+  <title>GSD Pi Config — Clean / linear palettes</title>
   <style>
     :root {
-      --page: #111110;
-      --ink: #f2f0ea;
-      --muted: #9a968c;
-      --line: #2a2926;
-      --card: #1a1917;
-      --focus: #e8a54b;
-      font-family: "Geist", "Segoe UI", system-ui, sans-serif;
+      --page: #0c0c0c;
+      --ink: #f5f5f5;
+      --muted: #888;
+      --line: #2a2a2a;
+      --card: #141414;
+      font-family: "Inter", "Geist", "Segoe UI", system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       background: var(--page);
       color: var(--ink);
-      line-height: 1.45;
+      line-height: 1.4;
       min-height: 100vh;
+      font-size: 14px;
     }
     header.page {
       position: sticky;
       top: 0;
       z-index: 20;
-      backdrop-filter: blur(12px);
-      background: color-mix(in srgb, var(--page) 90%, transparent);
+      background: rgba(12, 12, 12, 0.92);
       border-bottom: 1px solid var(--line);
-      padding: 1rem 1.5rem 1.1rem;
+      padding: 1rem 1.5rem 1.05rem;
     }
     header.page h1 {
-      margin: 0 0 0.3rem;
-      font-size: 1.2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      font-weight: 560;
+      letter-spacing: -0.03em;
     }
     header.page p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.88rem;
-      max-width: 48rem;
+      font-size: 0.84rem;
+      max-width: 40rem;
+      line-height: 1.5;
     }
-    .ban {
-      display: inline-flex;
+    .rules {
+      display: flex;
       flex-wrap: wrap;
       gap: 0.35rem;
       margin-top: 0.75rem;
     }
-    .ban span {
-      font-size: 0.68rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid #3a3530;
-      color: #c4b8a8;
-      background: #1c1916;
-    }
-    .ban span.x {
-      text-decoration: line-through;
-      opacity: 0.55;
+    .rules span {
+      font-size: 0.65rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.22rem 0.45rem;
+      border: 1px solid #333;
+      color: #aaa;
     }
     .controls {
       display: flex;
-      flex-wrap: wrap;
       gap: 0.5rem;
-      margin-top: 0.9rem;
+      margin-top: 0.85rem;
       align-items: center;
     }
     .controls label {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
     .seg {
       display: inline-flex;
       border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
     }
     .seg button {
       border: 0;
       background: transparent;
       color: var(--muted);
-      padding: 0.45rem 0.9rem;
+      padding: 0.4rem 0.75rem;
       font: inherit;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.78rem;
       cursor: pointer;
     }
     .seg button[aria-pressed="true"] {
-      background: #2a2824;
-      color: var(--ink);
+      background: #222;
+      color: #fff;
     }
     main {
       padding: 1.25rem 1.5rem 3rem;
       display: grid;
-      gap: 1.25rem;
+      gap: 1px;
+      background: var(--line);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
     }
     @media (min-width: 1100px) {
-      main.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      main.grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
     }
     .option {
-      border: 1px solid var(--line);
-      border-radius: 14px;
       background: var(--card);
-      overflow: hidden;
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
     .option.selected {
-      outline: 2px solid var(--focus);
-      outline-offset: 2px;
+      outline: 1px solid #fff;
+      outline-offset: -1px;
+      z-index: 1;
     }
     .option-head {
-      padding: 1rem 1.1rem 0.8rem;
+      padding: 1rem 1.1rem 0.85rem;
       border-bottom: 1px solid var(--line);
     }
     .option-head .tag {
-      display: inline-block;
       font-size: 0.62rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 0.35rem;
+      letter-spacing: 0.12em;
+      color: #777;
+      margin-bottom: 0.4rem;
     }
     .option-head h2 {
-      margin: 0 0 0.25rem;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
+      margin: 0 0 0.3rem;
+      font-size: 0.95rem;
+      font-weight: 560;
+      letter-spacing: -0.03em;
     }
     .option-head p {
       margin: 0;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--muted);
+      line-height: 1.45;
     }
     .swatches {
       display: flex;
-      gap: 0.35rem;
-      margin-top: 0.7rem;
-      flex-wrap: wrap;
+      gap: 0;
+      margin-top: 0.75rem;
+      border: 1px solid #333;
+      width: fit-content;
     }
     .swatch {
-      width: 1.4rem;
-      height: 1.4rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
+      width: 1.5rem;
+      height: 1.1rem;
     }
     .preview-wrap {
       padding: 0.85rem;
-      background: #0c0c0b;
+      background: #0a0a0a;
       flex: 1;
     }
+
+    /* Shared mock geometry — hard linear, 0 radius optional per palette */
     .mock {
-      --radius: 0.625rem;
-      border-radius: 12px;
-      overflow: hidden;
       border: 1px solid var(--p-border);
       background: var(--p-bg);
       color: var(--p-text);
       font-size: 12px;
-      min-height: 440px;
+      min-height: 430px;
       display: flex;
       flex-direction: column;
+      border-radius: var(--p-radius, 0);
+      overflow: hidden;
     }
 
-    /* ═══ A — Copper Paper (warm editorial) ═══ */
+    /* A — Pure Mono (black / white / gray only) */
     .mock.p-a {
-      --p-bg: #1a1612;
-      --p-surface: #241f1a;
-      --p-surface-2: #2c2620;
-      --p-border: #3d342c;
-      --p-text: #f3ebe1;
-      --p-muted: #b0a293;
-      --p-dim: #86786a;
-      --p-primary: #d97745;
-      --p-primary-fg: #1a120c;
-      --p-primary-hover: #e8915e;
-      --p-secondary: #c4a574;
-      --p-secondary-dim: rgba(196, 165, 116, 0.14);
-      --p-danger: #e07a6a;
-      --p-success: #8fbc8f;
-      --p-ring: rgba(217, 119, 69, 0.35);
-      --p-kicker: #e0b07a;
+      --p-radius: 0;
+      --p-bg: #0a0a0a;
+      --p-surface: #111;
+      --p-surface-2: #171717;
+      --p-border: #2a2a2a;
+      --p-text: #f5f5f5;
+      --p-muted: #8a8a8a;
+      --p-dim: #5c5c5c;
+      --p-primary: #f5f5f5;
+      --p-primary-fg: #0a0a0a;
+      --p-primary-hover: #fff;
+      --p-secondary: #8a8a8a;
+      --p-secondary-dim: rgba(255,255,255,0.06);
+      --p-danger: #cfcfcf;
+      --p-ring: rgba(255,255,255,0.25);
+      --p-active-bar: #f5f5f5;
     }
     .mock.p-a.light {
-      --p-bg: #f7f1e8;
-      --p-surface: #fffcf7;
-      --p-surface-2: #efe6d8;
-      --p-border: #ddd0bc;
-      --p-text: #1f1812;
-      --p-muted: #6b5d4e;
-      --p-dim: #8a7a68;
-      --p-primary: #c45c2a;
-      --p-primary-fg: #fff8f2;
-      --p-primary-hover: #a84c22;
-      --p-secondary: #8b6f47;
-      --p-secondary-dim: rgba(139, 111, 71, 0.12);
-      --p-danger: #c23b2e;
-      --p-success: #3d7a4a;
-      --p-ring: rgba(196, 92, 42, 0.28);
-      --p-kicker: #a85a2a;
+      --p-bg: #fafafa;
+      --p-surface: #fff;
+      --p-surface-2: #f0f0f0;
+      --p-border: #e0e0e0;
+      --p-text: #111;
+      --p-muted: #666;
+      --p-dim: #999;
+      --p-primary: #111;
+      --p-primary-fg: #fafafa;
+      --p-primary-hover: #000;
+      --p-secondary: #666;
+      --p-secondary-dim: rgba(0,0,0,0.05);
+      --p-danger: #333;
+      --p-ring: rgba(0,0,0,0.15);
+      --p-active-bar: #111;
     }
 
-    /* ═══ B — Midnight Ink (deep indigo + coral, no cyan) ═══ */
+    /* B — Cool Zinc (linear, slight cool cast, still almost mono) */
     .mock.p-b {
-      --p-bg: #0e1118;
-      --p-surface: #151a24;
-      --p-surface-2: #1c2330;
-      --p-border: #2a3344;
-      --p-text: #e8ecf4;
-      --p-muted: #95a0b5;
-      --p-dim: #6b7690;
-      --p-primary: #f07167;
-      --p-primary-fg: #1a0c0a;
-      --p-primary-hover: #ff8a80;
-      --p-secondary: #7b8db0;
-      --p-secondary-dim: rgba(123, 141, 176, 0.16);
-      --p-danger: #f07167;
-      --p-success: #6bbf8a;
-      --p-ring: rgba(240, 113, 103, 0.35);
-      --p-kicker: #f0a58e;
+      --p-radius: 0;
+      --p-bg: #09090b;
+      --p-surface: #0f0f12;
+      --p-surface-2: #16161a;
+      --p-border: #27272a;
+      --p-text: #fafafa;
+      --p-muted: #a1a1aa;
+      --p-dim: #71717a;
+      --p-primary: #e4e4e7;
+      --p-primary-fg: #09090b;
+      --p-primary-hover: #fff;
+      --p-secondary: #a1a1aa;
+      --p-secondary-dim: rgba(228,228,231,0.06);
+      --p-danger: #d4d4d8;
+      --p-ring: rgba(228,228,231,0.2);
+      --p-active-bar: #e4e4e7;
     }
     .mock.p-b.light {
-      --p-bg: #eef1f6;
+      --p-bg: #fafafa;
       --p-surface: #ffffff;
-      --p-surface-2: #e2e7f0;
-      --p-border: #c8d0de;
-      --p-text: #141820;
-      --p-muted: #556074;
-      --p-dim: #74809a;
-      --p-primary: #d94b42;
-      --p-primary-fg: #fff5f4;
-      --p-primary-hover: #c23e36;
-      --p-secondary: #4a5a78;
-      --p-secondary-dim: rgba(74, 90, 120, 0.1);
-      --p-danger: #c53030;
-      --p-success: #2f7a4e;
-      --p-ring: rgba(217, 75, 66, 0.28);
-      --p-kicker: #c45a4a;
+      --p-surface-2: #f4f4f5;
+      --p-border: #e4e4e7;
+      --p-text: #18181b;
+      --p-muted: #71717a;
+      --p-dim: #a1a1aa;
+      --p-primary: #18181b;
+      --p-primary-fg: #fafafa;
+      --p-primary-hover: #000;
+      --p-secondary: #52525b;
+      --p-secondary-dim: rgba(24,24,27,0.05);
+      --p-danger: #3f3f46;
+      --p-ring: rgba(24,24,27,0.12);
+      --p-active-bar: #18181b;
     }
 
-    /* ═══ C — Olive Noir (earthy, no teal/mint logo vibes) ═══ */
+    /* C — Soft Stone (warm gray only — no copper/gold accent) */
     .mock.p-c {
-      --p-bg: #121410;
-      --p-surface: #1a1d16;
-      --p-surface-2: #22261c;
-      --p-border: #32382a;
-      --p-text: #eceee4;
-      --p-muted: #a3a894;
-      --p-dim: #787d6c;
-      --p-primary: #c9a227;
-      --p-primary-fg: #1a1608;
-      --p-primary-hover: #dbb73a;
-      --p-secondary: #8a9a6e;
-      --p-secondary-dim: rgba(138, 154, 110, 0.16);
-      --p-danger: #d97b6c;
-      --p-success: #8aab6a;
-      --p-ring: rgba(201, 162, 39, 0.35);
-      --p-kicker: #d4bc5a;
+      --p-radius: 2px;
+      --p-bg: #0e0d0c;
+      --p-surface: #141312;
+      --p-surface-2: #1b1a18;
+      --p-border: #2c2a27;
+      --p-text: #f2f0ec;
+      --p-muted: #9c9890;
+      --p-dim: #6e6a62;
+      --p-primary: #f2f0ec;
+      --p-primary-fg: #0e0d0c;
+      --p-primary-hover: #fff;
+      --p-secondary: #9c9890;
+      --p-secondary-dim: rgba(242,240,236,0.06);
+      --p-danger: #d6d2c8;
+      --p-ring: rgba(242,240,236,0.2);
+      --p-active-bar: #f2f0ec;
     }
     .mock.p-c.light {
-      --p-bg: #f3f2ea;
-      --p-surface: #fbfaf4;
-      --p-surface-2: #e8e6d8;
-      --p-border: #d0cdb8;
-      --p-text: #1a1b14;
-      --p-muted: #5c5f4e;
-      --p-dim: #787b68;
-      --p-primary: #8a7018;
-      --p-primary-fg: #faf6e8;
-      --p-primary-hover: #6f5a12;
-      --p-secondary: #5a6b42;
-      --p-secondary-dim: rgba(90, 107, 66, 0.12);
-      --p-danger: #b54538;
-      --p-success: #4a6b32;
-      --p-ring: rgba(138, 112, 24, 0.28);
-      --p-kicker: #7a6418;
+      --p-bg: #f7f6f3;
+      --p-surface: #fffcf9;
+      --p-surface-2: #eeece7;
+      --p-border: #ddd9d0;
+      --p-text: #171614;
+      --p-muted: #6b6760;
+      --p-dim: #9a958c;
+      --p-primary: #171614;
+      --p-primary-fg: #f7f6f3;
+      --p-primary-hover: #000;
+      --p-secondary: #6b6760;
+      --p-secondary-dim: rgba(23,22,20,0.05);
+      --p-danger: #3d3a34;
+      --p-ring: rgba(23,22,20,0.12);
+      --p-active-bar: #171614;
     }
 
     .m-top {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.55rem 0.7rem;
+      gap: 0.55rem;
+      padding: 0 0.75rem;
+      height: 2.5rem;
       border-bottom: 1px solid var(--p-border);
       background: var(--p-surface);
     }
     .m-logo {
-      width: 1.35rem;
-      height: 1.35rem;
-      border-radius: 6px;
-      background: var(--p-primary);
+      width: 1rem;
+      height: 1rem;
+      background: var(--p-text);
       flex-shrink: 0;
-      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--p-text) 12%, transparent);
     }
     .m-brand {
-      font-weight: 600;
-      font-size: 0.72rem;
-      margin-right: 0.15rem;
+      font-weight: 550;
+      font-size: 0.7rem;
+      letter-spacing: -0.02em;
     }
     .m-nav {
       display: flex;
-      border: 1px solid var(--p-border);
-      border-radius: 6px;
-      overflow: hidden;
+      margin-left: 0.35rem;
+      gap: 0;
     }
     .m-nav span {
-      padding: 0.28rem 0.55rem;
+      padding: 0.35rem 0.55rem;
       color: var(--p-muted);
       font-size: 0.68rem;
       font-weight: 500;
+      border-bottom: 1px solid transparent;
     }
     .m-nav span.on {
-      background: var(--p-primary);
-      color: var(--p-primary-fg);
+      color: var(--p-text);
+      border-bottom-color: var(--p-active-bar);
     }
     .m-theme {
       margin-left: auto;
       display: flex;
       border: 1px solid var(--p-border);
-      border-radius: 6px;
-      overflow: hidden;
     }
     .m-theme span {
-      padding: 0.28rem 0.45rem;
-      font-size: 0.65rem;
+      padding: 0.22rem 0.4rem;
+      font-size: 0.62rem;
       color: var(--p-muted);
     }
     .m-theme span.on {
@@ -333,60 +326,61 @@
     }
     .m-body {
       display: grid;
-      grid-template-columns: 7.5rem 1fr;
+      grid-template-columns: 7.25rem 1fr;
       flex: 1;
     }
     .m-side {
       border-right: 1px solid var(--p-border);
       background: var(--p-surface);
-      padding: 0.55rem 0.4rem;
+      padding: 0.5rem 0;
     }
     .m-side .label {
       font-size: 0.55rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       color: var(--p-dim);
-      padding: 0.25rem 0.45rem;
-      margin-top: 0.35rem;
+      padding: 0.45rem 0.7rem 0.25rem;
     }
     .m-side .item {
-      padding: 0.35rem 0.5rem;
-      border-radius: 6px;
+      padding: 0.38rem 0.7rem;
       color: var(--p-muted);
       font-size: 0.72rem;
+      border-left: 2px solid transparent;
     }
     .m-side .item.active {
+      color: var(--p-text);
       background: var(--p-secondary-dim);
-      color: var(--p-kicker);
+      border-left-color: var(--p-active-bar);
       font-weight: 500;
     }
     .m-main {
-      padding: 1rem 1rem 0.85rem;
+      padding: 1.05rem 1rem 0.9rem;
       background: var(--p-bg);
     }
     .m-kicker {
       font-size: 0.58rem;
-      font-weight: 600;
+      font-weight: 500;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: var(--p-kicker);
-      margin-bottom: 0.35rem;
+      color: var(--p-dim);
+      margin-bottom: 0.4rem;
     }
     .m-main h3 {
       margin: 0 0 0.35rem;
       font-size: 0.95rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-weight: 560;
+      letter-spacing: -0.03em;
     }
     .m-main .lead {
-      margin: 0 0 0.85rem;
+      margin: 0 0 0.9rem;
       color: var(--p-muted);
       font-size: 0.72rem;
-      max-width: 18rem;
+      max-width: 17rem;
+      line-height: 1.45;
     }
     .m-step {
-      border-left: 2px solid var(--p-border);
-      padding-left: 0.7rem;
+      border-left: 1px solid var(--p-border);
+      padding-left: 0.65rem;
       margin-bottom: 0.55rem;
     }
     .m-step strong {
@@ -402,18 +396,18 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.35rem;
-      margin-top: 0.85rem;
+      margin-top: 0.9rem;
     }
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 1.85rem;
+      min-height: 1.75rem;
       padding: 0 0.7rem;
-      border-radius: 6px;
       font-size: 0.68rem;
       font-weight: 500;
       border: 1px solid transparent;
+      border-radius: var(--p-radius, 0);
     }
     .btn-primary {
       background: var(--p-primary);
@@ -422,22 +416,25 @@
     .btn-secondary {
       background: transparent;
       border-color: var(--p-border);
-      color: var(--p-muted);
+      color: var(--p-text);
     }
     .btn-ghost {
       background: transparent;
       color: var(--p-muted);
+      border-color: transparent;
     }
     .btn-danger {
-      background: color-mix(in srgb, var(--p-danger) 16%, transparent);
-      color: var(--p-danger);
-      border-color: color-mix(in srgb, var(--p-danger) 32%, transparent);
+      background: transparent;
+      color: var(--p-muted);
+      border-color: var(--p-border);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
     .m-card {
-      margin-top: 0.75rem;
+      margin-top: 0.8rem;
       border: 1px solid var(--p-border);
       background: var(--p-surface);
-      border-radius: 8px;
+      border-radius: var(--p-radius, 0);
       padding: 0.55rem 0.65rem;
     }
     .m-card .row {
@@ -447,26 +444,26 @@
       gap: 0.5rem;
       font-size: 0.68rem;
     }
-    .m-card .row + .row { margin-top: 0.4rem; }
+    .m-card .row + .row { margin-top: 0.45rem; }
     .m-card .muted { color: var(--p-muted); }
     .pill {
       font-size: 0.58rem;
-      padding: 0.15rem 0.4rem;
-      border-radius: 999px;
-      background: var(--p-secondary-dim);
-      color: var(--p-kicker);
-      font-weight: 500;
+      padding: 0.12rem 0.35rem;
+      border: 1px solid var(--p-border);
+      color: var(--p-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
     .field {
-      margin-top: 0.35rem;
-      height: 1.7rem;
-      border-radius: 6px;
+      height: 1.6rem;
       border: 1px solid var(--p-border);
       background: var(--p-surface-2);
+      border-radius: var(--p-radius, 0);
+      flex: 1;
     }
     .field.focus {
-      border-color: var(--p-primary);
-      box-shadow: 0 0 0 2px var(--p-ring);
+      border-color: var(--p-text);
+      box-shadow: 0 0 0 1px var(--p-ring);
     }
     .option-foot {
       padding: 0.85rem 1.1rem 1rem;
@@ -477,55 +474,56 @@
     }
     .hexes {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.64rem;
-      color: var(--muted);
+      font-size: 0.62rem;
+      color: #777;
       display: grid;
-      gap: 0.2rem;
+      gap: 0.15rem;
     }
     .pick {
-      border: 1px solid var(--line);
-      background: #242220;
-      color: var(--ink);
-      border-radius: 8px;
-      padding: 0.55rem 0.85rem;
+      border: 1px solid #333;
+      background: transparent;
+      color: #f5f5f5;
+      padding: 0.5rem 0.75rem;
       font: inherit;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.78rem;
+      font-weight: 550;
       cursor: pointer;
+      letter-spacing: -0.01em;
+      text-align: left;
     }
-    .pick:hover { border-color: #4a453c; }
+    .pick:hover { border-color: #666; }
     .pick.active {
-      background: color-mix(in srgb, var(--focus) 16%, #242220);
-      border-color: var(--focus);
-      color: #f5d9a8;
+      background: #f5f5f5;
+      color: #0c0c0c;
+      border-color: #f5f5f5;
     }
     footer.page {
-      padding: 0 1.5rem 2.5rem;
+      padding: 1.25rem 1.5rem 2.5rem;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
     }
     footer.page code {
-      font-size: 0.75rem;
-      color: #d4cfc4;
+      font-size: 0.74rem;
+      color: #bbb;
     }
   </style>
 </head>
 <body>
   <header class="page">
-    <h1>Full rethink — nothing like logo colors</h1>
+    <h1>Clean / linear — almost no color</h1>
     <p>
-      Fresh directions for the web redesign. Explicitly <strong>not</strong> cyan, violet, mint, or
-      “neon AI default.” Same layout mock so you judge color language only.
+      Hierarchy from type, borders, and space. Primary is high-contrast ink, not a brand hue.
+      No cyan, purple, copper, coral, gold, or mint.
     </p>
-    <div class="ban" aria-label="Banned from these options">
-      <span class="x">#22d3ee cyan</span>
-      <span class="x">#a855f7 purple</span>
-      <span class="x">logo gradient</span>
-      <span class="x">stock shadcn neutral</span>
-      <span>new systems only</span>
+    <div class="rules">
+      <span>0–1 accents</span>
+      <span>flat surfaces</span>
+      <span>1px rules</span>
+      <span>left edge active</span>
+      <span>underline nav</span>
     </div>
     <div class="controls">
-      <label>Preview</label>
+      <label>Mode</label>
       <div class="seg" role="group" aria-label="Preview theme">
         <button type="button" id="mode-dark" aria-pressed="true">Dark</button>
         <button type="button" id="mode-light" aria-pressed="false">Light</button>
@@ -533,19 +531,18 @@
     </div>
   </header>
 
-  <main class="grid-3" id="options">
-    <!-- A Copper Paper -->
+  <main class="grid-3">
     <article class="option" data-id="a">
       <div class="option-head">
-        <div class="tag">Option A · Warm editorial</div>
-        <h2>Copper Paper</h2>
-        <p>Warm brown paper surfaces + copper primary. Feels print/tooling, not terminal-neon.</p>
+        <div class="tag">Option A · Strict</div>
+        <h2>Pure Mono</h2>
+        <p>Black, white, gray only. Sharp corners. Active state = white bar / white button.</p>
         <div class="swatches" aria-hidden="true">
-          <span class="swatch" style="background:#1a1612"></span>
-          <span class="swatch" style="background:#241f1a"></span>
-          <span class="swatch" style="background:#f3ebe1"></span>
-          <span class="swatch" style="background:#d97745"></span>
-          <span class="swatch" style="background:#c4a574"></span>
+          <span class="swatch" style="background:#0a0a0a"></span>
+          <span class="swatch" style="background:#111"></span>
+          <span class="swatch" style="background:#2a2a2a"></span>
+          <span class="swatch" style="background:#8a8a8a"></span>
+          <span class="swatch" style="background:#f5f5f5"></span>
         </div>
       </div>
       <div class="preview-wrap">
@@ -567,11 +564,11 @@
               <div class="item">Hooks</div>
             </aside>
             <div class="m-main">
-              <div class="m-kicker">Configure · Ship · Done</div>
-              <h3>Cloud preferences editor</h3>
-              <p class="lead">Import, edit, download — same jobs, entirely new visual system.</p>
-              <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
-              <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
+              <div class="m-kicker">Cloud editor</div>
+              <h3>Configure preferences</h3>
+              <p class="lead">Import, edit, download. Same jobs — linear chrome, no brand paint.</p>
+              <div class="m-step"><strong>1 · Import</strong><span>preferences.md + optional JSON</span></div>
+              <div class="m-step"><strong>2 · Edit</strong><span>Session draft only</span></div>
               <div class="m-actions">
                 <span class="btn btn-primary">Import files</span>
                 <span class="btn btn-secondary">Load preset</span>
@@ -580,7 +577,7 @@
               </div>
               <div class="m-card">
                 <div class="row"><span class="muted">Token profile</span><span class="pill">balanced</span></div>
-                <div class="row"><span class="muted">Focus field</span><div class="field focus" style="flex:1"></div></div>
+                <div class="row"><span class="muted">Focus</span><div class="field focus"></div></div>
               </div>
             </div>
           </div>
@@ -588,25 +585,24 @@
       </div>
       <div class="option-foot">
         <div class="hexes">
-          <div>bg #1a1612 · surface #241f1a · text #f3ebe1</div>
-          <div>primary #d97745 · secondary #c4a574 · danger #e07a6a</div>
+          <div>#0a0a0a · #111 · #2a2a2a · #8a8a8a · #f5f5f5</div>
+          <div>primary = ink (no hue)</div>
         </div>
-        <button type="button" class="pick" data-pick="a">Select Copper Paper</button>
+        <button type="button" class="pick" data-pick="a">Select Pure Mono</button>
       </div>
     </article>
 
-    <!-- B Midnight Ink -->
     <article class="option" data-id="b">
       <div class="option-head">
-        <div class="tag">Option B · Cool ink + coral</div>
-        <h2>Midnight Ink</h2>
-        <p>Deep blue-ink surfaces with coral action color. Serious UI, warm hit of energy — zero cyan.</p>
+        <div class="tag">Option B · System</div>
+        <h2>Cool Zinc</h2>
+        <p>Same linear grammar, zinc grays (slight cool cast). Closest to a modern system UI without color chrome.</p>
         <div class="swatches" aria-hidden="true">
-          <span class="swatch" style="background:#0e1118"></span>
-          <span class="swatch" style="background:#151a24"></span>
-          <span class="swatch" style="background:#e8ecf4"></span>
-          <span class="swatch" style="background:#f07167"></span>
-          <span class="swatch" style="background:#7b8db0"></span>
+          <span class="swatch" style="background:#09090b"></span>
+          <span class="swatch" style="background:#0f0f12"></span>
+          <span class="swatch" style="background:#27272a"></span>
+          <span class="swatch" style="background:#a1a1aa"></span>
+          <span class="swatch" style="background:#e4e4e7"></span>
         </div>
       </div>
       <div class="preview-wrap">
@@ -628,11 +624,11 @@
               <div class="item">Hooks</div>
             </aside>
             <div class="m-main">
-              <div class="m-kicker">Configure · Ship · Done</div>
-              <h3>Cloud preferences editor</h3>
-              <p class="lead">Import, edit, download — same jobs, entirely new visual system.</p>
-              <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
-              <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
+              <div class="m-kicker">Cloud editor</div>
+              <h3>Configure preferences</h3>
+              <p class="lead">Import, edit, download. Same jobs — linear chrome, no brand paint.</p>
+              <div class="m-step"><strong>1 · Import</strong><span>preferences.md + optional JSON</span></div>
+              <div class="m-step"><strong>2 · Edit</strong><span>Session draft only</span></div>
               <div class="m-actions">
                 <span class="btn btn-primary">Import files</span>
                 <span class="btn btn-secondary">Load preset</span>
@@ -641,7 +637,7 @@
               </div>
               <div class="m-card">
                 <div class="row"><span class="muted">Token profile</span><span class="pill">balanced</span></div>
-                <div class="row"><span class="muted">Focus field</span><div class="field focus" style="flex:1"></div></div>
+                <div class="row"><span class="muted">Focus</span><div class="field focus"></div></div>
               </div>
             </div>
           </div>
@@ -649,25 +645,24 @@
       </div>
       <div class="option-foot">
         <div class="hexes">
-          <div>bg #0e1118 · surface #151a24 · text #e8ecf4</div>
-          <div>primary #f07167 · secondary #7b8db0 · danger #f07167</div>
+          <div>#09090b · #0f0f12 · #27272a · #a1a1aa · #e4e4e7</div>
+          <div>primary = zinc ink (no hue)</div>
         </div>
-        <button type="button" class="pick" data-pick="b">Select Midnight Ink</button>
+        <button type="button" class="pick" data-pick="b">Select Cool Zinc</button>
       </div>
     </article>
 
-    <!-- C Olive Noir -->
     <article class="option" data-id="c">
       <div class="option-head">
-        <div class="tag">Option C · Earth + gold</div>
-        <h2>Olive Noir</h2>
-        <p>Charcoal-olive fields with gold primary. Quiet luxury / instrument panel — not SaaS blue-green.</p>
+        <div class="tag">Option C · Soft edges</div>
+        <h2>Soft Stone</h2>
+        <p>Same hierarchy, warm-neutral grays only (paper, not copper). 2px radius — still linear, slightly softer.</p>
         <div class="swatches" aria-hidden="true">
-          <span class="swatch" style="background:#121410"></span>
-          <span class="swatch" style="background:#1a1d16"></span>
-          <span class="swatch" style="background:#eceee4"></span>
-          <span class="swatch" style="background:#c9a227"></span>
-          <span class="swatch" style="background:#8a9a6e"></span>
+          <span class="swatch" style="background:#0e0d0c"></span>
+          <span class="swatch" style="background:#141312"></span>
+          <span class="swatch" style="background:#2c2a27"></span>
+          <span class="swatch" style="background:#9c9890"></span>
+          <span class="swatch" style="background:#f2f0ec"></span>
         </div>
       </div>
       <div class="preview-wrap">
@@ -689,11 +684,11 @@
               <div class="item">Hooks</div>
             </aside>
             <div class="m-main">
-              <div class="m-kicker">Configure · Ship · Done</div>
-              <h3>Cloud preferences editor</h3>
-              <p class="lead">Import, edit, download — same jobs, entirely new visual system.</p>
-              <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
-              <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
+              <div class="m-kicker">Cloud editor</div>
+              <h3>Configure preferences</h3>
+              <p class="lead">Import, edit, download. Same jobs — linear chrome, no brand paint.</p>
+              <div class="m-step"><strong>1 · Import</strong><span>preferences.md + optional JSON</span></div>
+              <div class="m-step"><strong>2 · Edit</strong><span>Session draft only</span></div>
               <div class="m-actions">
                 <span class="btn btn-primary">Import files</span>
                 <span class="btn btn-secondary">Load preset</span>
@@ -702,7 +697,7 @@
               </div>
               <div class="m-card">
                 <div class="row"><span class="muted">Token profile</span><span class="pill">balanced</span></div>
-                <div class="row"><span class="muted">Focus field</span><div class="field focus" style="flex:1"></div></div>
+                <div class="row"><span class="muted">Focus</span><div class="field focus"></div></div>
               </div>
             </div>
           </div>
@@ -710,20 +705,17 @@
       </div>
       <div class="option-foot">
         <div class="hexes">
-          <div>bg #121410 · surface #1a1d16 · text #eceee4</div>
-          <div>primary #c9a227 · secondary #8a9a6e · danger #d97b6c</div>
+          <div>#0e0d0c · #141312 · #2c2a27 · #9c9890 · #f2f0ec</div>
+          <div>primary = stone ink (no hue)</div>
         </div>
-        <button type="button" class="pick" data-pick="c">Select Olive Noir</button>
+        <button type="button" class="pick" data-pick="c">Select Soft Stone</button>
       </div>
     </article>
   </main>
 
   <footer class="page">
-    <p id="choice">No selection yet. Click <strong>Select …</strong>, then reply in chat with <strong>A</strong>, <strong>B</strong>, or <strong>C</strong>.</p>
-    <p style="margin-top:0.5rem">
-      File: <code>.planning/design/palette-options.html</code>
-      · If none fit, say what you want (e.g. “more pastel”, “almost monochrome”, “high contrast red”) and we draft a fourth.
-    </p>
+    <p id="choice">No selection. Pick A / B / C, or say what to change (e.g. “Pure Mono but 4px radius”, “more whitespace”, “hairline only”).</p>
+    <p style="margin-top:0.45rem"><code>.planning/design/palette-options.html</code></p>
   </footer>
 
   <script>
@@ -745,15 +737,10 @@
           : "<span>Auto</span><span class=\"on\">Dark</span><span>Light</span>";
       });
     }
-
     darkBtn.addEventListener("click", () => setMode("dark"));
     lightBtn.addEventListener("click", () => setMode("light"));
 
-    const names = {
-      a: "Copper Paper (A)",
-      b: "Midnight Ink (B)",
-      c: "Olive Noir (C)",
-    };
+    const names = { a: "Pure Mono (A)", b: "Cool Zinc (B)", c: "Soft Stone (C)" };
 
     document.querySelectorAll("[data-pick]").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -761,30 +748,15 @@
         document.querySelectorAll(".option").forEach((o) => {
           o.classList.toggle("selected", o.dataset.id === id);
         });
-        document.querySelectorAll(".pick").forEach((b) => {
-          b.classList.toggle("active", b === btn);
-        });
+        document.querySelectorAll(".pick").forEach((b) => b.classList.toggle("active", b === btn));
         choice.innerHTML =
-          "Selected: <strong>" +
-          names[id] +
-          "</strong>. Reply in chat with <code>" +
-          id.toUpperCase() +
-          "</code> to lock this and start the redesign plan.";
+          "Selected: <strong>" + names[id] + "</strong>. Reply <code>" + id.toUpperCase() + "</code> in chat to lock.";
         try {
           localStorage.setItem("gsd-palette-pick", id);
-          localStorage.setItem("gsd-palette-gen", "rethink-v2");
+          localStorage.setItem("gsd-palette-gen", "linear-v3");
         } catch (_) {}
       });
     });
-
-    try {
-      if (localStorage.getItem("gsd-palette-gen") === "rethink-v2") {
-        const saved = localStorage.getItem("gsd-palette-pick");
-        if (saved && names[saved]) {
-          document.querySelector('[data-pick="' + saved + '"]')?.click();
-        }
-      }
-    } catch (_) {}
   </script>
 </body>
 </html>
