@@ -48,7 +48,14 @@ Plans:
   3. Loading, empty, and error states on restyled pages use consistent shadcn patterns
   4. Primary / secondary / destructive button language is consistent site-wide on restyled web surfaces (no mixed old/new button systems)
 
-**Plans**: TBD
+**Plans:** 4 plans
+Plans:
+
+- [ ] 02-01-PLAN.md — Mist Sky tokens + radius 0 + bridge remap + isolation contracts
+- [ ] 02-02-PLAN.md — Input/Textarea primitives + linear Button language (FND-03 allowlist)
+- [ ] 02-03-PLAN.md — WebShell underline nav + ThemeToggle text trio (WEB-01, THM-04)
+- [ ] 02-04-PLAN.md — Gallery, Wizard, Start, OAuth + WEB-06 surface contracts
+
 **UI hint**: yes
 
 ### Phase 3: Modals, Palette & Overlays
@@ -106,7 +113,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
-| 2. Web Chrome & Standalone Pages | 0/TBD | Not started | - |
+| 2. Web Chrome & Standalone Pages | 0/4 | Not started | - |
 | 3. Modals, Palette & Overlays | 0/TBD | Not started | - |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
