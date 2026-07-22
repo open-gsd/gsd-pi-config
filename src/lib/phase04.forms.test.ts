@@ -131,3 +131,43 @@ describe("phase04 FormControls FRM-03 ModelPicker contracts", () => {
     expect(src).toMatch(/v === CUSTOM_SENTINEL|next === CUSTOM_SENTINEL/);
   });
 });
+
+describe("phase04 FormControls FRM-03 ModelChain contracts", () => {
+  const src = readSrc(FORM_CONTROLS);
+
+  it("exports ModelChain with filter(Boolean) commit + rows resync", () => {
+    expect(src).toMatch(/export function ModelChain\b/);
+    expect(src).toMatch(/filter\(Boolean\)/);
+    expect(src).toMatch(/setRows/);
+    expect(src).toMatch(/const commit\s*=/);
+  });
+
+  it("keeps Primary/Fallback labels, + Add fallback, and move/remove aria-labels", () => {
+    expect(src).toMatch(/\+ Add fallback/);
+    expect(src).toMatch(/"Primary"/);
+    expect(src).toMatch(/Fallback \$\{/);
+    expect(src).toMatch(/Move \$\{label\} up/);
+    expect(src).toMatch(/Move \$\{label\} down/);
+    expect(src).toMatch(/Remove \$\{label\}/);
+  });
+
+  it("web ModelChain uses quiet ghost Buttons and Mist Sky label type scale", () => {
+    // Labels: 12px uppercase muted (not legacy text-[10px] gsd)
+    expect(src).toMatch(
+      /function ModelChain[\s\S]*?text-xs font-semibold uppercase[\s\S]*?text-muted-foreground/,
+    );
+    // Reorder/remove as ghost Button on web
+    expect(src).toMatch(
+      /function ModelChain[\s\S]*?variant=["']ghost["'][\s\S]*?function NumberField/,
+    );
+    // + Add fallback is primary text link style, not filled default Button
+    expect(src).toMatch(
+      /function ModelChain[\s\S]*?\+ Add fallback[\s\S]*?function NumberField/,
+    );
+    expect(src).toMatch(/text-primary/);
+  });
+
+  it("does not invent drag-and-drop for ModelChain", () => {
+    expect(src).not.toMatch(/function ModelChain[\s\S]*?\b(onDrag|dnd|DragDrop|useSortable)\b[\s\S]*?function NumberField/);
+  });
+});
