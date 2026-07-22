@@ -12,7 +12,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 const webCss = readFileSync(path.join(root, "src/index.web.css"), "utf8");
 const desktopCss = readFileSync(path.join(root, "src/index.desktop.css"), "utf8");
 
-/** FND-03: Button + Input + Textarea (plus import-only tests) under components/ui. */
+/** FND-03: Button + Input + Textarea + Dialog/Command/input-group (plus import-only tests) under components/ui. */
 const UI_ALLOWLIST = new Set([
   "button.tsx",
   "button.import.test.ts",
@@ -20,6 +20,13 @@ const UI_ALLOWLIST = new Set([
   "input.import.test.ts",
   "textarea.tsx",
   "textarea.import.test.ts",
+  // Phase 3 OVL-01/02 targets (D-24) — Dialog + Command + command peer only
+  "dialog.tsx",
+  "dialog.import.test.ts",
+  "command.tsx",
+  "command.import.test.ts",
+  "input-group.tsx",
+  "input-group.import.test.ts",
 ]);
 
 /** Required THM-01 semantic token names on the web entry. */
@@ -190,7 +197,20 @@ describe("components.json lock (FND-02)", () => {
 describe("ui primitive allowlist (FND-03)", () => {
   const uiDir = path.join(root, "src/components/ui");
 
-  it("only contains allowlisted Button/Input/Textarea files", () => {
+  /** Phase 3 required primitives (D-24 / OVL-01/02) — presence required, not forbidden. */
+  const REQUIRED_PHASE3 = ["dialog.tsx", "command.tsx", "input-group.tsx"] as const;
+
+  /** Registry dump still forbidden this phase (D-02 / D-24) — not AlertDialog unless true confirm. */
+  const FORBIDDEN_DUMP = [
+    "card",
+    "select",
+    "sheet",
+    "drawer",
+    "popover",
+    "alert-dialog",
+  ] as const;
+
+  it("only contains allowlisted Button/Input/Textarea/Dialog/Command files", () => {
     expect(existsSync(uiDir)).toBe(true);
     const basenames = readdirSync(uiDir).filter((name) => !name.startsWith("."));
     for (const name of basenames) {
@@ -199,12 +219,17 @@ describe("ui primitive allowlist (FND-03)", () => {
     expect(basenames).toContain("button.tsx");
   });
 
-  it("does not dump card/dialog/select/command registry files", () => {
-    // input/textarea are Phase 2 approved primitives (D-15); keep forbidding dump targets
-    const basenames = existsSync(uiDir)
-      ? readdirSync(uiDir).map((n) => n.toLowerCase())
-      : [];
-    for (const forbidden of ["card", "dialog", "select", "command"]) {
+  it("requires dialog/command/input-group and does not dump card/select/sheet peers", () => {
+    // D-24: Phase 3 targets must exist; flip former Phase 1 forbid of dialog/command
+    expect(existsSync(uiDir)).toBe(true);
+    const basenames = readdirSync(uiDir).map((n) => n.toLowerCase());
+    for (const required of REQUIRED_PHASE3) {
+      expect(
+        basenames.includes(required),
+        `missing required Phase 3 primitive: ${required}`,
+      ).toBe(true);
+    }
+    for (const forbidden of FORBIDDEN_DUMP) {
       expect(
         basenames.some((n) => n === `${forbidden}.tsx` || n.startsWith(`${forbidden}.`)),
         `forbidden primitive present: ${forbidden}`,
