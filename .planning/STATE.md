@@ -62,6 +62,14 @@ Progress: [██████████] 100%
 | Phase 01 P02 | 4min | 2 tasks | 10 files |
 | Phase 01 P03 | 8min | 3 tasks | 8 files |
 
+
+## Redesign direction (2026-07-21)
+
+- Phase 1 automated work complete; human UAT **parked** (optional later).
+- User requested **complete web redesign with custom brand colors**, full surface (Phases 2–4).
+- Palette selection: comparing 3 options in `.planning/design/palette-options.html` (A GSD Evolved · B Violet Signal · C Graphite Mint).
+- Next: lock palette → update PROJECT decisions (drop “neutral-only”) → `/gsd-discuss-phase 2` / plan Phase 2 with brand tokens.
+
 ## Accumulated Context
 
 ### Decisions

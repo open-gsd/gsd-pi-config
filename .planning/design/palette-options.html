@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GSD Pi Config — Palette options</title>
+  <style>
+    :root {
+      --page: #0a0a0c;
+      --ink: #e8e8ef;
+      --muted: #8b8ca6;
+      --line: #22222e;
+      --card: #12121a;
+      --focus: #22d3ee;
+      font-family: "Geist", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      line-height: 1.45;
+      min-height: 100vh;
+    }
+    header.page {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--page) 88%, transparent);
+      border-bottom: 1px solid var(--line);
+      padding: 1rem 1.5rem;
+    }
+    header.page h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+    header.page p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      max-width: 52rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+      align-items: center;
+    }
+    .controls label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+    .seg {
+      display: inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .seg button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.45rem 0.85rem;
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .seg button[aria-pressed="true"] {
+      background: #1b1b28;
+      color: var(--ink);
+    }
+    main {
+      padding: 1.25rem 1.5rem 3rem;
+      display: grid;
+      gap: 1.25rem;
+    }
+    @media (min-width: 1100px) {
+      main.grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    .option {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .option.selected {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+    .option-head {
+      padding: 1rem 1.1rem 0.75rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .option-head h2 {
+      margin: 0 0 0.2rem;
+      font-size: 1rem;
+    }
+    .option-head .tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .option-head p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .swatches {
+      display: flex;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .swatch {
+      width: 1.35rem;
+      height: 1.35rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .preview-wrap {
+      padding: 0.85rem;
+      background: #08080c;
+      flex: 1;
+    }
+    /* ─── Theme scope for each mock ───────────────────────────── */
+    .mock {
+      --radius: 0.625rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--p-border);
+      background: var(--p-bg);
+      color: var(--p-text);
+      font-size: 12px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.15s, color 0.15s;
+    }
+    .mock * { box-sizing: border-box; }
+
+    /* Palette A — GSD Evolved */
+    .mock.p-a {
+      --p-bg: #050507;
+      --p-surface: #0d0d14;
+      --p-surface-2: #12121c;
+      --p-border: #1b1b2a;
+      --p-border-strong: #2a2a3d;
+      --p-text: #e7e8f0;
+      --p-muted: #8b8ca6;
+      --p-dim: #6b6c82;
+      --p-primary: #22d3ee;
+      --p-primary-fg: #050507;
+      --p-primary-hover: #38e0ff;
+      --p-secondary: #a855f7;
+      --p-secondary-dim: rgba(168, 85, 247, 0.14);
+      --p-danger: #f87171;
+      --p-success: #34d399;
+      --p-ring: rgba(34, 211, 238, 0.35);
+    }
+    .mock.p-a.light {
+      --p-bg: #f4f5f8;
+      --p-surface: #ffffff;
+      --p-surface-2: #eceef4;
+      --p-border: #d8d9e6;
+      --p-border-strong: #c4c5d4;
+      --p-text: #12131a;
+      --p-muted: #5c5d70;
+      --p-dim: #7a7b8f;
+      --p-primary: #0891b2;
+      --p-primary-fg: #f4f5f8;
+      --p-primary-hover: #0e7490;
+      --p-secondary: #7c3aed;
+      --p-secondary-dim: rgba(124, 58, 237, 0.12);
+      --p-danger: #dc2626;
+      --p-success: #059669;
+      --p-ring: rgba(8, 145, 178, 0.3);
+    }
+
+    /* Palette B — Violet Signal */
+    .mock.p-b {
+      --p-bg: #09090f;
+      --p-surface: #12121b;
+      --p-surface-2: #181824;
+      --p-border: #252536;
+      --p-border-strong: #34344a;
+      --p-text: #ececf4;
+      --p-muted: #9a9ab3;
+      --p-dim: #6f6f88;
+      --p-primary: #8b5cf6;
+      --p-primary-fg: #faf5ff;
+      --p-primary-hover: #a78bfa;
+      --p-secondary: #22d3ee;
+      --p-secondary-dim: rgba(34, 211, 238, 0.12);
+      --p-danger: #fb7185;
+      --p-success: #4ade80;
+      --p-ring: rgba(139, 92, 246, 0.4);
+    }
+    .mock.p-b.light {
+      --p-bg: #f7f6fb;
+      --p-surface: #ffffff;
+      --p-surface-2: #efedf7;
+      --p-border: #ddd8eb;
+      --p-border-strong: #c8c0de;
+      --p-text: #17141f;
+      --p-muted: #5e5770;
+      --p-dim: #7a738c;
+      --p-primary: #7c3aed;
+      --p-primary-fg: #faf5ff;
+      --p-primary-hover: #6d28d9;
+      --p-secondary: #0e7490;
+      --p-secondary-dim: rgba(14, 116, 144, 0.1);
+      --p-danger: #e11d48;
+      --p-success: #16a34a;
+      --p-ring: rgba(124, 58, 237, 0.3);
+    }
+
+    /* Palette C — Graphite Mint */
+    .mock.p-c {
+      --p-bg: #0b0d0c;
+      --p-surface: #121614;
+      --p-surface-2: #171c19;
+      --p-border: #222a26;
+      --p-border-strong: #314038;
+      --p-text: #e8eee9;
+      --p-muted: #8f9b94;
+      --p-dim: #6a756e;
+      --p-primary: #2dd4a8;
+      --p-primary-fg: #04110c;
+      --p-primary-hover: #5eead4;
+      --p-secondary: #94a3b8;
+      --p-secondary-dim: rgba(148, 163, 184, 0.12);
+      --p-danger: #f87171;
+      --p-success: #4ade80;
+      --p-ring: rgba(45, 212, 168, 0.35);
+    }
+    .mock.p-c.light {
+      --p-bg: #f3f6f4;
+      --p-surface: #ffffff;
+      --p-surface-2: #e8eeea;
+      --p-border: #d2ddd6;
+      --p-border-strong: #b8c7be;
+      --p-text: #121816;
+      --p-muted: #526059;
+      --p-dim: #6e7a73;
+      --p-primary: #0f766e;
+      --p-primary-fg: #ecfdf8;
+      --p-primary-hover: #0d9488;
+      --p-secondary: #475569;
+      --p-secondary-dim: rgba(71, 85, 105, 0.1);
+      --p-danger: #dc2626;
+      --p-success: #15803d;
+      --p-ring: rgba(15, 118, 110, 0.28);
+    }
+
+    .m-top {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 0.7rem;
+      border-bottom: 1px solid var(--p-border);
+      background: color-mix(in srgb, var(--p-surface) 92%, transparent);
+    }
+    .m-logo {
+      width: 1.35rem;
+      height: 1.35rem;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--p-primary), var(--p-secondary));
+      flex-shrink: 0;
+    }
+    .m-brand {
+      font-weight: 600;
+      font-size: 0.72rem;
+      margin-right: 0.25rem;
+    }
+    .m-nav {
+      display: flex;
+      border: 1px solid var(--p-border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .m-nav span {
+      padding: 0.28rem 0.55rem;
+      color: var(--p-muted);
+      font-size: 0.68rem;
+      font-weight: 500;
+    }
+    .m-nav span.on {
+      background: var(--p-primary);
+      color: var(--p-primary-fg);
+    }
+    .m-theme {
+      margin-left: auto;
+      display: flex;
+      border: 1px solid var(--p-border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .m-theme span {
+      padding: 0.28rem 0.45rem;
+      font-size: 0.65rem;
+      color: var(--p-muted);
+    }
+    .m-theme span.on {
+      background: var(--p-primary);
+      color: var(--p-primary-fg);
+    }
+    .m-body {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      flex: 1;
+      min-height: 0;
+    }
+    .m-side {
+      border-right: 1px solid var(--p-border);
+      background: var(--p-surface);
+      padding: 0.55rem 0.4rem;
+    }
+    .m-side .label {
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--p-dim);
+      padding: 0.25rem 0.45rem;
+      margin-top: 0.35rem;
+    }
+    .m-side .item {
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      color: var(--p-muted);
+      font-size: 0.72rem;
+    }
+    .m-side .item.active {
+      background: var(--p-secondary-dim);
+      color: var(--p-primary);
+      font-weight: 500;
+    }
+    .m-main {
+      padding: 1rem 1rem 0.85rem;
+      background: var(--p-bg);
+    }
+    .m-kicker {
+      font-size: 0.58rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--p-primary);
+      margin-bottom: 0.35rem;
+    }
+    .m-main h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .m-main .lead {
+      margin: 0 0 0.85rem;
+      color: var(--p-muted);
+      font-size: 0.72rem;
+      max-width: 18rem;
+    }
+    .m-step {
+      border-left: 1px solid var(--p-border);
+      padding-left: 0.7rem;
+      margin-bottom: 0.55rem;
+    }
+    .m-step strong {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .m-step span {
+      color: var(--p-muted);
+      font-size: 0.65rem;
+    }
+    .m-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.85rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 1.85rem;
+      padding: 0 0.7rem;
+      border-radius: 6px;
+      font-size: 0.68rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      cursor: default;
+    }
+    .btn-primary {
+      background: var(--p-primary);
+      color: var(--p-primary-fg);
+    }
+    .btn-secondary {
+      background: transparent;
+      border-color: var(--p-border);
+      color: var(--p-muted);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--p-muted);
+      border-color: transparent;
+    }
+    .btn-danger {
+      background: color-mix(in srgb, var(--p-danger) 18%, transparent);
+      color: var(--p-danger);
+      border-color: color-mix(in srgb, var(--p-danger) 35%, transparent);
+    }
+    .m-card {
+      margin-top: 0.75rem;
+      border: 1px solid var(--p-border);
+      background: var(--p-surface);
+      border-radius: 8px;
+      padding: 0.55rem 0.65rem;
+    }
+    .m-card .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.68rem;
+    }
+    .m-card .row + .row { margin-top: 0.4rem; }
+    .m-card .muted { color: var(--p-muted); }
+    .pill {
+      font-size: 0.58rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 999px;
+      background: var(--p-secondary-dim);
+      color: var(--p-secondary);
+      font-weight: 500;
+    }
+    .field {
+      margin-top: 0.35rem;
+      height: 1.7rem;
+      border-radius: 6px;
+      border: 1px solid var(--p-border);
+      background: var(--p-surface-2);
+      box-shadow: 0 0 0 2px transparent;
+    }
+    .field.focus {
+      border-color: var(--p-primary);
+      box-shadow: 0 0 0 2px var(--p-ring);
+    }
+    .option-foot {
+      padding: 0.85rem 1.1rem 1rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .hexes {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      display: grid;
+      gap: 0.2rem;
+    }
+    .pick {
+      border: 1px solid var(--line);
+      background: #16161f;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 0.55rem 0.85rem;
+      font: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pick:hover { border-color: #3a3a50; }
+    .pick.active {
+      background: color-mix(in srgb, var(--focus) 18%, #16161f);
+      border-color: var(--focus);
+      color: #b8f4ff;
+    }
+    footer.page {
+      padding: 0 1.5rem 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer.page code {
+      font-size: 0.75rem;
+      color: #b4b5c9;
+    }
+  </style>
+</head>
+<body>
+  <header class="page">
+    <h1>Palette options — GSD Pi Config web redesign</h1>
+    <p>
+      Three full custom systems for the web restyle (Phases 2–4). Same mock chrome so you compare
+      color language, not layout. Pick one; we’ll lock tokens into shadcn <code>--primary</code> /
+      surfaces and plan the full redesign against it.
+    </p>
+    <div class="controls">
+      <label>Preview mode</label>
+      <div class="seg" role="group" aria-label="Preview theme">
+        <button type="button" id="mode-dark" aria-pressed="true">Dark</button>
+        <button type="button" id="mode-light" aria-pressed="false">Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="grid-3" id="options">
+    <!-- A -->
+    <article class="option" data-id="a" id="opt-a">
+      <div class="option-head">
+        <div class="tag">Option A · Recommended brand fit</div>
+        <h2>GSD Evolved</h2>
+        <p>Current opengsd DNA, formalized as a full design system: cyan primary, violet secondary, deep graphite surfaces.</p>
+        <div class="swatches" aria-hidden="true">
+          <span class="swatch" style="background:#050507"></span>
+          <span class="swatch" style="background:#0d0d14"></span>
+          <span class="swatch" style="background:#e7e8f0"></span>
+          <span class="swatch" style="background:#22d3ee"></span>
+          <span class="swatch" style="background:#a855f7"></span>
+        </div>
+      </div>
+      <div class="preview-wrap">
+        <div class="mock p-a" data-mock>
+          <div class="m-top">
+            <div class="m-logo"></div>
+            <div class="m-brand">GSD Pi Config</div>
+            <div class="m-nav"><span class="on">Editor</span><span>Gallery</span><span>New</span></div>
+            <div class="m-theme"><span>Auto</span><span class="on">Dark</span><span>Light</span></div>
+          </div>
+          <div class="m-body">
+            <aside class="m-side">
+              <div class="label">Setup</div>
+              <div class="item active">General</div>
+              <div class="item">Models</div>
+              <div class="item">API Keys</div>
+              <div class="label">Workflow</div>
+              <div class="item">Phases</div>
+              <div class="item">Hooks</div>
+            </aside>
+            <div class="m-main">
+              <div class="m-kicker">Git · Ship · Done</div>
+              <h3>Configure GSD Pi in the cloud</h3>
+              <p class="lead">Import, edit, download — same jobs, new design system.</p>
+              <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
+              <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
+              <div class="m-actions">
+                <span class="btn btn-primary">Import files</span>
+                <span class="btn btn-secondary">Load preset</span>
+                <span class="btn btn-ghost">New preset</span>
+                <span class="btn btn-danger">Discard</span>
+              </div>
+              <div class="m-card">
+                <div class="row"><span class="muted">Token profile</span><span class="pill">balanced</span></div>
+                <div class="row"><span class="muted">Focus field</span><div class="field focus" style="flex:1"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="option-foot">
+        <div class="hexes">
+          <div>bg #050507 · surface #0d0d14 · text #e7e8f0</div>
+          <div>primary #22d3ee · secondary #a855f7 · danger #f87171</div>
+        </div>
+        <button type="button" class="pick" data-pick="a">Select GSD Evolved</button>
+      </div>
+    </article>
+
+    <!-- B -->
+    <article class="option" data-id="b" id="opt-b">
+      <div class="option-head">
+        <div class="tag">Option B · Modern AI product</div>
+        <h2>Violet Signal</h2>
+        <p>Violet primary with cyan as signal accent. Feels more “2026 AI tool,” less terminal-cyan default.</p>
+        <div class="swatches" aria-hidden="true">
+          <span class="swatch" style="background:#09090f"></span>
+          <span class="swatch" style="background:#12121b"></span>
+          <span class="swatch" style="background:#ececf4"></span>
+          <span class="swatch" style="background:#8b5cf6"></span>
+          <span class="swatch" style="background:#22d3ee"></span>
+        </div>
+      </div>
+      <div class="preview-wrap">
+        <div class="mock p-b" data-mock>
+          <div class="m-top">
+            <div class="m-logo"></div>
+            <div class="m-brand">GSD Pi Config</div>
+            <div class="m-nav"><span class="on">Editor</span><span>Gallery</span><span>New</span></div>
+            <div class="m-theme"><span>Auto</span><span class="on">Dark</span><span>Light</span></div>
+          </div>
+          <div class="m-body">
+            <aside class="m-side">
+              <div class="label">Setup</div>
+              <div class="item active">General</div>
+              <div class="item">Models</div>
+              <div class="item">API Keys</div>
+              <div class="label">Workflow</div>
+              <div class="item">Phases</div>
+              <div class="item">Hooks</div>
+            </aside>
+            <div class="m-main">
+              <div class="m-kicker">Git · Ship · Done</div>
+              <h3>Configure GSD Pi in the cloud</h3>
+              <p class="lead">Import, edit, download — same jobs, new design system.</p>
+              <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
+              <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
+              <div class="m-actions">
+                <span class="btn btn-primary">Import files</span>
+                <span class="btn btn-secondary">Load preset</span>
+                <span class="btn btn-ghost">New preset</span>
+                <span class="btn btn-danger">Discard</span>
+              </div>
+              <div class="m-card">
+                <div class="row"><span class="muted">Token profile</span><span class="pill">balanced</span></div>
+                <div class="row"><span class="muted">Focus field</span><div class="field focus" style="flex:1"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="option-foot">
+        <div class="hexes">
+          <div>bg #09090f · surface #12121b · text #ececf4</div>
+          <div>primary #8b5cf6 · secondary #22d3ee · danger #fb7185</div>
+        </div>
+        <button type="button" class="pick" data-pick="b">Select Violet Signal</button>
+      </div>
+    </article>
+
+    <!-- C -->
+    <article class="option" data-id="c" id="opt-c">
+      <div class="option-head">
+        <div class="tag">Option C · Calm operator</div>
+        <h2>Graphite Mint</h2>
+        <p>Cool graphite + mint primary. Softer than neon cyan; reads “pro tooling” without purple drama.</p>
+        <div class="swatches" aria-hidden="true">
+          <span class="swatch" style="background:#0b0d0c"></span>
+          <span class="swatch" style="background:#121614"></span>
+          <span class="swatch" style="background:#e8eee9"></span>
+          <span class="swatch" style="background:#2dd4a8"></span>
+          <span class="swatch" style="background:#94a3b8"></span>
+        </div>
+      </div>
+      <div class="preview-wrap">
+        <div class="mock p-c" data-mock>
+          <div class="m-top">
+            <div class="m-logo"></div>
+            <div class="m-brand">GSD Pi Config</div>
+            <div class="m-nav"><span class="on">Editor</span><span>Gallery</span><span>New</span></div>
+            <div class="m-theme"><span>Auto</span><span class="on">Dark</span><span>Light</span></div>
+          </div>
+          <div class="m-body">
+            <aside class="m-side">
+              <div class="label">Setup</div>
+              <div class="item active">General</div>
+              <div class="item">Models</div>
+              <div class="item">API Keys</div>
+              <div class="label">Workflow</div>
+              <div class="item">Phases</div>
+              <div class="item">Hooks</div>
+            </aside>
+            <div class="m-main">
+              <div class="m-kicker">Git · Ship · Done</div>
+              <h3>Configure GSD Pi in the cloud</h3>
+              <p class="lead">Import, edit, download — same jobs, new design system.</p>
+              <div class="m-step"><strong>1 · Bring config in</strong><span>preferences.md + optional JSON</span></div>
+              <div class="m-step"><strong>2 · Edit in browser</strong><span>Draft stays in this session</span></div>
+              <div class="m-actions">
+                <span class="btn btn-primary">Import files</span>
+                <span class="btn btn-secondary">Load preset</span>
+                <span class="btn btn-ghost">New preset</span>
+                <span class="btn btn-danger">Discard</span>
+              </div>
+              <div class="m-card">
+                <div class="row"><span class="muted">Token profile</span><span class="pill">balanced</span></div>
+                <div class="row"><span class="muted">Focus field</span><div class="field focus" style="flex:1"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="option-foot">
+        <div class="hexes">
+          <div>bg #0b0d0c · surface #121614 · text #e8eee9</div>
+          <div>primary #2dd4a8 · secondary #94a3b8 · danger #f87171</div>
+        </div>
+        <button type="button" class="pick" data-pick="c">Select Graphite Mint</button>
+      </div>
+    </article>
+  </main>
+
+  <footer class="page">
+    <p id="choice">No selection yet. Click <strong>Select …</strong> on a card, then reply with A / B / C in chat.</p>
+    <p style="margin-top:0.5rem">File: <code>.planning/design/palette-options.html</code> — open in browser if the preview doesn’t auto-open.</p>
+  </footer>
+
+  <script>
+    const mocks = document.querySelectorAll("[data-mock]");
+    const darkBtn = document.getElementById("mode-dark");
+    const lightBtn = document.getElementById("mode-light");
+    const choice = document.getElementById("choice");
+
+    function setMode(mode) {
+      const light = mode === "light";
+      mocks.forEach((m) => m.classList.toggle("light", light));
+      darkBtn.setAttribute("aria-pressed", String(!light));
+      lightBtn.setAttribute("aria-pressed", String(light));
+      mocks.forEach((m) => {
+        const theme = m.querySelector(".m-theme");
+        if (!theme) return;
+        theme.innerHTML = light
+          ? "<span>Auto</span><span>Dark</span><span class=\"on\">Light</span>"
+          : "<span>Auto</span><span class=\"on\">Dark</span><span>Light</span>";
+      });
+    }
+
+    darkBtn.addEventListener("click", () => setMode("dark"));
+    lightBtn.addEventListener("click", () => setMode("light"));
+
+    const names = {
+      a: "GSD Evolved (A)",
+      b: "Violet Signal (B)",
+      c: "Graphite Mint (C)",
+    };
+
+    document.querySelectorAll("[data-pick]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-pick");
+        document.querySelectorAll(".option").forEach((o) => {
+          o.classList.toggle("selected", o.dataset.id === id);
+        });
+        document.querySelectorAll(".pick").forEach((b) => {
+          b.classList.toggle("active", b === btn);
+        });
+        choice.innerHTML =
+          "Selected: <strong>" +
+          names[id] +
+          "</strong>. Reply in chat with <code>" +
+          id.toUpperCase() +
+          "</code> (or the name) to lock this palette and start Phase 2 planning.";
+        try {
+          localStorage.setItem("gsd-palette-pick", id);
+        } catch (_) {}
+      });
+    });
+
+    try {
+      const saved = localStorage.getItem("gsd-palette-pick");
+      if (saved && names[saved]) {
+        document.querySelector('[data-pick="' + saved + '"]')?.click();
+      }
+    } catch (_) {}
+  </script>
+</body>
+</html>
