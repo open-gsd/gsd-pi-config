@@ -122,7 +122,7 @@ Each task was committed atomically:
 1. **Task 1: Expand FND-03 allowlist for Dialog/Command (D-24) — expect RED until install** - `7a3f547` (test)
 2. **Task 2: Install Dialog+Command via pinned CLI + Mist Sky overrides + import tests** - `ce5db1e` (feat)
 
-**Plan metadata:** (pending final docs commit)
+**Plan metadata:** `f597d7a` (docs: complete plan)
 
 _Note: TDD tasks used RED (Task 1 allowlist) → GREEN (Task 2 install)._
 
