@@ -119,7 +119,7 @@ Each task was committed atomically:
 1. **Task 1: Command-in-Dialog shell + shouldFilter false** - `9000b75` (feat)
 2. **Task 2: Linear active rows + empty/footer Mist Sky** - `02af85a` (test)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `f468df0` (docs: complete plan)
 
 ## Files Created/Modified
 
