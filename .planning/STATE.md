@@ -2,18 +2,19 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 4
-current_phase_name: Form Kit Adapters + Editor Chrome
-status: planning
-stopped_at: Completed 03-05-PLAN.md
-last_updated: "2026-07-22T12:13:11.688Z"
+current_phase: 04
+current_phase_name: form-kit-adapters-editor-chrome
+status: executing
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-07-22T18:23:29.199Z"
 last_activity: 2026-07-22
-last_activity_desc: Phase 3 complete, transitioned to Phase 4
+last_activity_desc: Phase 04 execution started
 progress:
-  total_phases: 3
+  total_phases: 5
   completed_phases: 1
-  total_plans: 14
-  completed_plans: 12
+  total_plans: 20
+  completed_plans: 13
+  percent: 20
 ---
 
 # Project State
@@ -23,14 +24,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-21)
 
 **Core value:** Every web page uses a single shadcn-based design system so the site looks cohesive and UI work stays maintainable — without changing what users can do.
-**Current focus:** Phase 03 — modals-palette-overlays
+**Current focus:** Phase 04 — form-kit-adapters-editor-chrome
 
 ## Current Position
 
-Phase: 4 — Form Kit Adapters + Editor Chrome
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-07-22 — Phase 3 complete, transitioned to Phase 4
+Phase: 04 (form-kit-adapters-editor-chrome) — EXECUTING
+Plan: 2 of 5
+Status: Ready to execute
+Last activity: 2026-07-22 — Phase 04 execution started
 
 Progress: [████████░░] 79%
 
@@ -71,6 +72,7 @@ Progress: [████████░░] 79%
 | Phase 03 P03 | 2min | 2 tasks | 1 files |
 | Phase 03 P04 | 2min | 2 tasks | 2 files |
 | Phase 03 P05 | 3min | 2 tasks | 2 files |
+| Phase 04 P01 | 2min | 2 tasks | 9 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -128,6 +130,9 @@ Recent decisions affecting current work:
 - [Phase ?]: Palette uses CommandDialog; Dialog+cmdk own dismiss/keyboard (D-09, D-13)
 - [Phase ?]: Single-open product overlay via closeAllOverlays + exclusive open helpers (D-16)
 - [Phase ?]: No desktop semantic CSS bridge — dual builds green without index.desktop.css changes
+- [Phase ?]: Install only switch/select/checkbox/popover via pinned shadcn@4.13.1; no Alert/Card/Sheet dump
+- [Phase ?]: Select trigger min-h-10 + rounded-none; Popover/Checkbox linear; Switch capsule h-5 w-9 sole non-square exception
+- [Phase ?]: No new runtime deps for Phase 4 form kit — reuse existing @base-ui/react@1.6.0
 
 ### Pending Todos
 
@@ -149,15 +154,14 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T04:03:31.619Z
-Stopped at: Completed 03-05-PLAN.md
+Last session: 2026-07-22T18:23:29.192Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
 
 ## Phase 3
 
 - CONTEXT ready: `.planning/phases/03-modals-palette-overlays/03-CONTEXT.md`
 - Next: `/gsd-ui-phase 3` then `/gsd-plan-phase 3` (or plan with UI gate).
-
 
 ## Phase 4
 
