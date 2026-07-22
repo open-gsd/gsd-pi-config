@@ -122,7 +122,7 @@ Each task was committed atomically:
 1. **Task 1: ShareModal Dialog + Gallery Preview title** - `27931f2` (feat)
 2. **Task 2: ImportPreferences + LoadPreset Dialog restyle** - `22ce670` (feat)
 
-**Plan metadata:** _(pending docs commit)_
+**Plan metadata:** `19a758d` (docs: complete plan)
 
 _Note: TDD — Gallery source test asserted Preview preset title before implement (RED then GREEN in Task 1)._
 
