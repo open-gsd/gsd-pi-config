@@ -1,4 +1,4 @@
-// GSD Pi Config - Phase 4 FormControls FRM-01/02 contracts (source-level, no DOM)
+// GSD Pi Config - Phase 4 form kit + editor chrome contracts (FRM-01–04, WEB-04)
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 /// <reference types="node" />
@@ -15,6 +15,8 @@ function readSrc(rel: string): string {
 }
 
 const FORM_CONTROLS = "src/components/FormControls.tsx";
+const CONFIG_APP = "src/ConfigApp.tsx";
+const SIDEBAR = "src/components/Sidebar.tsx";
 
 const CORE_EXPORTS = [
   "Field",
@@ -50,10 +52,26 @@ describe("phase04 FormControls FRM-01 core kit contracts", () => {
     expect(src).toMatch(/from\s+["']@\/platform["']|from\s+["']\.\.\/platform["']/);
   });
 
-  it("imports web Switch, Select, and Input primitives", () => {
-    expect(src).toMatch(/from\s+["']@\/components\/ui\/switch["']/);
-    expect(src).toMatch(/from\s+["']@\/components\/ui\/select["']/);
-    expect(src).toMatch(/from\s+["']@\/components\/ui\/input["']/);
+  it("imports web Switch, Select, Checkbox, Popover, Input, and Button primitives", () => {
+    // Flexible @/ or relative ui import paths
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/switch|\.\.\/components\/ui\/switch|\.\/ui\/switch)["']/,
+    );
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/select|\.\.\/components\/ui\/select|\.\/ui\/select)["']/,
+    );
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/checkbox|\.\.\/components\/ui\/checkbox|\.\/ui\/checkbox)["']/,
+    );
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/popover|\.\.\/components\/ui\/popover|\.\/ui\/popover)["']/,
+    );
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/input|\.\.\/components\/ui\/input|\.\/ui\/input)["']/,
+    );
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/button|\.\.\/components\/ui\/button|\.\/ui\/button)["']/,
+    );
   });
 
   it("maps Toggle to Switch on web and keeps desktop role=switch", () => {
@@ -66,7 +84,7 @@ describe("phase04 FormControls FRM-01 core kit contracts", () => {
     expect(src).toMatch(/String\(value\)/);
   });
 
-  it("keeps desktop native select markup for legacy branch", () => {
+  it("keeps desktop native select markup for legacy branch (locked Q4)", () => {
     expect(src).toMatch(/<select[\s>]/);
   });
 
@@ -80,8 +98,6 @@ describe("phase04 FormControls FRM-01 multi/combo/tag contracts", () => {
   const src = readSrc(FORM_CONTROLS);
 
   it("composes MultiSelect with Popover + Checkbox on web", () => {
-    expect(src).toMatch(/from\s+["']@\/components\/ui\/popover["']/);
-    expect(src).toMatch(/from\s+["']@\/components\/ui\/checkbox["']/);
     expect(src).toMatch(/\bPopover\b/);
     expect(src).toMatch(/\bCheckbox\b/);
   });
@@ -95,7 +111,9 @@ describe("phase04 FormControls FRM-01 multi/combo/tag contracts", () => {
   });
 
   it("uses Input for TagInput and Combo free text on web", () => {
-    expect(src).toMatch(/from\s+["']@\/components\/ui\/input["']/);
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/input|\.\.\/components\/ui\/input|\.\/ui\/input)["']/,
+    );
     // Web TagInput path should use Input primitive (not only bare <input>)
     expect(src).toMatch(/function TagInput[\s\S]*?<Input[\s\S]*?function SectionHeader/);
   });
@@ -168,6 +186,78 @@ describe("phase04 FormControls FRM-03 ModelChain contracts", () => {
   });
 
   it("does not invent drag-and-drop for ModelChain", () => {
-    expect(src).not.toMatch(/function ModelChain[\s\S]*?\b(onDrag|dnd|DragDrop|useSortable)\b[\s\S]*?function NumberField/);
+    expect(src).not.toMatch(
+      /function ModelChain[\s\S]*?\b(onDrag|dnd|DragDrop|useSortable)\b[\s\S]*?function NumberField/,
+    );
+  });
+});
+
+describe("phase04 ConfigApp FRM-04 + WEB-04 shell contracts", () => {
+  const src = readSrc(CONFIG_APP);
+
+  it("still uses useDirty( for preference dirty tracking", () => {
+    expect(src).toMatch(/useDirty\s*\(/);
+    expect(src).toMatch(/from\s+["']\.\/hooks\/useDirty["']/);
+  });
+
+  it("keeps webWorkspaceReady and anyDirty in save enablement region", () => {
+    expect(src).toMatch(/webWorkspaceReady/);
+    expect(src).toMatch(/anyDirty/);
+    // Enablement predicates must remain in disabled= expressions (FRM-04 / Pitfall 6)
+    expect(src).toMatch(
+      /disabled=\{[\s\S]*?webWorkspaceReady[\s\S]*?anyDirty|disabled=\{[\s\S]*?anyDirty[\s\S]*?webWorkspaceReady/,
+    );
+    expect(src).toMatch(/isWeb \? !webWorkspaceReady : !anyDirty/);
+    expect(src).toMatch(/isWeb \? webWorkspaceReady : anyDirty/);
+  });
+
+  it("imports Button from ui/button for web chrome", () => {
+    expect(src).toMatch(
+      /from\s+["'](?:@\/components\/ui\/button|\.\.\/components\/ui\/button|\.\/components\/ui\/button)["']/,
+    );
+    expect(src).toMatch(/\bButton\b/);
+  });
+
+  it("web primary Download path uses Button (not exclusively btnPrimary-only)", () => {
+    // Web branch renders Button for Download; desktop may keep btnPrimary
+    expect(src).toMatch(/isWeb \?[\s\S]*?<Button[\s\S]*?Download|Download[\s\S]*?<\/Button>/);
+    expect(src).toMatch(/<Button[\s\S]*?Downloading|Downloaded|Download/);
+  });
+
+  it("keeps quiet error banner role=alert with title-case Dismiss", () => {
+    expect(src).toMatch(/role=["']alert["']/);
+    expect(src).toMatch(/>\s*Dismiss\s*</);
+  });
+
+  it("does not reintroduce gsd-btn class strings on web Button toolbar path", () => {
+    // FormControls/ConfigApp web path must not reintroduce btn language on Button elements.
+    // Desktop may still import btn/btnPrimary from uiClasses — that is OK (ISO).
+    // Guard: no className={"gsd-btn...} on web Button usage.
+    expect(src).not.toMatch(/<Button[^>]*className=\{?["'`][^"'`]*gsd-btn/);
+  });
+});
+
+describe("phase04 Sidebar WEB-04 left-edge contracts", () => {
+  const src = readSrc(SIDEBAR);
+
+  it("uses left-edge primary active language on web", () => {
+    expect(src).toMatch(/border-l-\[3px\]/);
+    expect(src).toMatch(/border-l-primary/);
+    expect(src).toMatch(/bg-primary\/10/);
+    expect(src).toMatch(/font-semibold/);
+  });
+
+  it("keeps Unsaved changes dirty aria", () => {
+    expect(src).toMatch(/aria-label=["']Unsaved changes["']/);
+    expect(src).toMatch(/title=["']Unsaved changes["']/);
+  });
+
+  it("keeps desktop gsd-nav-item branch for ISO isolation", () => {
+    expect(src).toMatch(/gsd-nav-item/);
+    expect(src).toMatch(/gsd-nav-item-active/);
+  });
+
+  it("uses muted uppercase group labels on web (text-xs)", () => {
+    expect(src).toMatch(/text-xs font-semibold tracking-wider uppercase text-muted-foreground/);
   });
 });
