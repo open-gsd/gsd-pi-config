@@ -120,12 +120,16 @@ export function Sidebar({
 
   return (
     <nav
-      className={`w-56 shrink-0 bg-gsd-surface-solid/95 border-r border-gsd-border overflow-y-auto z-40 backdrop-blur-sm ${className}`}
+      className={
+        isWeb
+          ? `w-56 shrink-0 bg-card border-r border-border overflow-y-auto z-40 ${className}`
+          : `w-56 shrink-0 bg-gsd-surface-solid/95 border-r border-gsd-border overflow-y-auto z-40 backdrop-blur-sm ${className}`
+      }
       aria-label={isWeb ? "Settings sections" : "Navigation"}
     >
       {isWeb ? (
-        <div className="gsd-local-chrome px-4">
-          <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted">
+        <div className="px-4 py-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Sections
           </p>
         </div>
@@ -140,27 +144,46 @@ export function Sidebar({
       <div className="px-2 py-3">
         {sectionGroups.map((group) => (
           <div key={group.label} className="mb-4">
-            <div className="px-3 py-1 text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted">
+            <div
+              className={
+                isWeb
+                  ? "px-3 py-1 text-xs font-semibold tracking-wider uppercase text-muted-foreground"
+                  : "px-3 py-1 text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted"
+              }
+            >
               {group.label}
             </div>
             <ul>
               {group.items.map((s) => {
                 const isDirty = dirtySections?.has(s.id) ?? false;
+                const isActive = active === s.id;
                 return (
                   <li key={s.id}>
                     <button
                       type="button"
                       onClick={() => onSelect(s.id)}
-                      className={`gsd-nav-item ${
-                        active === s.id ? "gsd-nav-item-active" : "gsd-nav-item-idle"
-                      }`}
+                      className={
+                        isWeb
+                          ? `flex w-full min-h-10 items-center justify-between gap-2 px-3 text-left text-sm transition-colors ${
+                              isActive
+                                ? "border-l-[3px] border-l-primary bg-primary/10 font-semibold text-foreground"
+                                : "border-l-[3px] border-l-transparent text-muted-foreground hover:bg-muted"
+                            }`
+                          : `gsd-nav-item ${
+                              isActive ? "gsd-nav-item-active" : "gsd-nav-item-idle"
+                            }`
+                      }
                     >
                       <span>{s.label}</span>
                       {isDirty && (
                         <span
                           aria-label="Unsaved changes"
                           title="Unsaved changes"
-                          className="h-1.5 w-1.5 rounded-full bg-gsd-accent shrink-0"
+                          className={
+                            isWeb
+                              ? "h-1 w-1 rounded-full bg-primary shrink-0"
+                              : "h-1.5 w-1.5 rounded-full bg-gsd-accent shrink-0"
+                          }
                         />
                       )}
                     </button>
@@ -171,10 +194,20 @@ export function Sidebar({
           </div>
         ))}
         {footerLink && (
-          <div className="px-3 pt-2 mt-2 border-t border-gsd-border">
+          <div
+            className={
+              isWeb
+                ? "px-3 pt-2 mt-2 border-t border-border"
+                : "px-3 pt-2 mt-2 border-t border-gsd-border"
+            }
+          >
             <a
               href={footerLink.href}
-              className="text-xs text-gsd-accent hover:text-gsd-accent-hover"
+              className={
+                isWeb
+                  ? "text-xs text-primary hover:underline"
+                  : "text-xs text-gsd-accent hover:text-gsd-accent-hover"
+              }
             >
               {footerLink.label}
             </a>
