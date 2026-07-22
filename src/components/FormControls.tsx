@@ -825,6 +825,8 @@ export function ModelChain({
     commit([...rows, ""]);
   };
 
+  const web = isWebPlatform();
+
   return (
     <div className="flex flex-col gap-2">
       {rows.map((value, idx) => {
@@ -833,9 +835,15 @@ export function ModelChain({
         const canUp = idx > 0;
         const canDown = idx < rows.length - 1;
         return (
-          <div key={idx} className="flex items-start gap-1.5">
-            <div className="flex flex-col items-end gap-0.5">
-              <span className="text-[10px] uppercase tracking-wide text-gsd-text-dim leading-none">
+          <div key={idx} className="flex items-start gap-2">
+            <div className="flex min-w-0 flex-1 flex-col items-end gap-1">
+              <span
+                className={
+                  web
+                    ? "text-xs font-semibold uppercase tracking-wide text-muted-foreground leading-none"
+                    : "text-[10px] uppercase tracking-wide text-gsd-text-dim leading-none"
+                }
+              >
                 {label}
               </span>
               <ModelPicker
@@ -846,48 +854,103 @@ export function ModelChain({
                 className={className}
               />
             </div>
-            <div className="flex flex-col gap-0.5 pt-3.5">
-              <button
-                type="button"
-                onClick={() => move(idx, -1)}
-                disabled={!canUp}
-                className="text-xs text-gsd-text-dim hover:text-gsd-text disabled:opacity-30 disabled:cursor-not-allowed leading-none px-1"
-                title="Move up"
-                aria-label={`Move ${label} up`}
-              >
-                ↑
-              </button>
-              <button
-                type="button"
-                onClick={() => move(idx, 1)}
-                disabled={!canDown}
-                className="text-xs text-gsd-text-dim hover:text-gsd-text disabled:opacity-30 disabled:cursor-not-allowed leading-none px-1"
-                title="Move down"
-                aria-label={`Move ${label} down`}
-              >
-                ↓
-              </button>
-            </div>
-            <button
-              type="button"
-              onClick={() => remove(idx)}
-              disabled={rows.length === 1}
-              className="text-xs text-gsd-text-dim hover:text-gsd-danger disabled:opacity-30 disabled:cursor-not-allowed pt-3.5 px-1"
-              title="Remove"
-              aria-label={`Remove ${label}`}
-            >
-              ×
-            </button>
+            {web ? (
+              <>
+                <div className="flex flex-col gap-0.5 pt-4">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => move(idx, -1)}
+                    disabled={!canUp}
+                    title="Move up"
+                    aria-label={`Move ${label} up`}
+                    className="rounded-none text-muted-foreground"
+                  >
+                    ↑
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => move(idx, 1)}
+                    disabled={!canDown}
+                    title="Move down"
+                    aria-label={`Move ${label} down`}
+                    className="rounded-none text-muted-foreground"
+                  >
+                    ↓
+                  </Button>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => remove(idx)}
+                  disabled={rows.length === 1}
+                  title="Remove"
+                  aria-label={`Remove ${label}`}
+                  className="mt-4 rounded-none text-muted-foreground hover:text-destructive"
+                >
+                  ×
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col gap-0.5 pt-3.5">
+                  <button
+                    type="button"
+                    onClick={() => move(idx, -1)}
+                    disabled={!canUp}
+                    className="text-xs text-gsd-text-dim hover:text-gsd-text disabled:opacity-30 disabled:cursor-not-allowed leading-none px-1"
+                    title="Move up"
+                    aria-label={`Move ${label} up`}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(idx, 1)}
+                    disabled={!canDown}
+                    className="text-xs text-gsd-text-dim hover:text-gsd-text disabled:opacity-30 disabled:cursor-not-allowed leading-none px-1"
+                    title="Move down"
+                    aria-label={`Move ${label} down`}
+                  >
+                    ↓
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => remove(idx)}
+                  disabled={rows.length === 1}
+                  className="text-xs text-gsd-text-dim hover:text-gsd-danger disabled:opacity-30 disabled:cursor-not-allowed pt-3.5 px-1"
+                  title="Remove"
+                  aria-label={`Remove ${label}`}
+                >
+                  ×
+                </button>
+              </>
+            )}
           </div>
         );
       })}
-      <button
-        type="button"
-        onClick={add}
-        className="self-start text-xs text-gsd-accent hover:text-gsd-accent-hover mt-0.5"
-      >
-        + Add fallback
-      </button>
+      {web ? (
+        <button
+          type="button"
+          onClick={add}
+          className="mt-0.5 self-start text-xs text-primary hover:underline"
+        >
+          + Add fallback
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={add}
+          className="self-start text-xs text-gsd-accent hover:text-gsd-accent-hover mt-0.5"
+        >
+          + Add fallback
+        </button>
+      )}
     </div>
   );
 }
