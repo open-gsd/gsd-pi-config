@@ -5,16 +5,15 @@ milestone_name: milestone
 current_phase: 04
 current_phase_name: form-kit-adapters-editor-chrome
 status: executing
-stopped_at: Completed 04-01-PLAN.md
-last_updated: "2026-07-22T18:23:29.199Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-07-22T18:29:49.110Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 04 execution started
 progress:
-  total_phases: 5
+  total_phases: 4
   completed_phases: 1
   total_plans: 20
-  completed_plans: 13
-  percent: 20
+  completed_plans: 14
 ---
 
 # Project State
@@ -29,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 04 (form-kit-adapters-editor-chrome) — EXECUTING
-Plan: 2 of 5
+Plan: 3 of 5
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 04 execution started
 
-Progress: [████████░░] 79%
+Progress: [███████░░░] 70%
 
 ## Performance Metrics
 
@@ -73,6 +72,7 @@ Progress: [████████░░] 79%
 | Phase 03 P04 | 2min | 2 tasks | 2 files |
 | Phase 03 P05 | 3min | 2 tasks | 2 files |
 | Phase 04 P01 | 2min | 2 tasks | 9 files |
+| Phase 04 P02 | 6min | 2 tasks | 2 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -133,6 +133,9 @@ Recent decisions affecting current work:
 - [Phase ?]: Install only switch/select/checkbox/popover via pinned shadcn@4.13.1; no Alert/Card/Sheet dump
 - [Phase ?]: Select trigger min-h-10 + rounded-none; Popover/Checkbox linear; Switch capsule h-5 w-9 sole non-square exception
 - [Phase ?]: No new runtime deps for Phase 4 form kit — reuse existing @base-ui/react@1.6.0
+- [Phase ?]: Web FormControls adapters branch via isWebPlatform; desktop keeps legacy form chrome
+- [Phase ?]: Select empty uses internal sentinel never emitted into prefs
+- [Phase ?]: MultiSelect Popover+Checkbox checkbox-first; Combo Input+Popover; Tag quiet chips
 
 ### Pending Todos
 
@@ -154,8 +157,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T18:23:29.192Z
-Stopped at: Completed 04-01-PLAN.md
+Last session: 2026-07-22T18:29:49.080Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None
 
 ## Phase 3

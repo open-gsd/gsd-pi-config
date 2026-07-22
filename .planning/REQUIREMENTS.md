@@ -33,7 +33,7 @@
 ### Forms & editor
 
 - [x] **FRM-01**: Form control presentation is restyled via a stable FormControls API (Field, Toggle/Switch, Select, MultiSelect, Combo, text/number, tags, section headers)
-- [ ] **FRM-02**: Preference section editors keep domain behavior (controlled prefs, validators, `data-field-path`) with presentation-only changes
+- [x] **FRM-02**: Preference section editors keep domain behavior (controlled prefs, validators, `data-field-path`) with presentation-only changes
 - [ ] **FRM-03**: Domain-specific controls (e.g. model chain / multi model pickers) compose shadcn primitives without losing product UX
 - [ ] **FRM-04**: Editor chrome restyle does not change dirty tracking, save, import, download, or scope semantics
 
@@ -96,7 +96,7 @@
 | WEB-06 | Phase 2 | Complete |
 | WEB-07 | Phase 2 | Complete |
 | FRM-01 | Phase 4 | Complete |
-| FRM-02 | Phase 4 | Pending |
+| FRM-02 | Phase 4 | Complete |
 | FRM-03 | Phase 4 | Pending |
 | FRM-04 | Phase 4 | Pending |
 | OVL-01 | Phase 3 | Complete |
