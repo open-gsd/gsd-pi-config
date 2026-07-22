@@ -8,7 +8,7 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
 
 - [ ] **Phase 1: Foundation, Isolation & Theme Bridge** - shadcn init, platform CSS split, tokens, and dual-write theme
 - [x] **Phase 2: Web Chrome & Standalone Pages** - restyle WebShell, gallery, wizard, OAuth, and button language (completed 2026-07-21)
-- [ ] **Phase 3: Modals, Palette & Overlays** - Dialog/AlertDialog modals, ⌘K command palette, focus traps
+- [x] **Phase 3: Modals, Palette & Overlays** - Dialog/AlertDialog modals, ⌘K command palette, focus traps (completed 2026-07-22)
 - [ ] **Phase 4: Form Kit Adapters + Editor Chrome** - FormControls.web adapters, section inheritance, editor shell
 - [ ] **Phase 5: Hardening & Polish Gates** - isolation, behavior smoke, a11y parity, residual web cleanup
 
@@ -70,14 +70,14 @@ Plans:
   2. Command palette (⌘K) is restyled with shadcn Command/Dialog and still supports field-jump / keyboard behavior
   3. Overlay focus management remains usable (trap, ESC, restore); nested Select/Dialog focus is not broken
 
-**Plans:** 4/5 plans executed
+**Plans:** 5/5 plans complete
 Plans:
 
 - [x] 03-01-PLAN.md — Dialog/Command CLI install + Mist Sky overrides + FND-03 allowlist
 - [x] 03-02-PLAN.md — Share + Gallery preview + Import + Load on Dialog
 - [x] 03-03-PLAN.md — Submit preset restyle (OAuth/scan handlers intact)
 - [x] 03-04-PLAN.md — Palette Command-in-Dialog + scoring + shouldFilter false
-- [ ] 03-05-PLAN.md — ConfigApp exclusivity + phase03 contracts + dual builds
+- [x] 03-05-PLAN.md — ConfigApp exclusivity + phase03 contracts + dual builds
 
 **UI hint**: yes
 
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
-| 3. Modals, Palette & Overlays | 4/5 | In Progress|  |
+| 3. Modals, Palette & Overlays | 5/5 | Complete   | 2026-07-22 |
 | 4. Form Kit Adapters + Editor Chrome | 0/TBD | Not started | - |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
 
