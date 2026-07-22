@@ -736,27 +736,15 @@ const UI_ALLOWLIST = new Set([
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Primary hover token**
-   - What we know: UI-SPEC lists exact hover hex; registry uses `primary/80`.
-   - What's unclear: Whether visual review will reject opacity approximation.
-   - Recommendation: Add `--primary-hover` in token wave; wire Button default hover to it (small CVA edit).
+1. **Primary hover token** — **RESOLVED (Plan 02-01 / 02-02):** Add optional `--primary-hover` (UI-SPEC hex) in token wave; wire Button default hover to it (small CVA edit). Do not rely on opacity-only `primary/80` as sole hover if it fails Mist Sky contrast.
 
-2. **Label primitive**
-   - What we know: Optional in UI-SPEC; plain `<label>` is valid.
-   - What's unclear: Whether planner wants registry Label for consistency.
-   - Recommendation: Prefer plain labels to minimize FND-03 surface; add Label only if shared styling needed.
+2. **Label primitive** — **RESOLVED (Plan 02-02 / 02-04):** Prefer plain `<label>` to minimize FND-03 surface; do **not** add shadcn Label unless shared styling proves necessary mid-execution.
 
-3. **ShareModal visual depth**
-   - What we know: Handlers stay; Phase 3 owns full Dialog.
-   - What's unclear: How much class polish if Preview looks broken under Mist Sky.
-   - Recommendation: Token inheritance only; no Dialog migration in Phase 2.
+3. **ShareModal visual depth** — **RESOLVED (Plan 02-04):** Handlers + light token inheritance only; full Dialog migration is Phase 3. No Dialog dump in Phase 2.
 
-4. **Isolation test rewrite detail for bridge**
-   - What we know: Phase 1 asserts `--bridge-accent` and cyan-not-primary.
-   - What's unclear: Exact assertions after cyan retirement.
-   - Recommendation: Assert Mist Sky primary present; assert no `#22d3ee` on `--primary` or `--color-gsd-accent`; keep `.gsd-btn` presence assert.
+4. **Isolation test rewrite detail for bridge** — **RESOLVED (Plan 02-01):** Assert Mist Sky primary present; assert no `#22d3ee` on `--primary` or `--color-gsd-accent`; keep `.gsd-btn` presence assert for Phase 4 bridge.
 
 ---
 
