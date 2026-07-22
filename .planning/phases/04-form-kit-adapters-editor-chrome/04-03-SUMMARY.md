@@ -96,7 +96,7 @@ Each task was committed atomically:
 3. **Task 2 RED: ModelChain Mist Sky visual contracts** - `ff0880e` (test)
 4. **Task 2 GREEN: ModelChain linear Mist Sky rows** - `af9d525` (feat)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `932a72b` (docs: complete plan)
 
 _Note: TDD tasks have test → feat commit pairs_
 
