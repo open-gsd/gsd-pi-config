@@ -94,13 +94,13 @@ Plans:
   3. Cloud editor route (`/`) shell is fully restyled on shadcn (sidebar, toolbar, status, banners)
   4. Dirty tracking, save, import, download, and scope semantics are unchanged after the editor chrome restyle
 
-**Plans:** 2/5 plans executed
+**Plans:** 3/5 plans executed
 
 Plans:
 
 - [x] 04-01-PLAN.md — Install Switch/Select/Checkbox/Popover + FND-03 allowlist + import tests
 - [x] 04-02-PLAN.md — FormControls web presentation (Field, Toggle, Selects, Multi/Combo/Tags, Text/Number)
-- [ ] 04-03-PLAN.md — ModelPicker + ModelChain restyle (semantics frozen)
+- [x] 04-03-PLAN.md — ModelPicker + ModelChain restyle (semantics frozen)
 - [ ] 04-04-PLAN.md — Editor shell: Sidebar, ConfigApp toolbar/banners/drawer
 - [ ] 04-05-PLAN.md — phase04.forms contracts + dual builds + bridge cleanup
 
@@ -132,7 +132,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
 | 3. Modals, Palette & Overlays | 5/5 | Complete    | 2026-07-22 |
-| 4. Form Kit Adapters + Editor Chrome | 2/5 | In Progress|  |
+| 4. Form Kit Adapters + Editor Chrome | 3/5 | In Progress|  |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
 
 ## Coverage Map
