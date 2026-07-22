@@ -18,11 +18,11 @@
 - [x] **THM-01**: Semantic design tokens power web UI (background, foreground, primary, muted, destructive, border, ring) with a clean default neutral look
 - [x] **THM-02**: Existing Auto / Dark / Light theme behavior is preserved (storage + system preference + no-flash boot)
 - [x] **THM-03**: Theme bridge keeps GSD theme attributes and shadcn dark-mode class in sync (e.g. `data-theme` + `.dark`)
-- [ ] **THM-04**: Theme toggle on web uses shadcn-styled controls without changing theme semantics
+- [x] **THM-04**: Theme toggle on web uses shadcn-styled controls without changing theme semantics
 
 ### Web chrome & pages
 
-- [ ] **WEB-01**: Shared web chrome (header/nav/workspace strip) is restyled with shadcn components
+- [x] **WEB-01**: Shared web chrome (header/nav/workspace strip) is restyled with shadcn components
 - [ ] **WEB-02**: Gallery route (`/gallery`) is fully restyled on shadcn (loading, empty, error, list/cards)
 - [x] **WEB-03**: Wizard route (`/new`) is fully restyled on shadcn
 - [ ] **WEB-04**: Cloud editor route (`/`) shell is fully restyled on shadcn (sidebar, toolbar, status, banners)
@@ -87,8 +87,8 @@
 | THM-01 | Phase 1 | Complete |
 | THM-02 | Phase 1 | Complete |
 | THM-03 | Phase 1 | Complete |
-| THM-04 | Phase 2 | Pending |
-| WEB-01 | Phase 2 | Pending |
+| THM-04 | Phase 2 | Complete |
+| WEB-01 | Phase 2 | Complete |
 | WEB-02 | Phase 2 | Pending |
 | WEB-03 | Phase 2 | Complete |
 | WEB-04 | Phase 4 | Pending |

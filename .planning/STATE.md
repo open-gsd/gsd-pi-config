@@ -5,15 +5,16 @@ milestone_name: milestone
 current_phase: 02
 current_phase_name: web-chrome-standalone-pages
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-07-22T01:10:34.010Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-07-22T01:14:45.998Z"
 last_activity: 2026-07-21
 last_activity_desc: Phase 02 execution started
 progress:
-  total_phases: 2
+  total_phases: 5
   completed_phases: 1
   total_plans: 8
-  completed_plans: 5
+  completed_plans: 6
+  percent: 20
 ---
 
 # Project State
@@ -28,7 +29,7 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 02 (web-chrome-standalone-pages) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-07-21 — Phase 02 execution started
 
@@ -63,6 +64,7 @@ Progress: [██████░░░░] 63%
 | Phase 01 P03 | 8min | 3 tasks | 8 files |
 | Phase 02 P01 | 2min | 2 tasks | 2 files |
 | Phase 02 P02 | 3min | 2 tasks | 7 files |
+| Phase 02 P03 | 3min | 2 tasks | 4 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -101,6 +103,10 @@ Recent decisions affecting current work:
 - [Phase ?]: Install only Input + Textarea via pinned CLI 4.13.1; skip Label (plain HTML later)
 - [Phase ?]: Button default/sm ≥40px rounded-none; hover via --primary-hover; soft destructive retained
 - [Phase ?]: No product route mounts this plan — Plans 03–04 consume primitives
+- [Phase ?]: Pure CSS underline (border-b 1px primary) for nav and theme trio — not ToggleGroup pills
+- [Phase ?]: ThemeToggle presentation-only; theme.ts dual-write and storage key untouched
+- [Phase ?]: BrandMark PNG retained without BrandMark.tsx changes (D-03)
+- [Phase ?]: External opengsd.net uses buttonVariants outline size sm; hidden below sm
 
 ### Pending Todos
 
@@ -122,6 +128,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T01:10:33.985Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-07-22T01:14:45.983Z
+Stopped at: Completed 02-03-PLAN.md
 Resume file: None
