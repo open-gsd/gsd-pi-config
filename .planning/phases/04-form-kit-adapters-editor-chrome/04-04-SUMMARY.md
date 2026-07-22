@@ -103,7 +103,7 @@ Each task was committed atomically:
 1. **Task 1: Sidebar linear left-edge active + type scale (D-13)** - `eef7419` (feat)
 2. **Task 2: ConfigApp web toolbar Button language + banners + drawer panel (D-14–16, FRM-04)** - `86081ea` (feat)
 
-**Plan metadata:** (pending final docs commit)
+**Plan metadata:** `70893db` (docs: complete plan)
 
 ## Files Created/Modified
 
