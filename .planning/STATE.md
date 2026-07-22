@@ -5,16 +5,15 @@ milestone_name: milestone
 current_phase: 04
 current_phase_name: form-kit-adapters-editor-chrome
 status: executing
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-07-22T18:34:37.024Z"
+stopped_at: Completed 04-04-PLAN.md
+last_updated: "2026-07-22T18:38:27.709Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 04 execution started
 progress:
-  total_phases: 5
+  total_phases: 4
   completed_phases: 1
   total_plans: 20
-  completed_plans: 15
-  percent: 20
+  completed_plans: 16
 ---
 
 # Project State
@@ -29,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 04 (form-kit-adapters-editor-chrome) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 04 execution started
 
-Progress: [███████░░░] 70%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -75,6 +74,7 @@ Progress: [███████░░░] 70%
 | Phase 04 P01 | 2min | 2 tasks | 9 files |
 | Phase 04 P02 | 6min | 2 tasks | 2 files |
 | Phase 04 P03 | 4min | 2 tasks | 2 files |
+| Phase 04 P04 | 3min | 2 tasks | 2 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -140,6 +140,8 @@ Recent decisions affecting current work:
 - [Phase ?]: MultiSelect Popover+Checkbox checkbox-first; Combo Input+Popover; Tag quiet chips
 - [Phase ?]: ModelPicker Select-first with SelectGroup/SelectLabel; Command not used (RESEARCH Q3)
 - [Phase ?]: ModelChain visual-only Mist Sky restyle; filter(Boolean) commit/resync frozen
+- [Phase ?]: Web-only Mist Sky editor chrome; desktop BrandMark + gsd-nav-item + btn language preserved (ISO)
+- [Phase ?]: Save/Download enablement predicates copied verbatim into web Button and desktop button branches (FRM-04 / Pitfall 6)
 
 ### Pending Todos
 
@@ -161,8 +163,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T18:34:37.016Z
-Stopped at: Completed 04-03-PLAN.md
+Last session: 2026-07-22T18:38:27.701Z
+Stopped at: Completed 04-04-PLAN.md
 Resume file: None
 
 ## Phase 3

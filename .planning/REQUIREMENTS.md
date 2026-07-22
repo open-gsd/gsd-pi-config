@@ -25,7 +25,7 @@
 - [x] **WEB-01**: Shared web chrome (header/nav/workspace strip) is restyled with shadcn components
 - [x] **WEB-02**: Gallery route (`/gallery`) is fully restyled on shadcn (loading, empty, error, list/cards)
 - [x] **WEB-03**: Wizard route (`/new`) is fully restyled on shadcn
-- [ ] **WEB-04**: Cloud editor route (`/`) shell is fully restyled on shadcn (sidebar, toolbar, status, banners)
+- [x] **WEB-04**: Cloud editor route (`/`) shell is fully restyled on shadcn (sidebar, toolbar, status, banners)
 - [x] **WEB-05**: OAuth callback route (`/oauth/callback`) is fully restyled on shadcn
 - [x] **WEB-06**: Consistent Button language site-wide (primary / secondary / destructive; no mixed old/new button systems on web)
 - [x] **WEB-07**: Loading, empty, and error states on restyled pages use consistent shadcn patterns
@@ -35,7 +35,7 @@
 - [x] **FRM-01**: Form control presentation is restyled via a stable FormControls API (Field, Toggle/Switch, Select, MultiSelect, Combo, text/number, tags, section headers)
 - [x] **FRM-02**: Preference section editors keep domain behavior (controlled prefs, validators, `data-field-path`) with presentation-only changes
 - [x] **FRM-03**: Domain-specific controls (e.g. model chain / multi model pickers) compose shadcn primitives without losing product UX
-- [ ] **FRM-04**: Editor chrome restyle does not change dirty tracking, save, import, download, or scope semantics
+- [x] **FRM-04**: Editor chrome restyle does not change dirty tracking, save, import, download, or scope semantics
 
 ### Overlays
 
@@ -91,14 +91,14 @@
 | WEB-01 | Phase 2 | Complete |
 | WEB-02 | Phase 2 | Complete |
 | WEB-03 | Phase 2 | Complete |
-| WEB-04 | Phase 4 | Pending |
+| WEB-04 | Phase 4 | Complete |
 | WEB-05 | Phase 2 | Complete |
 | WEB-06 | Phase 2 | Complete |
 | WEB-07 | Phase 2 | Complete |
 | FRM-01 | Phase 4 | Complete |
 | FRM-02 | Phase 4 | Complete |
 | FRM-03 | Phase 4 | Complete |
-| FRM-04 | Phase 4 | Pending |
+| FRM-04 | Phase 4 | Complete |
 | OVL-01 | Phase 3 | Complete |
 | OVL-02 | Phase 3 | Complete |
 | OVL-03 | Phase 3 | Complete |
