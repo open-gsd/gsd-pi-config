@@ -30,4 +30,18 @@ describe("shadcn Button import (FND-01 / FND-03)", () => {
       expect(buttonVariants({ variant })).toEqual(expect.any(String));
     }
   });
+
+  it("locks linear default language (radius 0, ≥40px hit target)", () => {
+    // D-05 / D-23 / WEB-06 — class string only, no DOM render
+    const className = buttonVariants({ variant: "default", size: "default" });
+    expect(className).toMatch(/rounded-none/);
+    expect(className).toMatch(/(?:^|\s)(?:min-h-10|h-10)(?:\s|$)/);
+  });
+
+  it("keeps destructive soft (not solid red fill)", () => {
+    // D-07 — soft wash/text, not solid bg-destructive alone
+    const className = buttonVariants({ variant: "destructive" });
+    expect(className).toMatch(/text-destructive/);
+    expect(className).not.toMatch(/(?:^|\s)bg-destructive(?:\s|$)/);
+  });
 });
