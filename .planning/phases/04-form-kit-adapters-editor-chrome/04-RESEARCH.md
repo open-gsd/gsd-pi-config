@@ -650,24 +650,26 @@ return (
 
 ## Open Questions
 
-1. **Empty Select item value strategy**  
-   - What we know: native select uses `value=""` → `undefined`; Base UI allows `null` root value.  
-   - What's unclear: whether SelectItem `value=""` is valid in practice.  
-   - Recommendation: implement with verification; use sentinel if needed; never emit sentinel into prefs.
+> **Planner-locked 2026-07-22** — answers below are binding for Phase 4 plans. Residual UAT may refine implementation details within these locks.
 
-2. **How hard to drop `.gsd-btn` bridge on web**  
-   - What we know: isolation test still requires `.gsd-btn` until Phase 4; ConfigApp + ApiKeys + libraries use it.  
-   - What's unclear: whether ApiKeys must migrate this phase for WEB-06 purity.  
-   - Recommendation: drop `btn`/`btnPrimary` on **ConfigApp web toolbar** + FormControls web path; leave library sections if time-boxed; update foundation bridge assertion accordingly.
+1. **Empty Select item value strategy** — **LOCKED**  
+   - Prefer Base UI `null`/empty root value mapping to product `undefined` (same as native `""` → `undefined`).  
+   - If SelectItem rejects empty string at runtime, use an internal sentinel **only inside the adapter**; never emit the sentinel into prefs/models/settings.  
+   - Preserve option **values** exactly for non-empty options (D-06).
 
-3. **ModelPicker Select vs Command search**  
-   - What we know: UI-SPEC prefers Select groups; catalog can grow with custom providers.  
-   - Recommendation: Select first; Command only if UAT pain.
+2. **Drop `.gsd-btn` bridge on web** — **LOCKED**  
+   - **Must drop** `btn` / `btnPrimary` (and related uiClasses button language) on **ConfigApp web toolbar actions** + **FormControls web path** when Button lands (WEB-04 / D-14 / D-00b).  
+   - **ApiKeys / Skills / Agents library micro-chrome may residual to Phase 5** (A4) — not a Phase 4 blocker.  
+   - Update `foundation.isolation` bridge assertion so web no longer *requires* `.gsd-btn*` for success after shell migration; desktop may keep bridge classes; residual web bridge CSS is OK until Phase 5 full purge if still referenced by library surfaces.
 
-4. **Desktop FormControls code path testing**  
-   - What we know: dual build compiles both; visual ISO is manual/desktop.  
-   - Recommendation: source contracts assert legacy markup branch still present (`role="switch"` button path or native select for desktop).
+3. **ModelPicker Select vs Command search** — **LOCKED**  
+   - **Select with provider groups first** (UI-SPEC / D-09).  
+   - Command/Combobox search only if Select UX fails with catalog length during implementation/UAT — not the default path.
 
+4. **Desktop FormControls code path testing** — **LOCKED**  
+   - Keep `isWebPlatform()` dual markup paths (D-01/D-02).  
+   - `phase04.forms.test.ts` must assert legacy desktop markers still present (e.g. `role="switch"` track path and/or native select markup in non-web branch).  
+   - Dual builds (`build:web` + `build`) are the compile gate; visual desktop ISO is manual.
 ## Environment Availability
 
 | Dependency | Required By | Available | Version | Fallback |
