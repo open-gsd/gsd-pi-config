@@ -127,7 +127,7 @@ Each task was committed atomically:
 1. **Task 1: ThemeToggle linear text trio** — `0729ce6` (test) → `e1a942a` (feat)
 2. **Task 2: WebShell underline nav + Button chrome** — `2d66151` (test) → `b1dd439` (feat)
 
-**Plan metadata:** (pending docs commit)
+**Plan metadata:** `ef428f0` (docs: complete plan)
 
 _Note: TDD tasks use test → feat commit pairs (RED/GREEN)._
 
