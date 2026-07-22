@@ -1,9 +1,10 @@
 ---
 phase: 4
 slug: form-kit-adapters-editor-chrome
-status: draft
+status: approved
 shadcn_initialized: true
 preset: base-nova (neutral, cssVariables, Base UI)
+reviewed_at: 2026-07-22
 created: 2026-07-22
 ---
 
@@ -91,7 +92,7 @@ created: 2026-07-22
 | Chip pad | **4px × 8px** (`py-1 px-2`) | Compact meta; not primary hit target |
 | Switch track | **20×36** visual (`h-5 w-9`); outer hit **≥40×40** | Keep product toggle proportions |
 | Left-edge active | **2–3px** primary | Sidebar active; multi-select checked row optional wash |
-| Dirty section dot | **6px** (`h-1.5 w-1.5`) | Primary fill; not a second accent system |
+| Dirty section dot | **4px** (`h-1 w-1`) | Primary fill; scale-aligned (not 6px) |
 | Mobile drawer scrim | `bg-black/50` | Keep `useSidebarDrawerLayout` behavior; restyle panel only (D-16) |
 | Main content pad | `px-4 py-4` → `sm:px-6 sm:py-5` | Keep rhythm |
 
@@ -102,6 +103,8 @@ created: 2026-07-22
 - **Chip / tag vertical pad 4px** — compact meta only; remove control still needs ≥24px hit if tiny, prefer 24–32px remove button hit with visual ×.
 - **No 44px icon-only exception** — 40px min remains the floor (Phase 2/3).
 - **20px horizontal pad** only if reusing modal density patterns; editor shell uses 16→24.
+- **Left-edge 2–3px active** and **Switch track 20×36** — control/border geometry (not spacing tokens); Phase 2/3 hairline pattern. Outer hit target still ≥40px.
+- **Dirty-dot 4px only** — do not use 6px (`h-1.5`); stay on spacing scale.
 
 ---
 
@@ -366,7 +369,7 @@ On **web** restyled toolbar and form actions that are true buttons, **only** `Bu
 | Web header | Quiet **Sections** kicker 12px uppercase muted (no BrandMark — branding in WebShell) |
 | Groups | Uppercase muted labels 12/600 |
 | Items | Full-width linear buttons min-h 40; idle muted/foreground; **active = left-edge 2–3px primary + soft wash + 600 weight** |
-| Dirty dot | 6px primary circle; `aria-label="Unsaved changes"` |
+| Dirty dot | 4px primary circle (`h-1 w-1`); `aria-label="Unsaved changes"` |
 | Data | `SECTION_GROUPS` / web filter **unchanged** |
 | Footer link | Optional; 12px primary text link |
 | Desktop | Legacy sidebar chrome OK (BrandMark block may remain desktop-only) |
