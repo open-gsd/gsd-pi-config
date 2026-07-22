@@ -143,7 +143,7 @@ Each task was committed atomically:
 2. **Task 2: Wizard choice rows + Input/Textarea + Start panel** — `82a4088` (test) → `baebde0` (feat)
 3. **Task 3: OAuth WebShell wrap + phase02 surfaces gate + dual builds** — `f92f6ca` (test) → `05496b3` (feat)
 
-**Plan metadata:** _(pending docs commit)_
+**Plan metadata:** `e6f6f29` (docs: complete plan)
 
 _Note: TDD tasks use test → feat commit pairs (RED/GREEN)._
 
