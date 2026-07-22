@@ -70,9 +70,9 @@ describe("web CSS semantic tokens (THM-01)", () => {
   });
 
   it("does not map GSD cyan into --primary", () => {
-    // Official neutral scaffold uses OKLCH, never #22d3ee as primary
+    // Mist Sky primary only — never logo cyan as --primary (D-00a / THM-01)
     expect(webCss).not.toMatch(/--primary\s*:\s*#22d3ee/i);
-    // Brand cyan may live on --bridge-accent / --color-gsd-accent only (not --primary)
+    expect(webCss).not.toMatch(/--primary\s*:\s*#0891b2/i);
   });
 
   it("keeps shadcn as the primary token system (no bare --gsd-* primary vars)", () => {
@@ -84,11 +84,28 @@ describe("web CSS semantic tokens (THM-01)", () => {
     expect(webCss).not.toMatch(/(?:^|[^-\w])--gsd-accent\s*:/m);
   });
 
-  it("bridges transitional product color utilities + button chrome until Phase 2", () => {
-    // uiClasses / WebShell still use gsd-* Tailwind colors and .gsd-btn until restyle
+  it("declares Mist Sky primary hexes (D-00a)", () => {
+    // Dark primary + light primary from locked PALETTE.md
+    expect(webCss).toMatch(/--primary\s*:\s*#a8c5e8/i);
+    expect(webCss).toMatch(/--primary\s*:\s*#5a7fa8/i);
+  });
+
+  it("sets --radius to 0 for strict linear grammar (D-23)", () => {
+    expect(webCss).toMatch(/--radius\s*:\s*0\s*;/);
+    // Scaffold 0.625rem must not remain the product radius
+    expect(webCss).not.toMatch(/--radius\s*:\s*0\.625rem/);
+  });
+
+  it("bridges transitional product color utilities + button chrome until Phase 4 (D-21, D-22)", () => {
+    // uiClasses / ConfigApp still use gsd-* Tailwind colors and .gsd-btn until Phase 4
     expect(webCss).toMatch(/--color-gsd-bg\s*:/);
     expect(webCss).toMatch(/--color-gsd-accent\s*:/);
-    expect(webCss).toMatch(/--bridge-accent\s*:/);
+    // Accent utility source is Mist Sky primary path — not cyan bridge literals (D-21)
+    expect(webCss).toMatch(/--color-gsd-accent\s*:\s*var\(--primary\)/);
+    expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*var\(--bridge-accent\)/);
+    expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*#22d3ee/i);
+    expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*#0891b2/i);
+    // Editor bridge class chrome retained until Phase 4 form restyle (D-22)
     expect(webCss).toContain(".gsd-btn");
     expect(webCss).toContain(".gsd-btn-segment");
     expect(webCss).toContain(".gsd-btn-primary");
