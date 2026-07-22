@@ -648,7 +648,7 @@ return (
 
 **If empty table:** N/A — five assumptions listed for planner/user confirmation.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 > **Planner-locked 2026-07-22** — answers below are binding for Phase 4 plans. Residual UAT may refine implementation details within these locks.
 
