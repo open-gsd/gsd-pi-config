@@ -132,7 +132,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
 | 3. Modals, Palette & Overlays | 5/5 | Complete    | 2026-07-22 |
-| 4. Form Kit Adapters + Editor Chrome | 5/5 | Complete   | 2026-07-22 |
+| 4. Form Kit Adapters + Editor Chrome | 5/5 | Complete    | 2026-07-22 |
 | 5. Hardening & Polish Gates | 0/TBD | Not started | - |
 
 ## Coverage Map
