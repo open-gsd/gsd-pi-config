@@ -1,10 +1,11 @@
 ---
 phase: 2
 slug: web-chrome-standalone-pages
-status: draft
+status: approved
 shadcn_initialized: true
 preset: base-nova (neutral, cssVariables, Base UI)
 created: 2026-07-21
+reviewed_at: 2026-07-21
 ---
 
 # Phase 2 — UI Design Contract
