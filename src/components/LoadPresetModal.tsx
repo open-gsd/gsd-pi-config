@@ -11,7 +11,17 @@ import {
 } from "../lib/presetsCatalog";
 import { useConfigBackend } from "../platform/backend";
 import type { GSDPreferences } from "../types";
-import { btn, modalPanel } from "../lib/uiClasses";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 export interface LoadedPresetMeta {
   title?: string;
@@ -54,13 +64,8 @@ export function LoadPresetModal({ open, onClose, onLoaded }: LoadPresetModalProp
       setLoadingSlug(null);
       return;
     }
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
     void loadIndex();
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose, loadIndex]);
+  }, [open, loadIndex]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -73,6 +78,8 @@ export function LoadPresetModal({ open, onClose, onLoaded }: LoadPresetModalProp
         e.tags.some((t) => t.toLowerCase().includes(q)),
     );
   }, [entries, query]);
+
+  const hasQuery = query.trim().length > 0;
 
   const loadEntry = async (entry: PresetIndexEntry) => {
     setLoadingSlug(entry.slug);
@@ -106,56 +113,60 @@ export function LoadPresetModal({ open, onClose, onLoaded }: LoadPresetModalProp
     }
   };
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onClose();
+      }}
     >
-      <div
-        className={`w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden ${modalPanel}`}
-        onClick={(e) => e.stopPropagation()}
+      <DialogContent
+        showCloseButton
+        className="flex max-h-[85vh] w-full max-w-lg flex-col gap-0 overflow-hidden rounded-none p-0 sm:max-w-lg"
       >
-        <div className="px-5 py-4 border-b border-gsd-border shrink-0">
-          <h2 className="gsd-heading text-sm font-semibold text-gsd-text">Load preset</h2>
-          <p className="gsd-prose mt-1 text-xs text-gsd-text-dim">
-            Choose a community preset or load a <code className="text-[10px]">.preset.md</code>{" "}
-            file from your computer. Review changes, then Save to apply.
-          </p>
-        </div>
+        <DialogHeader className="shrink-0 border-b border-border px-5 py-4 text-left">
+          <DialogTitle className="text-sm font-semibold">Load preset</DialogTitle>
+          <DialogDescription className="text-xs text-muted-foreground">
+            Choose a community preset or load a{" "}
+            <code className="font-mono text-xs">.preset.md</code> file from your computer. Review
+            changes, then Save to apply.
+          </DialogDescription>
+        </DialogHeader>
 
-        <div className="px-5 py-3 border-b border-gsd-border flex gap-2 shrink-0">
-          <input
+        <div className="flex shrink-0 gap-2 border-b border-border px-5 py-3">
+          <Input
             type="search"
-            placeholder="Search presets..."
+            placeholder="Search presets…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 text-sm"
+            className="min-h-10 flex-1 rounded-none"
             autoFocus
           />
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => void loadFromFile()}
-            className={`${btn} shrink-0`}
+            className="shrink-0"
           >
             From file…
-          </button>
+          </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-3 min-h-0">
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 py-3">
           {error && (
-            <p className="text-xs text-gsd-danger mb-3">{error}</p>
+            <p className="mb-3 text-xs text-destructive" role="alert">
+              {error}
+            </p>
           )}
           {loading && (
-            <p className="text-xs text-gsd-text-dim">Loading gallery…</p>
+            <p className="text-xs text-muted-foreground">Loading gallery…</p>
           )}
-          {!loading && filtered.length === 0 && !error && (
-            <p className="text-xs text-gsd-text-dim">
+          {!loading && filtered.length === 0 && !error && !hasQuery && (
+            <p className="text-xs text-muted-foreground">
               No presets in the gallery index. Try{" "}
               <button
                 type="button"
-                className="text-gsd-accent underline"
+                className="text-primary underline underline-offset-2 hover:text-foreground"
                 onClick={() => void loadFromFile()}
               >
                 loading from file
@@ -163,61 +174,81 @@ export function LoadPresetModal({ open, onClose, onLoaded }: LoadPresetModalProp
               .
             </p>
           )}
+          {!loading && filtered.length === 0 && !error && hasQuery && (
+            <p className="text-xs text-muted-foreground">
+              No presets match your search. Clear the search or use{" "}
+              <button
+                type="button"
+                className="text-primary underline underline-offset-2 hover:text-foreground"
+                onClick={() => void loadFromFile()}
+              >
+                From file…
+              </button>
+            </p>
+          )}
           <ul className="space-y-2">
-            {filtered.map((entry) => (
-              <li key={entry.slug}>
-                <button
-                  type="button"
-                  disabled={loadingSlug !== null}
-                  onClick={() => void loadEntry(entry)}
-                  className="w-full min-h-10 text-left p-3 rounded-md border border-gsd-border hover:border-gsd-accent/50 hover:bg-gsd-surface-hover transition-[border-color,background-color,transform] active:scale-[0.96] disabled:opacity-50"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-medium text-gsd-text">{entry.title}</span>
-                    {loadingSlug === entry.slug && (
-                      <span className="text-[10px] text-gsd-text-dim">Loading…</span>
+            {filtered.map((entry) => {
+              const isLoading = loadingSlug === entry.slug;
+              return (
+                <li key={entry.slug}>
+                  <button
+                    type="button"
+                    disabled={loadingSlug !== null}
+                    onClick={() => void loadEntry(entry)}
+                    className={cn(
+                      "w-full min-h-10 rounded-none border border-border p-3 text-left transition-colors",
+                      "hover:bg-muted/50 focus-visible:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                      "disabled:opacity-50",
+                      isLoading && "border-l-[3px] border-l-primary bg-primary/10",
                     )}
-                  </div>
-                  {entry.description && (
-                    <p className="text-xs text-gsd-text-dim mt-1 line-clamp-2">
-                      {entry.description}
-                    </p>
-                  )}
-                  {entry.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {entry.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[10px] px-1.5 py-0.5 rounded bg-gsd-bg border border-gsd-border text-gsd-text-muted"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold text-foreground">{entry.title}</span>
+                      {isLoading && (
+                        <span className="text-xs text-muted-foreground">Loading…</span>
+                      )}
                     </div>
-                  )}
-                </button>
-              </li>
-            ))}
+                    {entry.description && (
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                        {entry.description}
+                      </p>
+                    )}
+                    {entry.tags.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {entry.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-none border border-border px-1.5 py-0.5 text-xs text-muted-foreground"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
-        <div className="px-5 py-3 border-t border-gsd-border flex items-center justify-between gap-3 shrink-0">
+        <DialogFooter className="mx-0 mb-0 shrink-0 items-center gap-3 rounded-none border-t border-border px-5 py-3 sm:justify-between">
           {backend.isWeb() ? (
             <Link
               to="/gallery"
-              className="text-xs text-gsd-accent hover:text-gsd-accent-hover"
+              className="text-xs text-primary hover:underline"
               onClick={onClose}
             >
               Browse full gallery
             </Link>
           ) : (
-            <span className="text-xs text-gsd-text-dim">Community presets</span>
+            <span className="text-xs text-muted-foreground">Community presets</span>
           )}
-          <button type="button" onClick={onClose} className={btn}>
+          <Button type="button" variant="outline" onClick={onClose}>
             Cancel
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
