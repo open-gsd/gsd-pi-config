@@ -15,6 +15,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 /** Internal Select empty sentinel — never emitted into prefs (D-06 / RESEARCH Q1). */
 const SELECT_EMPTY_SENTINEL = "__gsd_select_empty__";
@@ -325,9 +332,11 @@ export function MultiSelectField({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const listId = useId();
+  const web = isWebPlatform();
 
+  // Desktop owns dismiss via hand-rolled listeners; web Popover owns ESC/outside.
   useEffect(() => {
-    if (!open) return;
+    if (web || !open) return;
     const onPointerDown = (e: MouseEvent) => {
       if (rootRef.current?.contains(e.target as Node)) return;
       setOpen(false);
@@ -341,7 +350,7 @@ export function MultiSelectField({
       document.removeEventListener("mousedown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [open, web]);
 
   const toggle = (value: string) => {
     if (values.includes(value)) {
@@ -360,6 +369,89 @@ export function MultiSelectField({
       : values.length <= 2
         ? values.map(labelFor).join(", ")
         : `${values.length} selected`;
+
+  if (web) {
+    return (
+      <div className={cn("text-sm", className)}>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger
+            type="button"
+            aria-expanded={open}
+            aria-haspopup="listbox"
+            className={cn(
+              "flex min-h-10 w-full items-center justify-between gap-2 rounded-none border border-input bg-transparent px-2.5 py-2 text-sm outline-none transition-colors",
+              "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+              "dark:bg-input/30 dark:hover:bg-input/50",
+            )}
+          >
+            <span
+              className={cn(
+                "min-w-0 flex-1 truncate text-left",
+                values.length === 0 ? "text-muted-foreground" : "text-foreground",
+              )}
+            >
+              {summary}
+            </span>
+            <span className="shrink-0 text-xs text-muted-foreground" aria-hidden>
+              {open ? "▴" : "▾"}
+            </span>
+          </PopoverTrigger>
+          <PopoverContent
+            align="start"
+            sideOffset={4}
+            className="w-(--anchor-width) min-w-56 max-h-64 overflow-y-auto rounded-none p-1 gap-0"
+          >
+            <div role="listbox" aria-multiselectable="true" className="flex flex-col">
+              {options.map((opt) => {
+                const checked = values.includes(opt.value);
+                return (
+                  <label
+                    key={opt.value}
+                    role="option"
+                    aria-selected={checked}
+                    className={cn(
+                      "flex cursor-pointer items-center gap-2 rounded-none px-2 py-2 text-sm outline-none",
+                      "hover:bg-muted/60",
+                      checked && "border-l-2 border-l-primary bg-primary/10 pl-[6px]",
+                    )}
+                  >
+                    <Checkbox
+                      checked={checked}
+                      onCheckedChange={() => toggle(opt.value)}
+                    />
+                    <span className="min-w-0 truncate">{opt.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {values.length > 0 && (
+          <div className="mt-1.5 flex flex-wrap gap-1">
+            {values.map((v) => (
+              <span
+                key={v}
+                className="inline-flex max-w-full items-center gap-1 rounded-none border border-border bg-muted/40 px-2 py-0.5 text-xs text-foreground"
+              >
+                <span className="max-w-[12rem] truncate">{labelFor(v)}</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label={`Remove ${labelFor(v)}`}
+                  onClick={() => toggle(v)}
+                  className="size-6 min-h-6 text-muted-foreground hover:text-destructive"
+                >
+                  ×
+                </Button>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div ref={rootRef} className={`relative text-xs ${className}`}>
@@ -448,7 +540,69 @@ export function ComboField({
   placeholder = "Select or type",
   className = "w-full sm:w-52",
 }: ComboFieldProps) {
-  const listId = `combo-${Math.random().toString(36).slice(2)}`;
+  const [open, setOpen] = useState(false);
+  const listId = useId();
+
+  if (isWebPlatform()) {
+    const query = value ?? "";
+    const filtered =
+      query.trim() === ""
+        ? options
+        : options.filter((opt) =>
+            opt.toLowerCase().includes(query.trim().toLowerCase()),
+          );
+
+    return (
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger
+          render={
+            <div className={cn("relative", className)} />
+          }
+          nativeButton={false}
+        >
+          <Input
+            type="text"
+            value={query}
+            onChange={(e) => {
+              onChange(e.target.value || undefined);
+              if (!open) setOpen(true);
+            }}
+            onFocus={() => setOpen(true)}
+            placeholder={placeholder}
+            className="w-full rounded-none"
+            aria-autocomplete="list"
+            aria-expanded={open}
+          />
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          sideOffset={4}
+          className="w-(--anchor-width) min-w-52 max-h-56 overflow-y-auto rounded-none p-1 gap-0"
+          // Keep focus on the input while browsing suggestions.
+          initialFocus={false}
+        >
+          {filtered.length === 0 ? (
+            <p className="px-2 py-2 text-xs text-muted-foreground">No matches</p>
+          ) : (
+            filtered.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                className="flex w-full cursor-pointer items-center rounded-none px-2 py-2 text-left text-sm hover:bg-muted/60"
+                onClick={() => {
+                  onChange(opt);
+                  setOpen(false);
+                }}
+              >
+                {opt}
+              </button>
+            ))
+          )}
+        </PopoverContent>
+      </Popover>
+    );
+  }
+
   return (
     <>
       <input
@@ -774,6 +928,8 @@ interface TagInputProps {
 }
 
 export function TagInput({ values, onChange, placeholder }: TagInputProps) {
+  const [draft, setDraft] = useState("");
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && e.currentTarget.value.trim()) {
       e.preventDefault();
@@ -782,12 +938,50 @@ export function TagInput({ values, onChange, placeholder }: TagInputProps) {
         onChange([...values, newVal]);
       }
       e.currentTarget.value = "";
+      setDraft("");
     }
   };
 
   const remove = (idx: number) => {
     onChange(values.filter((_, i) => i !== idx));
   };
+
+  if (isWebPlatform()) {
+    return (
+      <div className="w-full sm:w-64">
+        {values.length > 0 && (
+          <div className="mb-1.5 flex flex-wrap gap-1">
+            {values.map((v, i) => (
+              <span
+                key={`${v}-${i}`}
+                className="inline-flex max-w-full items-center gap-1 rounded-none border border-border bg-muted/40 px-2 py-0.5 text-xs text-foreground"
+              >
+                <span className="max-w-[12rem] truncate">{v}</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label={`Remove ${v}`}
+                  onClick={() => remove(i)}
+                  className="size-6 min-h-6 text-muted-foreground hover:text-destructive"
+                >
+                  ×
+                </Button>
+              </span>
+            ))}
+          </div>
+        )}
+        <Input
+          type="text"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder ?? "Type and press Enter"}
+          className="w-full rounded-none"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="w-64">
@@ -801,6 +995,7 @@ export function TagInput({ values, onChange, placeholder }: TagInputProps) {
             <button
               onClick={() => remove(i)}
               className="text-gsd-text-dim hover:text-gsd-danger ml-0.5"
+              aria-label={`Remove ${v}`}
             >
               x
             </button>
