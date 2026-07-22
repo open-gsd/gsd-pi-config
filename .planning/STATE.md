@@ -70,7 +70,8 @@ Progress: [██████████] 100%
 - **Palette locked: Mist Sky (A)** — clean/linear + soft light sky primary `#a8c5e8` (dark) / `#5a7fa8` (light).
 - Spec: `.planning/design/PALETTE.md`
 - Explicitly **not** logo cyan/purple.
-- Next: discuss/plan Phase 2 against Mist Sky tokens.
+- Phase 2 CONTEXT gathered: `.planning/phases/02-web-chrome-standalone-pages/02-CONTEXT.md`
+- Next: `/gsd-plan-phase 2` (or `/gsd-ui-phase 2` first for UI contract).
 
 
 ## Accumulated Context
