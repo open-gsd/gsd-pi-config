@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 05
 current_phase_name: hardening-polish-gates
 status: executing
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-07-23T00:23:39.689Z"
+stopped_at: Completed 05-03-PLAN.md
+last_updated: "2026-07-23T00:27:45.396Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 05 execution started
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 25
-  completed_plans: 19
+  completed_plans: 20
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 05 (hardening-polish-gates) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 05 execution started
 
-Progress: [████████░░] 76%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -79,6 +79,7 @@ Progress: [████████░░] 76%
 | Phase 04 P05 | 3min | 2 tasks | 2 files |
 | Phase 05 P01 | 2min | 2 tasks | 2 files |
 | Phase 05 P02 | 4min | 2 tasks | 13 files |
+| Phase 05 P03 | 3min | 2 tasks | 3 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -152,6 +153,8 @@ Recent decisions affecting current work:
 - [Phase ?]: ApiKeys residual uses Input for search/edit; CustomProviders free-text stays native under FormControls
 - [Phase ?]: Prefer shared semantic tokens on residual section chrome without isWebPlatform branch
 - [Phase ?]: ConfigApp verify-only dual path: web Button, desktop uiClasses retained
+- [Phase ?]: ConfigApp uiClasses imports remain allowed for desktop; residual tests scope CustomProviders/ApiKeys + CSS only
+- [Phase ?]: Web CSS purge deletes only button-bridge family; nav-item/choice-btn kept for Sidebar
 
 ### Pending Todos
 
@@ -173,8 +176,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T00:23:39.681Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-07-23T00:27:45.389Z
+Stopped at: Completed 05-03-PLAN.md
 Resume file: None
 
 ## Phase 3
