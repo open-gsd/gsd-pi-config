@@ -1,203 +1,69 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
-current_phase: 5
-current_phase_name: Hardening & Polish Gates
-status: milestone_complete
-stopped_at: All phases 1–5 complete; Phase 1 parked UAT closed after Phase 5 approval
-last_updated: "2026-07-23T03:34:30.000Z"
+milestone_name: Web UI Redesign
+status: Awaiting next milestone
+current_phase: 0
+stopped_at: Milestone v1.0 archived 2026-07-23
+last_updated: "2026-07-23T11:35:00.000Z"
 last_activity: 2026-07-23
-last_activity_desc: All 5 phases complete (100%); ready for milestone audit/archive
+last_activity_desc: Milestone v1.0 completed and archived
 progress:
   total_phases: 5
   completed_phases: 5
   total_plans: 21
   completed_plans: 21
   percent: 100
+closeout_type: override_closeout
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-07-21)
+See: .planning/PROJECT.md (updated 2026-07-23)
 
-**Core value:** Every web page uses a single shadcn-based design system so the site looks cohesive and UI work stays maintainable — without changing what users can do.
-**Current focus:** Milestone v1.0 complete — ready for `/gsd-audit-milestone` then `/gsd-complete-milestone`
+**Core value:** Every web page uses a single shadcn-based design system so the site looks cohesive and UI work stays maintainable — without changing what users can do.  
+**Current focus:** Planning next milestone — run `/gsd-new-milestone`
 
 ## Current Position
 
-Phase: 5 — Hardening & Polish Gates (last phase)
-Plan: All plans complete (21/21)
-Status: Milestone ready to archive
-Last activity: 2026-07-23 — Phase 1 formal close + all phases checked complete
+Phase: — (v1.0 complete)  
+Plan: —  
+Status: Awaiting next milestone  
+Last activity: 2026-07-23 — Milestone v1.0 archived
 
-Progress: [██████████] 100%
-
-## Performance Metrics
-
-**Velocity:**
-
-- Total plans completed: 21
-- Average duration: —
-- Total execution time: 0 hours
-
-**By Phase:**
-
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| 2 | 4 | - | - |
-| 3 | 5 | - | - |
-| 4 | 5 | - | - |
-| 5 | 4 | - | - |
-| 1 | 3 | - | - |
-
-**Recent Trend:**
-
-- Last 5 plans: —
-- Trend: —
-
-*Updated after each plan completion*
-| Phase 01 P01 | 1min | 3 tasks | 8 files |
-**Per-Plan Metrics:**
-
-| Plan | Duration | Tasks | Files |
-|------|----------|-------|-------|
-| Phase 01 P02 | 4min | 2 tasks | 10 files |
-| Phase 01 P03 | 8min | 3 tasks | 8 files |
-| Phase 02 P01 | 2min | 2 tasks | 2 files |
-| Phase 02 P02 | 3min | 2 tasks | 7 files |
-| Phase 02 P03 | 3min | 2 tasks | 4 files |
-| Phase 02 P04 | 4min | 3 tasks | 8 files |
-| Phase 03 P01 | 4min | 2 tasks | 9 files |
-| Phase 03 P02 | 3min | 2 tasks | 5 files |
-| Phase 03 P03 | 2min | 2 tasks | 1 files |
-| Phase 03 P04 | 2min | 2 tasks | 2 files |
-| Phase 03 P05 | 3min | 2 tasks | 2 files |
-| Phase 04 P01 | 2min | 2 tasks | 9 files |
-| Phase 04 P02 | 6min | 2 tasks | 2 files |
-| Phase 04 P03 | 4min | 2 tasks | 2 files |
-| Phase 04 P04 | 3min | 2 tasks | 2 files |
-| Phase 04 P05 | 3min | 2 tasks | 2 files |
-| Phase 05 P01 | 2min | 2 tasks | 2 files |
-| Phase 05 P02 | 4min | 2 tasks | 13 files |
-| Phase 05 P03 | 3min | 2 tasks | 3 files |
-| Phase 05 P04 | 2min | 2 tasks | 3 files |
-
-## Redesign direction (2026-07-21)
-
-- Phase 1 automated work complete; human UAT **parked**.
-- User requested **complete web redesign** with custom colors, full surface (Phases 2–4).
-- **Palette locked: Mist Sky (A)** — clean/linear + soft light sky primary `#a8c5e8` (dark) / `#5a7fa8` (light).
-- Spec: `.planning/design/PALETTE.md`
-- Explicitly **not** logo cyan/purple.
-- Phase 2 CONTEXT gathered: `.planning/phases/02-web-chrome-standalone-pages/02-CONTEXT.md`
-- Next: `/gsd-plan-phase 2` (or `/gsd-ui-phase 2` first for UI contract).
-
-## Accumulated Context
-
-### Decisions
-
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- Milestone is web-only shadcn visual restyle; desktop look deferred
-- Presentation isolation via platform CSS + form adapters (not forking ConfigApp)
-- Clean shadcn defaults (neutral); no custom brand system in v1
-- Research-backed phase order: foundation → web leaves → overlays → forms/editor → gates
-- [Phase ?]: Dual-write applyTheme for data-theme + .dark; no next-themes
-- [Phase ?]: cn via clsx+tailwind-merge; @/* alias in tsconfig and Vite
-- [Phase ?]: Prefer @platform-css static alias over async CSS import (FOUC-safe)
-- [Phase ?]: Delete shared index.css after split — no dual-loading shim
-- [Phase ?]: Defer @import shadcn/tailwind.css to Plan 03 until shadcn package legitimacy gate
-- [Phase ?]: Clean neutral OKLCH primary — no GSD cyan mapped into --primary
-- [Phase ?]: Pin shadcn CLI 4.13.1; style base-nova / Base UI only — never mix Radix
-- [Phase ?]: Install only Button (+ CLI-required support); FND-03 allowlist enforces no registry dump
-- [Phase ?]: Add @import shadcn/tailwind.css to web CSS only after legitimacy approval
-- [Phase ?]: Hand-install @base-ui/react when CLI add wrote Button but omitted the peer dep
-- [Phase ?]: Mist Sky locked palette applied as hex on web only (D-00a)
-- [Phase ?]: Keep .gsd-btn* class chrome until Phase 4; bridge aliases Mist Sky (D-22)
-- [Phase ?]: radius 0 both themes D-23; color-gsd-accent maps to primary D-21
-- [Phase ?]: Install only Input + Textarea via pinned CLI 4.13.1; skip Label (plain HTML later)
-- [Phase ?]: Button default/sm ≥40px rounded-none; hover via --primary-hover; soft destructive retained
-- [Phase ?]: No product route mounts this plan — Plans 03–04 consume primitives
-- [Phase ?]: Pure CSS underline (border-b 1px primary) for nav and theme trio — not ToggleGroup pills
-- [Phase ?]: ThemeToggle presentation-only; theme.ts dual-write and storage key untouched
-- [Phase ?]: BrandMark PNG retained without BrandMark.tsx changes (D-03)
-- [Phase ?]: External opengsd.net uses buttonVariants outline size sm; hidden below sm
-- [Phase ?]: Gallery empty states split on query.trim() — catalog vs filtered copy per UI-SPEC
-- [Phase ?]: Wizard mode stays equal flex pair; profile full-width stack with shared choiceRowClass
-- [Phase ?]: OAuth uses WebShell active=editor; no console logging of authorization code
-- [Phase ?]: uiClasses.ts kept intact for Phase 3/4; only Phase 2 surfaces drop button symbols
-- [Phase ?]: Install only Dialog/Command (+ input-group peer) via shadcn@4.13.1; no AlertDialog dump (D-24)
-- [Phase ?]: Mist Sky Dialog defaults: bg-black/60 scrim, no product blur, rounded-none content/footer
-- [Phase ?]: Reuse ShareModal for Gallery preview via optional title prop (D-07)
-- [Phase ?]: Drop hand-rolled Escape listeners; Dialog owns X/ESC/backdrop dismiss on product modals
-- [Phase ?]: Load rows use left primary edge + soft wash instead of active:scale press theater
-- [Phase ?]: SubmitPresetModal restyle only (D-08): Dialog + Input/Textarea/Button; OAuth/scan handlers unchanged
-- [Phase ?]: Submit secret-scan errors stay soft-danger role=alert (D-20); no OAuth code console logging
-- [Phase ?]: Palette Command shouldFilter=false keeps scoreField/scoreSection/MAX_RESULTS authoritative (D-10)
-- [Phase ?]: Palette uses CommandDialog; Dialog+cmdk own dismiss/keyboard (D-09, D-13)
-- [Phase ?]: Single-open product overlay via closeAllOverlays + exclusive open helpers (D-16)
-- [Phase ?]: No desktop semantic CSS bridge — dual builds green without index.desktop.css changes
-- [Phase ?]: Install only switch/select/checkbox/popover via pinned shadcn@4.13.1; no Alert/Card/Sheet dump
-- [Phase ?]: Select trigger min-h-10 + rounded-none; Popover/Checkbox linear; Switch capsule h-5 w-9 sole non-square exception
-- [Phase ?]: No new runtime deps for Phase 4 form kit — reuse existing @base-ui/react@1.6.0
-- [Phase ?]: Web FormControls adapters branch via isWebPlatform; desktop keeps legacy form chrome
-- [Phase ?]: Select empty uses internal sentinel never emitted into prefs
-- [Phase ?]: MultiSelect Popover+Checkbox checkbox-first; Combo Input+Popover; Tag quiet chips
-- [Phase ?]: ModelPicker Select-first with SelectGroup/SelectLabel; Command not used (RESEARCH Q3)
-- [Phase ?]: ModelChain visual-only Mist Sky restyle; filter(Boolean) commit/resync frozen
-- [Phase ?]: Web-only Mist Sky editor chrome; desktop BrandMark + gsd-nav-item + btn language preserved (ISO)
-- [Phase ?]: Save/Download enablement predicates copied verbatim into web Button and desktop button branches (FRM-04 / Pitfall 6)
-- [Phase ?]: Leave residual web .gsd-btn CSS for library sections until Phase 5; isolation no longer requires them for Phase 4 success
-- [Phase ?]: phase04.forms.test.ts locks FRM-01–04 + WEB-04 via source contracts; dual builds mandatory gate
-- [Phase ?]: Soft destructive residual CTAs use outline + destructive tint, not solid red fill
-- [Phase ?]: ApiKeys residual uses Input for search/edit; CustomProviders free-text stays native under FormControls
-- [Phase ?]: Prefer shared semantic tokens on residual section chrome without isWebPlatform branch
-- [Phase ?]: ConfigApp verify-only dual path: web Button, desktop uiClasses retained
-- [Phase ?]: ConfigApp uiClasses imports remain allowed for desktop; residual tests scope CustomProviders/ApiKeys + CSS only
-- [Phase ?]: Web CSS purge deletes only button-bridge family; nav-item/choice-btn kept for Sidebar
-- [Phase ?]: Plan 04: no product code changes; dual builds + 173 tests green for ISO-02
-- [Phase ?]: nyquist_compliant stays false until human 05-UAT.md sign-off (D-08)
-- [Phase ?]: ConfigApp btn imports allowed; chip-remove inherits Phase 4 24px unless a11y flags
-
-### Pending Todos
-
-None yet.
-
-### Blockers/Concerns
-
-- Phase 1 must pin Base UI vs Radix and theme dual-write strategy before page restyles
-- Phase 4 FormControls adapter mechanism (alias vs dual file) needs an explicit choice before section migration
-- Nested Dialog/Command/Select focus matrix is a known risk for Phase 3
+Progress: [██████████] 100% (v1.0)
 
 ## Deferred Items
 
-Items acknowledged and carried forward from previous milestone close:
+Items acknowledged and deferred at milestone close on 2026-07-23:
 
-| Category | Item | Status | Deferred At |
-|----------|------|--------|-------------|
-| v2 | Sonner toasts, Skeleton, Tooltip, Badge/Kbd, Sheet mobile nav, density tokens, visual regression harness, desktop shadcn migration | Deferred | 2026-07-21 |
+| Category | Item | Status |
+|----------|------|--------|
+| uat_tooling | Phase 01 UAT flagged incomplete by audit-open despite status=passed, 0 pending | acknowledged false-positive |
+| uat_tooling | Phase 02 UAT flagged incomplete by audit-open despite status=passed, 0 pending | acknowledged false-positive |
+| uat_tooling | Phase 03 UAT flagged incomplete by audit-open despite status=passed, 0 pending | acknowledged false-positive |
+| uat_tooling | Phase 04 UAT flagged incomplete by audit-open despite status=passed, 0 pending | acknowledged false-positive |
+| uat_tooling | Phase 05 UAT flagged incomplete by audit-open despite status=passed, 0 pending | acknowledged false-positive |
+| nyquist | Phases 1–4 VALIDATION.md remain status:draft (never `/gsd-validate-phase`) | deferred process hygiene |
+| automation | Playwright E2E (D-06) | deferred v2 |
+| automation | axe-core CI (D-09) | deferred v2 |
+| product | Desktop shadcn migration | deferred next milestone |
+| product | Sonner toasts, skeletons, tooltips, Badge/Kbd, Sheet mobile nav, density tokens, visual harness | deferred v2 backlog |
+
+Known verification overrides: 5 (UAT tooling false positives only; see above)
+
+## Performance Metrics
+
+**Velocity (v1.0):**
+
+- Total plans completed: 21
+- Total phases: 5
+- Tasks (CLI extract): 45
+- Timeline: 2026-07-21 → 2026-07-23
 
 ## Session Continuity
 
-Last session: 2026-07-23T00:30:28.417Z
-Stopped at: Completed 05-04-PLAN.md
-Resume file: None
-
-## Phase 3
-
-- CONTEXT ready: `.planning/phases/03-modals-palette-overlays/03-CONTEXT.md`
-- Next: `/gsd-ui-phase 3` then `/gsd-plan-phase 3` (or plan with UI gate).
-
-## Phase 4
-
-- CONTEXT ready: `.planning/phases/04-form-kit-adapters-editor-chrome/04-CONTEXT.md`
-- Next: `/gsd-ui-phase 4` then `/gsd-plan-phase 4`.
-
-## Phase 5
-
-- CONTEXT ready: `.planning/phases/05-hardening-polish-gates/05-CONTEXT.md`
-- Next: `/gsd-ui-phase 5` (if gate) then `/gsd-plan-phase 5`.
+Last session: Milestone complete / archive  
+Next: `/gsd-new-milestone` for requirements + roadmap of next version
