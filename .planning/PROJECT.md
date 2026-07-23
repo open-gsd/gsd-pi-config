@@ -22,12 +22,12 @@ Every web page uses a single shadcn-based design system so the site looks cohesi
 
 ### Active
 
-- [ ] Adopt shadcn/ui as the web design system (setup, tokens, primitives)
-- [ ] Restyle all web routes/pages onto shadcn components: gallery, wizard, editor shell, OAuth callback, shared chrome
-- [ ] Mist Sky visual direction (clean/linear hierarchy; soft sky primary; not logo cyan) — see `.planning/design/PALETTE.md`
-- [ ] Isolate restyle to a **web-only presentation layer** so desktop can keep current styling this milestone
-- [ ] Preserve existing web flows and feature behavior (no product rethink)
-- [ ] Keep preference domain logic, backends, and APIs behavior-stable through the UI swap
+- [x] Adopt shadcn/ui as the web design system (setup, tokens, primitives) — Phase 1
+- [x] Restyle all web routes/pages onto shadcn components: gallery, wizard, editor shell, OAuth callback, shared chrome — Phases 2–5
+- [x] Mist Sky visual direction (clean/linear hierarchy; soft sky primary; not logo cyan) — see `.planning/design/PALETTE.md`
+- [x] Isolate restyle to a **web-only presentation layer** so desktop can keep current styling this milestone — ISO-01/02
+- [x] Preserve existing web flows and feature behavior (no product rethink) — ISO-03/05
+- [x] Keep preference domain logic, backends, and APIs behavior-stable through the UI swap — dual builds + suite
 
 ### Out of Scope
 

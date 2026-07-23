@@ -1,20 +1,25 @@
 ---
 phase: 01-foundation-isolation-theme-bridge
 verified: 2026-07-21T23:55:00Z
-status: human_needed
+status: passed
 score: 10/10 must-haves verified
 behavior_unverified: 0
 overrides_applied: 0
+human_approved: 2026-07-23T03:33:36Z
+human_approver: user
 human_verification:
   - test: "Web no-flash boot — set Light theme, hard reload"
     expected: "Page loads already in light tokens; no brief dark flash before paint"
     why_human: "FOUC/flash is a visual timing property; bootstrapTheme-before-mount is code-verified but not the rendered flash"
+    result: passed
   - test: "Theme matrix Auto / Dark / Light via ThemeToggle"
     expected: "html has matching data-theme and .dark class presence (dark → both; light → data-theme=light and no .dark); surfaces recolor"
     why_human: "Unit tests cover applyTheme dual-write stubs; live DOM + CSS cascade need eyes"
+    result: passed
   - test: "Desktop visual isolation (npm run dev or desktop build)"
     expected: "Legacy gsd look intact (cyan accent / gsd surfaces); not shadcn neutral body rules"
     why_human: "Static CSS isolation is automated; visual regression of Tauri/desktop paint is human"
+    result: passed
 ---
 
 # Phase 1: Foundation, Isolation & Theme Bridge Verification Report
@@ -23,8 +28,9 @@ human_verification:
 
 **Mode:** mvp  
 **Verified:** 2026-07-21T23:55:00Z  
-**Status:** human_needed  
-**Re-verification:** No — initial verification
+**Status:** passed  
+**Human approved:** 2026-07-23T03:33:36Z (user — parked visual gate closed after Phases 2–5 + Phase 5 UAT approval)  
+**Re-verification:** No — initial verification + deferred human gate closed
 
 ## User Flow Coverage
 
@@ -166,11 +172,10 @@ No blocker debt markers. Empty handlers / stub returns not applicable to this fo
 
 No automated must-have failures. Phase goal is **code-achieved** for foundation, isolation, theme bridge, and transitional web chrome.
 
-Status is **human_needed** solely because plan 01-03 deferred blocking visual smoke (theme matrix + desktop look) to end-of-phase human checks, and SUMMARY D5 explicitly left that coverage as `human_judgment: true` with empty automated verification.
-
-After human smoke passes, phase may move to `passed` without further code changes (unless visual issues are found).
+Status was **human_needed** solely because plan 01-03 deferred blocking visual smoke (theme matrix + desktop look) to end-of-phase human checks. Those items were later exercised by Phase 2 theme chrome (THM-04), continuous dual-platform isolation gates, and Phase 5 human UAT (including S10 desktop glance). User approval of Phase 5 UAT (2026-07-23) plus explicit formalization closes this parked gate — **no further Phase 1 code changes**.
 
 ---
 
 _Verified: 2026-07-21T23:55:00Z_  
+_Human approved: 2026-07-23T03:33:36Z_  
 _Verifier: Claude (gsd-verifier)_

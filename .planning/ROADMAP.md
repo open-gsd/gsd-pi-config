@@ -6,7 +6,7 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
 
 ## Phases
 
-- [ ] **Phase 1: Foundation, Isolation & Theme Bridge** - shadcn init, platform CSS split, tokens, and dual-write theme
+- [x] **Phase 1: Foundation, Isolation & Theme Bridge** - shadcn init, platform CSS split, tokens, and dual-write theme (completed 2026-07-23)
 - [x] **Phase 2: Web Chrome & Standalone Pages** - restyle WebShell, gallery, wizard, OAuth, and button language (completed 2026-07-21)
 - [x] **Phase 3: Modals, Palette & Overlays** - Dialog/AlertDialog modals, ⌘K command palette, focus traps (completed 2026-07-22)
 - [x] **Phase 4: Form Kit Adapters + Editor Chrome** - FormControls.web adapters, section inheritance, editor shell (completed 2026-07-22)
@@ -26,7 +26,7 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
   2. Web loads shadcn semantic tokens (background, foreground, primary, muted, destructive, border, ring) with a clean neutral default look; desktop build still runs with current non-shadcn styling
   3. Auto / Dark / Light theme still works (storage + system preference + no-flash boot) and GSD theme attributes stay in sync with shadcn dark mode (e.g. `data-theme` + `.dark`)
 
-**Plans:** 3/3 plans executed
+**Plans:** 3/3 plans complete
 Plans:
 
 - [x] 01-01-PLAN.md — Wave 0 tests, `@/*` + `cn`, theme dual-write (`data-theme` + `.dark`)
@@ -137,7 +137,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation, Isolation & Theme Bridge | 3/3 | In Progress|  |
+| 1. Foundation, Isolation & Theme Bridge | 3/3 | Complete    | 2026-07-23 |
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
 | 3. Modals, Palette & Overlays | 5/5 | Complete    | 2026-07-22 |
 | 4. Form Kit Adapters + Editor Chrome | 5/5 | Complete    | 2026-07-22 |
