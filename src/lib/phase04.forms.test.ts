@@ -88,6 +88,15 @@ describe("phase04 FormControls FRM-01 core kit contracts", () => {
     expect(src).toMatch(/<select[\s>]/);
   });
 
+  it("maps empty sentinel to labels via items + SelectValue (no raw __gsd_select_empty__ in trigger)", () => {
+    // Base UI closed-trigger shows raw value unless items map / Value children resolve labels
+    expect(src).toMatch(/__gsd_select_empty__/);
+    expect(src).toMatch(/function selectItemsMap\b|selectItemsMap\(/);
+    expect(src).toMatch(/function selectDisplayLabel\b|selectDisplayLabel\(/);
+    expect(src).toMatch(/items=\{items\}/);
+    expect(src).toMatch(/SelectValue placeholder=\{placeholder\}>/);
+  });
+
   it("SectionHeader web uses text-xl font-semibold heading scale", () => {
     expect(src).toMatch(/text-xl/);
     expect(src).toMatch(/font-semibold/);

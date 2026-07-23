@@ -28,6 +28,37 @@ import { Button } from "@/components/ui/button";
 /** Internal Select empty sentinel — never emitted into prefs (D-06 / RESEARCH Q1). */
 const SELECT_EMPTY_SENTINEL = "__gsd_select_empty__";
 
+/**
+ * Base UI Select shows the raw `value` string when the popup is closed unless
+ * labels are supplied via the Root `items` map (portal items are not registered
+ * until open). Always pass this map so empty sentinel / option values render as labels.
+ */
+function selectItemsMap(
+  entries: ReadonlyArray<{ value: string; label: ReactNode }>,
+  emptyLabel?: string,
+): Record<string, ReactNode> {
+  const items: Record<string, ReactNode> = {};
+  if (emptyLabel !== undefined) {
+    items[SELECT_EMPTY_SENTINEL] = emptyLabel;
+  }
+  for (const e of entries) {
+    items[e.value] = e.label;
+  }
+  return items;
+}
+
+/** Closed-trigger label for a controlled select value (never shows the empty sentinel raw). */
+function selectDisplayLabel(
+  value: string | null | undefined,
+  items: Record<string, ReactNode>,
+  placeholder: string,
+): ReactNode {
+  if (value == null || value === "" || value === SELECT_EMPTY_SENTINEL) {
+    return placeholder;
+  }
+  return items[value] ?? value;
+}
+
 interface FieldProps {
   label: string;
   description?: string;
@@ -203,10 +234,15 @@ export function SelectField<T extends string>({
           ? SELECT_EMPTY_SENTINEL
           : (value ?? null)
         : value;
+    const items = selectItemsMap(
+      options.map((opt) => ({ value: opt, label: opt })),
+      allowEmpty ? placeholder : undefined,
+    );
 
     return (
       <Select
         value={selectValue as string | null}
+        items={items}
         onValueChange={(next) => {
           if (next == null || next === "" || next === SELECT_EMPTY_SENTINEL) {
             onChange(undefined);
@@ -216,7 +252,9 @@ export function SelectField<T extends string>({
         }}
       >
         <SelectTrigger className={cn("min-h-10 h-10 rounded-none", className)}>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder}>
+            {(v) => selectDisplayLabel(v as string | null, items, placeholder)}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent className="rounded-none">
           {allowEmpty && (
@@ -272,10 +310,15 @@ export function LabeledSelectField({
   if (isWebPlatform()) {
     const selectValue =
       value === undefined || value === "" ? SELECT_EMPTY_SENTINEL : value;
+    const items = selectItemsMap(
+      options.map((opt) => ({ value: opt.value, label: opt.label })),
+      placeholder,
+    );
 
     return (
       <Select
         value={selectValue}
+        items={items}
         onValueChange={(next) => {
           if (next == null || next === "" || next === SELECT_EMPTY_SENTINEL) {
             onChange(undefined);
@@ -285,7 +328,9 @@ export function LabeledSelectField({
         }}
       >
         <SelectTrigger className={cn("min-h-10 h-10 rounded-none", className)}>
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder}>
+            {(v) => selectDisplayLabel(v as string | null, items, placeholder)}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent className="rounded-none">
           <SelectItem value={SELECT_EMPTY_SENTINEL}>{placeholder}</SelectItem>
@@ -674,6 +719,16 @@ export function ModelPicker({
       : value === undefined || value === ""
         ? SELECT_EMPTY_SENTINEL
         : value;
+    const customLabel = "— Custom (provider/model) —";
+    const items: Record<string, ReactNode> = {
+      [SELECT_EMPTY_SENTINEL]: placeholder,
+      [CUSTOM_SENTINEL]: customLabel,
+    };
+    for (const prov of catalog) {
+      for (const m of prov.models) {
+        items[`${prov.id}/${m}`] = m;
+      }
+    }
 
     return (
       <div className="flex flex-col gap-1 items-end">
@@ -682,12 +737,14 @@ export function ModelPicker({
             No models available
           </p>
         )}
-        <Select value={selectValue} onValueChange={applySelectValue}>
+        <Select value={selectValue} items={items} onValueChange={applySelectValue}>
           <SelectTrigger
             className={cn("min-h-10 h-10 rounded-none", className)}
             title={value}
           >
-            <SelectValue placeholder={placeholder} />
+            <SelectValue placeholder={placeholder}>
+              {(v) => selectDisplayLabel(v as string | null, items, placeholder)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent className="rounded-none">
             <SelectItem value={SELECT_EMPTY_SENTINEL}>{placeholder}</SelectItem>
@@ -701,7 +758,7 @@ export function ModelPicker({
                 ))}
               </SelectGroup>
             ))}
-            <SelectItem value={CUSTOM_SENTINEL}>— Custom (provider/model) —</SelectItem>
+            <SelectItem value={CUSTOM_SENTINEL}>{customLabel}</SelectItem>
           </SelectContent>
         </Select>
         {isCustom && (
