@@ -5,15 +5,15 @@ milestone_name: milestone
 current_phase: 05
 current_phase_name: hardening-polish-gates
 status: executing
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-07-23T00:18:48.079Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-07-23T00:23:39.689Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 05 execution started
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 25
-  completed_plans: 18
+  completed_plans: 19
 ---
 
 # Project State
@@ -28,11 +28,11 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 ## Current Position
 
 Phase: 05 (hardening-polish-gates) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-07-22 — Phase 05 execution started
 
-Progress: [███████░░░] 72%
+Progress: [████████░░] 76%
 
 ## Performance Metrics
 
@@ -78,6 +78,7 @@ Progress: [███████░░░] 72%
 | Phase 04 P04 | 3min | 2 tasks | 2 files |
 | Phase 04 P05 | 3min | 2 tasks | 2 files |
 | Phase 05 P01 | 2min | 2 tasks | 2 files |
+| Phase 05 P02 | 4min | 2 tasks | 13 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -149,6 +150,8 @@ Recent decisions affecting current work:
 - [Phase ?]: phase04.forms.test.ts locks FRM-01–04 + WEB-04 via source contracts; dual builds mandatory gate
 - [Phase ?]: Soft destructive residual CTAs use outline + destructive tint, not solid red fill
 - [Phase ?]: ApiKeys residual uses Input for search/edit; CustomProviders free-text stays native under FormControls
+- [Phase ?]: Prefer shared semantic tokens on residual section chrome without isWebPlatform branch
+- [Phase ?]: ConfigApp verify-only dual path: web Button, desktop uiClasses retained
 
 ### Pending Todos
 
@@ -170,8 +173,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T00:18:48.072Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-07-23T00:23:39.681Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None
 
 ## Phase 3
