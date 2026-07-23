@@ -2,18 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-current_phase: 5
-current_phase_name: Hardening & Polish Gates
-status: planning
-stopped_at: Completed 04-05-PLAN.md
-last_updated: "2026-07-22T20:57:12.750Z"
+current_phase: 05
+current_phase_name: hardening-polish-gates
+status: executing
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-07-23T00:18:48.079Z"
 last_activity: 2026-07-22
-last_activity_desc: Phase 4 complete, transitioned to Phase 5
+last_activity_desc: Phase 05 execution started
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 1
-  total_plans: 20
-  completed_plans: 17
+  total_plans: 25
+  completed_plans: 18
 ---
 
 # Project State
@@ -23,16 +23,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-21)
 
 **Core value:** Every web page uses a single shadcn-based design system so the site looks cohesive and UI work stays maintainable — without changing what users can do.
-**Current focus:** Phase 04 — form-kit-adapters-editor-chrome
+**Current focus:** Phase 05 — hardening-polish-gates
 
 ## Current Position
 
-Phase: 5 — Hardening & Polish Gates
-Plan: Not started
-Status: Ready to plan
-Last activity: 2026-07-22 — Phase 4 complete, transitioned to Phase 5
+Phase: 05 (hardening-polish-gates) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Last activity: 2026-07-22 — Phase 05 execution started
 
-Progress: [████████░░] 80%
+Progress: [███████░░░] 72%
 
 ## Performance Metrics
 
@@ -77,6 +77,7 @@ Progress: [████████░░] 80%
 | Phase 04 P03 | 4min | 2 tasks | 2 files |
 | Phase 04 P04 | 3min | 2 tasks | 2 files |
 | Phase 04 P05 | 3min | 2 tasks | 2 files |
+| Phase 05 P01 | 2min | 2 tasks | 2 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -146,6 +147,8 @@ Recent decisions affecting current work:
 - [Phase ?]: Save/Download enablement predicates copied verbatim into web Button and desktop button branches (FRM-04 / Pitfall 6)
 - [Phase ?]: Leave residual web .gsd-btn CSS for library sections until Phase 5; isolation no longer requires them for Phase 4 success
 - [Phase ?]: phase04.forms.test.ts locks FRM-01–04 + WEB-04 via source contracts; dual builds mandatory gate
+- [Phase ?]: Soft destructive residual CTAs use outline + destructive tint, not solid red fill
+- [Phase ?]: ApiKeys residual uses Input for search/edit; CustomProviders free-text stays native under FormControls
 
 ### Pending Todos
 
@@ -167,8 +170,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-22T18:41:43.869Z
-Stopped at: Completed 04-05-PLAN.md
+Last session: 2026-07-23T00:18:48.072Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None
 
 ## Phase 3
@@ -180,7 +183,6 @@ Resume file: None
 
 - CONTEXT ready: `.planning/phases/04-form-kit-adapters-editor-chrome/04-CONTEXT.md`
 - Next: `/gsd-ui-phase 4` then `/gsd-plan-phase 4`.
-
 
 ## Phase 5
 

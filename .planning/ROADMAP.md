@@ -119,10 +119,11 @@ Plans:
   3. Behavior smoke gates pass on web: import/draft, edit, download workspace, share/redact path, dirty/save affordances, OAuth submit path as applicable
   4. Focus/a11y parity is maintained (labels, invalid states, keyboard nav, focus rings, hit targets)
 
-**Plans**: 4 plans
+**Plans**: 1/4 plans executed
 
 Plans:
-- [ ] 05-01-PLAN.md — Residual purge CustomProviders + ApiKeys → Button + semantic tokens (≥40px)
+
+- [x] 05-01-PLAN.md — Residual purge CustomProviders + ApiKeys → Button + semantic tokens (≥40px)
 - [ ] 05-02-PLAN.md — Web section gsd-* color sweep + ConfigApp web path verify
 - [ ] 05-03-PLAN.md — phase05.residual contracts + delete web .gsd-btn CSS + isolation update
 - [ ] 05-04-PLAN.md — Dual builds + full suite + UAT smoke/a11y artifact + open questions
@@ -140,7 +141,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
 | 3. Modals, Palette & Overlays | 5/5 | Complete    | 2026-07-22 |
 | 4. Form Kit Adapters + Editor Chrome | 5/5 | Complete    | 2026-07-22 |
-| 5. Hardening & Polish Gates | 0/4 | Planned | - |
+| 5. Hardening & Polish Gates | 1/4 | In Progress|  |
 
 ## Coverage Map
 
