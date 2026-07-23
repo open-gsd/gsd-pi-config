@@ -2,7 +2,7 @@
 phase: 5
 slug: hardening-polish-gates
 status: automated-gates-green
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: true
 created: 2026-07-22
 updated: 2026-07-23

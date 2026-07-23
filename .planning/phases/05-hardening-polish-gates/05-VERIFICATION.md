@@ -1,10 +1,12 @@
 ---
 phase: 05-hardening-polish-gates
 verified: 2026-07-23T00:32:46Z
-status: human_needed
+status: passed
 score: 8/10 must-haves verified
 behavior_unverified: 2
 overrides_applied: 0
+human_approved: 2026-07-23T03:32:29Z
+human_approver: user
 behavior_unverified_items:
   - truth: "Behavior smoke gates pass on web (import/draft, edit, download, share/redact, dirty/save, OAuth) — ISO-03 S1–S10"
     test: "Run npm run dev:web and walk 05-UAT.md S1–S10 (residual Custom Providers + API Keys S7; gallery/wizard S8; palette S9)"
@@ -31,7 +33,7 @@ human_verification:
 **Phase Goal:** All web pages are cohesive on shadcn; desktop and behavior stay stable; smoke and a11y gates pass  
 **User story (MVP):** As a web user of GSD Pi Config, I want to finish the redesign with cohesive Mist Sky residual chrome, stable domain behavior, and accessible controls, so that the milestone closes without product or IA changes.  
 **Verified:** 2026-07-23T00:32:46Z  
-**Status:** human_needed  
+**Status:** passed  
 **Re-verification:** No — initial verification  
 **Requirements:** ISO-02, ISO-03, ISO-04, ISO-05
 
