@@ -136,7 +136,7 @@ export function Sidebar({
       ) : (
         <div className="gsd-local-chrome flex min-h-[4.5rem] flex-col items-start justify-center gap-1.5 px-4">
           <BrandMark size="md" subtitle="Pi Config" />
-          <p className="text-[9px] text-gsd-text-muted tracking-wide pl-[2.75rem]">
+          <p className="text-[9px] text-gsd-text-muted tracking-wide">
             Git · Ship · Done
           </p>
         </div>

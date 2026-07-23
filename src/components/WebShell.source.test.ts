@@ -35,12 +35,15 @@ describe("WebShell underline nav + Button chrome (WEB-01 / D-01 / D-08)", () => 
     expect(src).not.toMatch(/backdrop-blur-md/);
   });
 
-  it("styles external opengsd.net via buttonVariants and keeps BrandMark PNG", () => {
+  it("styles external opengsd.net via buttonVariants and brands home with wordmark", () => {
     expect(src).toMatch(/buttonVariants/);
     expect(src).toMatch(/opengsd\.net/);
     expect(src).toMatch(/rel=["']noopener noreferrer["']/);
     expect(src).toMatch(/BrandMark/);
     expect(src).toMatch(/size=["']sm["']/);
+    // Brand goes to editor home (not external); wordmark is Link to /
+    expect(src).toMatch(/<Link\s+to=["']\/["']/);
+    expect(src).not.toMatch(/opengsd-logo\.png/);
   });
 
   it("keeps editor workspace strip at 2.25rem with primary mono label", () => {

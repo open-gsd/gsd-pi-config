@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { CSSProperties, ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { BrandMark } from "./BrandMark";
 import { ThemeToggle } from "./ThemeToggle";
 import { buttonVariants } from "./ui/button";
@@ -39,15 +39,14 @@ export function WebShell({ active, children, workspaceLabel }: WebShellProps) {
       style={shellStyle}
     >
       <header className="shrink-0 border-b border-border bg-background z-50">
-        <div className="flex h-[var(--gsd-shell-nav-height)] w-full items-center gap-3 px-4 sm:px-6">
-          <a
-            href="https://www.opengsd.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 transition-opacity hover:opacity-90"
+        <div className="flex h-[var(--gsd-shell-nav-height)] w-full items-center gap-4 px-4 sm:px-6">
+          <Link
+            to="/"
+            className="shrink-0 rounded-none outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring/50"
+            aria-label="Open GSD Pi Config — Editor"
           >
             <BrandMark size="sm" subtitle="Pi Config" />
-          </a>
+          </Link>
 
           <nav className="ml-1 flex items-stretch gap-1" aria-label="Main">
             {NAV.map((item) => (
