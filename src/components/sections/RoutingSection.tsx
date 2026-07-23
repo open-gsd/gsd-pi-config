@@ -5,6 +5,7 @@ import type { GSDPreferences, DynamicRoutingConfig, ModelCapabilityScores } from
 import { CATALOG_PROVIDER_IDS } from "../../constants";
 import { Field, Toggle, ModelPicker, SectionHeader, MultiSelectField, NumberField, TextField } from "../FormControls";
 import type { ProviderCatalog } from "../../constants";
+import { Button } from "@/components/ui/button";
 
 const CAPABILITY_KEYS: (keyof ModelCapabilityScores)[] = [
   "coding", "debugging", "research", "reasoning", "speed", "longContext", "instruction",
@@ -66,7 +67,7 @@ export function RoutingSection({ prefs, onChange, modelCatalog = [] }: Props) {
         />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-4 mb-2 uppercase tracking-wider">Tier Models</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-4 mb-2 uppercase tracking-wider">Tier Models</h3>
 
       <Field path="dynamic_routing.tier_models.light" label="Light" description="Model for simple/light tasks.">
         <ModelPicker
@@ -95,11 +96,11 @@ export function RoutingSection({ prefs, onChange, modelCatalog = [] }: Props) {
         />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Model Capability Overrides</h3>
-      <p className="text-xs text-gsd-text-dim mb-3">Per-model 7-D scores (0–100) for capability-aware routing (ADR-004).</p>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Model Capability Overrides</h3>
+      <p className="text-xs text-muted-foreground mb-3">Per-model 7-D scores (0–100) for capability-aware routing (ADR-004).</p>
 
       {Object.entries(prefs.modelOverrides ?? {}).map(([modelId, override]) => (
-        <div key={modelId} className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
+        <div key={modelId} className="p-3 rounded-none bg-card border border-border mb-3">
           <div className="flex items-center justify-between mb-2">
             <TextField
               value={modelId}
@@ -113,9 +114,11 @@ export function RoutingSection({ prefs, onChange, modelCatalog = [] }: Props) {
               }}
               className="font-mono text-sm w-48"
             />
-            <button
+            <Button
               type="button"
-              className="text-xs text-gsd-danger"
+              variant="outline"
+              size="sm"
+              className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
               onClick={() => {
                 const { [modelId]: _drop, ...rest } = prefs.modelOverrides ?? {};
                 void _drop;
@@ -126,12 +129,12 @@ export function RoutingSection({ prefs, onChange, modelCatalog = [] }: Props) {
               }}
             >
               Remove
-            </button>
+            </Button>
           </div>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {CAPABILITY_KEYS.map((key) => (
               <div key={key}>
-                <label className="text-[10px] text-gsd-text-dim block mb-0.5">{key}</label>
+                <label className="text-xs text-muted-foreground block mb-0.5">{key}</label>
                 <NumberField
                   value={override.capabilities?.[key]}
                   onChange={(v) => {
@@ -154,9 +157,11 @@ export function RoutingSection({ prefs, onChange, modelCatalog = [] }: Props) {
         </div>
       ))}
 
-      <button
+      <Button
         type="button"
-        className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover hover:bg-gsd-accent/30"
+        variant="default"
+        size="sm"
+        className="rounded-none"
         onClick={() => {
           const id = `model-${Object.keys(prefs.modelOverrides ?? {}).length + 1}`;
           onChange({
@@ -166,7 +171,7 @@ export function RoutingSection({ prefs, onChange, modelCatalog = [] }: Props) {
         }}
       >
         + Add model override
-      </button>
+      </Button>
     </div>
   );
 }

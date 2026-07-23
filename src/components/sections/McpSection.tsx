@@ -3,6 +3,7 @@
 
 import type { ClaudeCodeMcpPerModelEntry, GSDPreferences } from "../../types";
 import { TextField, TagInput, SectionHeader } from "../FormControls";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   prefs: GSDPreferences;
@@ -23,20 +24,26 @@ function McpModelCard({
   onRenamePrefix: (next: string) => void;
 }) {
   return (
-    <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
+    <div className="p-3 rounded-none bg-card border border-border mb-3">
       <div className="flex items-center justify-between gap-2 mb-2">
         <TextField
           value={prefix}
           onChange={(v) => v && onRenamePrefix(v)}
           className="font-mono text-sm flex-1"
         />
-        <button type="button" onClick={onRemove} className="text-xs text-gsd-danger hover:text-red-400 shrink-0">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onRemove}
+          className="shrink-0 rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+        >
           Remove
-        </button>
+        </Button>
       </div>
       <div className="space-y-2">
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Allowed servers</label>
+          <label className="text-xs text-muted-foreground block mb-1">Allowed servers</label>
           <TagInput
             values={entry.allowed_servers ?? []}
             onChange={(allowed_servers) =>
@@ -49,7 +56,7 @@ function McpModelCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Blocked servers</label>
+          <label className="text-xs text-muted-foreground block mb-1">Blocked servers</label>
           <TagInput
             values={entry.blocked_servers ?? []}
             onChange={(blocked_servers) =>
@@ -92,18 +99,20 @@ export function McpSection({ prefs, onChange }: Props) {
       />
 
       <div className="flex items-center justify-between mt-2 mb-3">
-        <p className="text-xs text-gsd-text-dim">Keys are model ID prefixes matched longest-first.</p>
-        <button
+        <p className="text-xs text-muted-foreground">Keys are model ID prefixes matched longest-first.</p>
+        <Button
           type="button"
+          variant="default"
+          size="sm"
           onClick={addPrefix}
-          className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover hover:bg-gsd-accent/30 shrink-0"
+          className="shrink-0 rounded-none"
         >
           + Add prefix
-        </button>
+        </Button>
       </div>
 
       {entries.length === 0 && (
-        <p className="text-xs text-gsd-text-dim mb-4">No per-model MCP filters configured.</p>
+        <p className="text-xs text-muted-foreground mb-4">No per-model MCP filters configured.</p>
       )}
 
       {entries.map(([prefix, entry]) => (

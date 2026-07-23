@@ -3,6 +3,7 @@
 
 import { useState, type ReactNode } from "react";
 import { Field } from "../FormControls";
+import { Button } from "@/components/ui/button";
 import type { BashInterceptorRule, FallbackChainEntry, HookEntry, HooksSettings } from "../../lib/agentSettingsTypes";
 import { HOOK_EVENTS, type HookEventName } from "../../lib/agentSettings";
 
@@ -47,18 +48,18 @@ export function StringListField({
       <div className={wide ? "w-full max-w-xl" : "w-80"}>
         <div className="flex flex-wrap gap-1 mb-1.5 min-h-[1.25rem]">
           {list.length === 0 && (
-            <span className="text-xs text-gsd-text-dim italic">empty</span>
+            <span className="text-xs text-muted-foreground italic">empty</span>
           )}
           {list.map((v, i) => (
             <span
               key={`${v}-${i}`}
-              className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono rounded bg-gsd-accent/20 text-gsd-accent-hover"
+              className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-mono rounded-none bg-primary/10 text-primary"
             >
               {v}
               <button
                 type="button"
                 onClick={() => commit(list.filter((_, j) => j !== i))}
-                className="text-gsd-text-dim hover:text-gsd-danger ml-0.5"
+                className="text-muted-foreground hover:text-destructive ml-0.5"
                 aria-label={`Remove ${v}`}
               >
                 ×
@@ -80,13 +81,9 @@ export function StringListField({
             placeholder={placeholder}
             className="flex-1 text-xs font-mono"
           />
-          <button
-            type="button"
-            onClick={add}
-            className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover"
-          >
+          <Button type="button" variant="outline" size="sm" onClick={add} className="rounded-none">
             Add
-          </button>
+          </Button>
         </div>
       </div>
     </Field>
@@ -117,31 +114,34 @@ export function EnvEditor({
   return (
     <div>
       {entries.length === 0 && (
-        <div className="text-xs text-gsd-text-dim italic mb-2">No environment variables set.</div>
+        <div className="text-xs text-muted-foreground italic mb-2">No environment variables set.</div>
       )}
       {entries.map(([k, v]) => (
         <div key={k} className="flex items-center gap-2 mb-2">
-          <input type="text" value={k} readOnly className="w-52 font-mono text-xs bg-gsd-bg" />
+          <input type="text" value={k} readOnly className="w-52 font-mono text-xs bg-background" />
           <input
             type="text"
             value={v}
             onChange={(e) => onChange({ ...value, [k]: e.target.value })}
             className="flex-1 font-mono text-xs"
           />
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="sm"
             onClick={() => {
               const { [k]: _drop, ...rest } = value;
               void _drop;
               onChange(rest);
             }}
-            className="px-2 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-danger"
+            className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+            aria-label={`Remove ${k}`}
           >
             ×
-          </button>
+          </Button>
         </div>
       ))}
-      <div className="flex items-center gap-2 pt-2 border-t border-gsd-border">
+      <div className="flex items-center gap-2 pt-2 border-t border-border">
         <input
           type="text"
           value={draftKey}
@@ -162,14 +162,16 @@ export function EnvEditor({
           placeholder="value"
           className="flex-1 font-mono text-xs"
         />
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={add}
           disabled={!draftKey.trim()}
-          className="px-3 py-1 text-xs rounded-md border border-gsd-border text-gsd-text-dim hover:text-gsd-text hover:bg-gsd-surface-hover disabled:opacity-40"
+          className="rounded-none"
         >
           Add
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -187,7 +189,7 @@ function HookEntryCard({
   onRemove: () => void;
 }) {
   return (
-    <div className="p-2 rounded border border-gsd-border/80 bg-gsd-bg/40 mb-2 text-xs space-y-2">
+    <div className="p-2 rounded-none border border-border/80 bg-background/40 mb-2 text-xs space-y-2">
       <div className="flex justify-between gap-2">
         <input
           type="text"
@@ -196,12 +198,18 @@ function HookEntryCard({
           placeholder="Shell command"
           className="flex-1 font-mono"
         />
-        <button type="button" onClick={onRemove} className="text-gsd-danger shrink-0">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onRemove}
+          className="shrink-0 rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+        >
           Remove
-        </button>
+        </Button>
       </div>
       <div className="flex flex-wrap gap-3">
-        <label className="flex items-center gap-1 text-gsd-text-dim">
+        <label className="flex items-center gap-1 text-muted-foreground">
           <input
             type="checkbox"
             checked={entry.blocking !== false}
@@ -209,7 +217,7 @@ function HookEntryCard({
           />
           Blocking
         </label>
-        <label className="text-gsd-text-dim">
+        <label className="text-muted-foreground">
           Timeout (ms)
           <input
             type="number"
@@ -276,19 +284,19 @@ export function HooksEditor({
         const entries = hooks[event] ?? [];
         const isOpen = expanded === event;
         return (
-          <div key={event} className="rounded-lg border border-gsd-border overflow-hidden">
+          <div key={event} className="rounded-none border border-border overflow-hidden">
             <button
               type="button"
-              className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-mono bg-gsd-surface hover:bg-gsd-surface-hover"
+              className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-mono bg-card hover:bg-muted"
               onClick={() => setExpanded(isOpen ? null : event)}
             >
               <span>{event}</span>
-              <span className="text-gsd-text-dim">
+              <span className="text-muted-foreground">
                 {entries.length} hook{entries.length === 1 ? "" : "s"}
               </span>
             </button>
             {isOpen && (
-              <div className="p-3 border-t border-gsd-border">
+              <div className="p-3 border-t border-border">
                 {entries.map((entry, i) => (
                   <HookEntryCard
                     key={i}
@@ -304,9 +312,11 @@ export function HooksEditor({
                     }}
                   />
                 ))}
-                <button
+                <Button
                   type="button"
-                  className="text-xs text-gsd-accent hover:text-gsd-accent-hover"
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-none text-primary hover:text-primary"
                   onClick={() =>
                     onChangeEvent(event, [
                       ...entries,
@@ -315,7 +325,7 @@ export function HooksEditor({
                   }
                 >
                   + Add hook
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -352,10 +362,10 @@ export function FallbackChainsEditor({
   return (
     <div className="space-y-3">
       {names.length === 0 && (
-        <p className="text-xs text-gsd-text-dim">No fallback chains configured.</p>
+        <p className="text-xs text-muted-foreground">No fallback chains configured.</p>
       )}
       {names.map((name) => (
-        <div key={name} className="p-3 rounded-lg bg-gsd-surface border border-gsd-border">
+        <div key={name} className="p-3 rounded-none bg-card border border-border">
           <input
             type="text"
             defaultValue={name}
@@ -365,7 +375,7 @@ export function FallbackChainsEditor({
           {(chains[name] ?? []).map((entry, i) => (
             <div key={i} className="flex flex-wrap gap-2 mb-2 items-end">
               <div>
-                <label className="text-[10px] text-gsd-text-dim">Provider</label>
+                <label className="text-xs text-muted-foreground">Provider</label>
                 <input
                   type="text"
                   value={entry.provider}
@@ -378,7 +388,7 @@ export function FallbackChainsEditor({
                 />
               </div>
               <div>
-                <label className="text-[10px] text-gsd-text-dim">Model</label>
+                <label className="text-xs text-muted-foreground">Model</label>
                 <input
                   type="text"
                   value={entry.model}
@@ -391,7 +401,7 @@ export function FallbackChainsEditor({
                 />
               </div>
               <div>
-                <label className="text-[10px] text-gsd-text-dim">Priority</label>
+                <label className="text-xs text-muted-foreground">Priority</label>
                 <input
                   type="number"
                   value={entry.priority}
@@ -404,22 +414,27 @@ export function FallbackChainsEditor({
                   min={0}
                 />
               </div>
-              <button
+              <Button
                 type="button"
-                className="text-xs text-gsd-danger pb-1"
+                variant="ghost"
+                size="sm"
+                className="rounded-none text-destructive pb-1"
                 onClick={() => {
                   const list = chains[name].filter((_, j) => j !== i);
                   setChain(name, list);
                 }}
+                aria-label="Remove entry"
               >
                 ×
-              </button>
+              </Button>
             </div>
           ))}
           <div className="flex gap-2">
-            <button
+            <Button
               type="button"
-              className="text-xs text-gsd-accent"
+              variant="ghost"
+              size="sm"
+              className="rounded-none text-primary"
               onClick={() =>
                 setChain(name, [
                   ...(chains[name] ?? []),
@@ -428,27 +443,31 @@ export function FallbackChainsEditor({
               }
             >
               + Entry
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
-              className="text-xs text-gsd-danger"
+              variant="outline"
+              size="sm"
+              className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
               onClick={() => setChain(name, undefined)}
             >
               Delete chain
-            </button>
+            </Button>
           </div>
         </div>
       ))}
-      <button
+      <Button
         type="button"
-        className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover"
+        variant="default"
+        size="sm"
+        className="rounded-none"
         onClick={() => {
           const id = `chain-${names.length + 1}`;
           onChange({ ...chains, [id]: [] });
         }}
       >
         + Add chain
-      </button>
+      </Button>
     </div>
   );
 }
@@ -465,19 +484,21 @@ export function BashInterceptorRulesEditor({
   return (
     <div className="space-y-2">
       {rules.map((rule, i) => (
-        <div key={i} className="p-3 rounded-lg bg-gsd-surface border border-gsd-border text-xs space-y-2">
+        <div key={i} className="p-3 rounded-none bg-card border border-border text-xs space-y-2">
           <div className="flex justify-between">
-            <span className="text-gsd-text-dim">Rule {i + 1}</span>
-            <button
+            <span className="text-muted-foreground">Rule {i + 1}</span>
+            <Button
               type="button"
-              className="text-gsd-danger"
+              variant="outline"
+              size="sm"
+              className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
               onClick={() => {
                 const next = rules.filter((_, j) => j !== i);
                 onChange(next.length > 0 ? next : undefined);
               }}
             >
               Remove
-            </button>
+            </Button>
           </div>
           <input
             type="text"
@@ -525,9 +546,11 @@ export function BashInterceptorRulesEditor({
           />
         </div>
       ))}
-      <button
+      <Button
         type="button"
-        className="text-xs text-gsd-accent"
+        variant="ghost"
+        size="sm"
+        className="rounded-none text-primary"
         onClick={() =>
           onChange([
             ...rules,
@@ -536,7 +559,7 @@ export function BashInterceptorRulesEditor({
         }
       >
         + Add rule
-      </button>
+      </Button>
     </div>
   );
 }
@@ -550,10 +573,10 @@ export function SettingsGroup({
 }) {
   return (
     <>
-      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-gsd-text uppercase">
+      <h3 className="mt-6 mb-1 text-xs font-semibold tracking-wide text-foreground uppercase">
         {title}
       </h3>
-      <div className="rounded-lg bg-gsd-surface border border-gsd-border px-4">
+      <div className="rounded-none bg-card border border-border px-4">
         {children}
       </div>
     </>
