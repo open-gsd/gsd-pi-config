@@ -10,7 +10,7 @@ Restyle the existing GSD Pi Config **web surface** onto **shadcn/ui** while keep
 - [x] **Phase 2: Web Chrome & Standalone Pages** - restyle WebShell, gallery, wizard, OAuth, and button language (completed 2026-07-21)
 - [x] **Phase 3: Modals, Palette & Overlays** - Dialog/AlertDialog modals, ⌘K command palette, focus traps (completed 2026-07-22)
 - [x] **Phase 4: Form Kit Adapters + Editor Chrome** - FormControls.web adapters, section inheritance, editor shell (completed 2026-07-22)
-- [ ] **Phase 5: Hardening & Polish Gates** - isolation, behavior smoke, a11y parity, residual web cleanup
+- [x] **Phase 5: Hardening & Polish Gates** - isolation, behavior smoke, a11y parity, residual web cleanup (completed 2026-07-23)
 
 ## Phase Details
 
@@ -119,14 +119,14 @@ Plans:
   3. Behavior smoke gates pass on web: import/draft, edit, download workspace, share/redact path, dirty/save affordances, OAuth submit path as applicable
   4. Focus/a11y parity is maintained (labels, invalid states, keyboard nav, focus rings, hit targets)
 
-**Plans**: 3/4 plans executed
+**Plans**: 4/4 plans complete
 
 Plans:
 
 - [x] 05-01-PLAN.md — Residual purge CustomProviders + ApiKeys → Button + semantic tokens (≥40px)
 - [x] 05-02-PLAN.md — Web section gsd-* color sweep + ConfigApp web path verify
 - [x] 05-03-PLAN.md — phase05.residual contracts + delete web .gsd-btn CSS + isolation update
-- [ ] 05-04-PLAN.md — Dual builds + full suite + UAT smoke/a11y artifact + open questions
+- [x] 05-04-PLAN.md — Dual builds + full suite + UAT smoke/a11y artifact + open questions
 
 **UI hint**: yes
 
@@ -141,7 +141,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Web Chrome & Standalone Pages | 4/4 | Complete    | 2026-07-21 |
 | 3. Modals, Palette & Overlays | 5/5 | Complete    | 2026-07-22 |
 | 4. Form Kit Adapters + Editor Chrome | 5/5 | Complete    | 2026-07-22 |
-| 5. Hardening & Polish Gates | 3/4 | In Progress|  |
+| 5. Hardening & Polish Gates | 4/4 | Complete   | 2026-07-23 |
 
 ## Coverage Map
 

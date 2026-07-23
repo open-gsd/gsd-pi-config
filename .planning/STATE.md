@@ -4,16 +4,17 @@ milestone: v1.0
 milestone_name: milestone
 current_phase: 05
 current_phase_name: hardening-polish-gates
-status: executing
-stopped_at: Completed 05-03-PLAN.md
-last_updated: "2026-07-23T00:27:45.396Z"
+status: verifying
+stopped_at: Completed 05-04-PLAN.md
+last_updated: "2026-07-23T00:30:28.422Z"
 last_activity: 2026-07-22
 last_activity_desc: Phase 05 execution started
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 25
-  completed_plans: 20
+  completed_plans: 21
+  percent: 20
 ---
 
 # Project State
@@ -29,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-07-21)
 
 Phase: 05 (hardening-polish-gates) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-07-22 — Phase 05 execution started
 
 Progress: [████████░░] 80%
@@ -80,6 +81,7 @@ Progress: [████████░░] 80%
 | Phase 05 P01 | 2min | 2 tasks | 2 files |
 | Phase 05 P02 | 4min | 2 tasks | 13 files |
 | Phase 05 P03 | 3min | 2 tasks | 3 files |
+| Phase 05 P04 | 2min | 2 tasks | 3 files |
 
 ## Redesign direction (2026-07-21)
 
@@ -155,6 +157,9 @@ Recent decisions affecting current work:
 - [Phase ?]: ConfigApp verify-only dual path: web Button, desktop uiClasses retained
 - [Phase ?]: ConfigApp uiClasses imports remain allowed for desktop; residual tests scope CustomProviders/ApiKeys + CSS only
 - [Phase ?]: Web CSS purge deletes only button-bridge family; nav-item/choice-btn kept for Sidebar
+- [Phase ?]: Plan 04: no product code changes; dual builds + 173 tests green for ISO-02
+- [Phase ?]: nyquist_compliant stays false until human 05-UAT.md sign-off (D-08)
+- [Phase ?]: ConfigApp btn imports allowed; chip-remove inherits Phase 4 24px unless a11y flags
 
 ### Pending Todos
 
@@ -176,8 +181,8 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-07-23T00:27:45.389Z
-Stopped at: Completed 05-03-PLAN.md
+Last session: 2026-07-23T00:30:28.417Z
+Stopped at: Completed 05-04-PLAN.md
 Resume file: None
 
 ## Phase 3

@@ -47,7 +47,7 @@
 
 - [x] **ISO-01**: Desktop build continues to run with current (non-shadcn) visual styling for this milestone
 - [x] **ISO-02**: Shared domain logic (preferences core, backends, Tauri/web APIs) stays behavior-stable — UI wiring only unless unavoidable
-- [ ] **ISO-03**: Behavior smoke gates pass on web: import/draft, edit, download workspace, share/redact path, dirty/save affordances, OAuth submit path as applicable
+- [x] **ISO-03**: Behavior smoke gates pass on web: import/draft, edit, download workspace, share/redact path, dirty/save affordances, OAuth submit path as applicable
 - [x] **ISO-04**: Focus/a11y parity is maintained (labels, invalid states, keyboard nav, focus rings, hit targets)
 - [x] **ISO-05**: No product/IA rethink: same routes, section groups, and user capabilities as before the restyle
 
@@ -104,7 +104,7 @@
 | OVL-03 | Phase 3 | Complete |
 | ISO-01 | Phase 1 | Complete |
 | ISO-02 | Phase 5 | Complete |
-| ISO-03 | Phase 5 | Pending |
+| ISO-03 | Phase 5 | Complete |
 | ISO-04 | Phase 5 | Complete |
 | ISO-05 | Phase 5 | Complete |
 
