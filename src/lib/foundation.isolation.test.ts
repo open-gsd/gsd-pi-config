@@ -125,10 +125,14 @@ describe("web CSS semantic tokens (THM-01)", () => {
     expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*var\(--bridge-accent\)/);
     expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*#22d3ee/i);
     expect(webCss).not.toMatch(/--color-gsd-accent\s*:\s*#0891b2/i);
-    // Phase 4 shell migrated ConfigApp web toolbar + FormControls to Button language
-    // (locked RESEARCH Q2). Residual .gsd-btn* CSS may remain for library sections
-    // (ApiKeys / Skills / Agents) until Phase 5 full purge — do NOT require them for
-    // Phase 4 success, and do NOT fail if they are still present.
+    // Phase 5 (D-02): web button-bridge CSS purged after zero web callers.
+    // Desktop CSS still ships .gsd-btn (ISO-01) — asserted in desktop isolation block.
+  });
+
+  it("web CSS no longer ships .gsd-btn chrome after Phase 5 purge (D-02)", () => {
+    expect(webCss).not.toMatch(/\.gsd-btn\b/);
+    // field-focus helper retained for ConfigApp palette jump (S9)
+    expect(webCss).toMatch(/\[data-field-path\]\.gsd-field-focus/);
   });
 
   it("does not copy legacy form tag chrome selectors", () => {
