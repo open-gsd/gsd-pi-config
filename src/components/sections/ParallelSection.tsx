@@ -27,7 +27,7 @@ export function ParallelSection({ prefs, onChange, modelCatalog = [] }: Props) {
         description="Milestone-level and slice-level parallelism settings."
       />
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-4 mb-2 uppercase tracking-wider">Milestone Parallel</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-4 mb-2 uppercase tracking-wider">Milestone Parallel</h3>
 
       <Field path="parallel.enabled" label="Enabled" description="Enable parallel milestone execution.">
         <Toggle checked={par.enabled ?? false} onChange={(v) => setPar({ enabled: v })} />
@@ -63,7 +63,7 @@ export function ParallelSection({ prefs, onChange, modelCatalog = [] }: Props) {
         <ModelPicker value={par.worker_model} onChange={(v) => setPar({ worker_model: v })} catalog={modelCatalog} placeholder="Default" />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Slice Parallel</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Slice Parallel</h3>
 
       <Field path="slice_parallel.enabled" label="Enabled" description="Enable slice-level parallelism within a milestone.">
         <Toggle checked={slice.enabled ?? false} onChange={(v) => setSlice({ enabled: v })} />

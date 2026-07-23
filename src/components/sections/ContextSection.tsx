@@ -53,7 +53,7 @@ export function ContextSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Context Mode (gsd_exec)</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Context Mode (gsd_exec)</h3>
 
       <Field path="context_mode.enabled" label="Enabled" description="Sandbox tool output via subprocess digest. Default on unless explicitly false.">
         <Toggle
