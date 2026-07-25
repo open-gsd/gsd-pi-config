@@ -8,6 +8,7 @@ import type {
   WorkspaceMode,
 } from "../../types";
 import { Field, SelectField, TextField, TagInput, SectionHeader } from "../FormControls";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   prefs: GSDPreferences;
@@ -26,18 +27,24 @@ function RepoCard({
   onRemove: () => void;
 }) {
   return (
-    <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
+    <div className="p-3 rounded-none bg-card border border-border mb-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gsd-text">{id}</span>
+        <span className="text-sm font-medium text-foreground">{id}</span>
         {id !== "project" && (
-          <button type="button" onClick={onRemove} className="text-xs text-gsd-danger hover:text-red-400">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onRemove}
+            className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+          >
             Remove
-          </button>
+          </Button>
         )}
       </div>
       <div className="space-y-2">
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Path</label>
+          <label className="text-xs text-muted-foreground block mb-1">Path</label>
           <TextField
             value={repo.path}
             onChange={(path) => onUpdate({ ...repo, path: path ?? "" })}
@@ -46,7 +53,7 @@ function RepoCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Role</label>
+          <label className="text-xs text-muted-foreground block mb-1">Role</label>
           <TextField
             value={repo.role}
             onChange={(role) => onUpdate({ ...repo, role: role || undefined })}
@@ -55,7 +62,7 @@ function RepoCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Verification commands</label>
+          <label className="text-xs text-muted-foreground block mb-1">Verification commands</label>
           <TagInput
             values={repo.verification ?? []}
             onChange={(verification) =>
@@ -65,7 +72,7 @@ function RepoCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Commit policy</label>
+          <label className="text-xs text-muted-foreground block mb-1">Commit policy</label>
           <SelectField<"auto" | "skip">
             value={repo.commit_policy}
             onChange={(commit_policy) => onUpdate({ ...repo, commit_policy })}
@@ -111,18 +118,14 @@ export function WorkspaceSection({ prefs, onChange }: Props) {
       </Field>
 
       <div className="flex items-center justify-between mt-4 mb-3">
-        <h3 className="text-sm font-medium text-gsd-text-dim uppercase tracking-wider">Repositories</h3>
-        <button
-          type="button"
-          onClick={addRepo}
-          className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover hover:bg-gsd-accent/30"
-        >
+        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Repositories</h3>
+        <Button type="button" variant="default" size="sm" onClick={addRepo} className="rounded-none">
           + Add repository
-        </button>
+        </Button>
       </div>
 
       {entries.length === 0 && (
-        <p className="text-xs text-gsd-text-dim mb-4">No child repositories configured.</p>
+        <p className="text-xs text-muted-foreground mb-4">No child repositories configured.</p>
       )}
 
       {entries.map(([id, repo]) => (

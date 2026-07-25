@@ -5,6 +5,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ShareModal } from "../components/ShareModal";
 import { WebShell } from "../components/WebShell";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { buildShareablePreset, loadPreferencesFromText } from "../lib/preferencesCore";
 import {
   fetchPresetIndex,
@@ -14,7 +17,6 @@ import {
 } from "../lib/presetsCatalog";
 import { setWebDraft, writeWebDraftMeta, writeWebWorkspaceLabel } from "../platform/web";
 import type { GSDPreferences } from "../types";
-import { btn, btnPrimary, heading, prose } from "../lib/uiClasses";
 
 export function GalleryPage() {
   const navigate = useNavigate();
@@ -90,23 +92,26 @@ export function GalleryPage() {
     }
   };
 
+  const hasQuery = query.trim().length > 0;
+
   return (
     <WebShell active="gallery">
       <ShareModal
         open={previewOpen}
         content={previewContent}
         onClose={() => setPreviewOpen(false)}
+        title="Preview preset"
       />
 
       <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6">
         <header className="mb-8">
-          <h1 className={`${heading} text-xl font-semibold text-gsd-text`}>Preset gallery</h1>
-          <p className={`${prose} text-sm text-gsd-text-dim mt-2 max-w-xl`}>
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">Preset gallery</h1>
+          <p className="mt-2 max-w-xl text-sm text-muted-foreground">
             Community starting points. Open one in the editor, customize, then download files for
             your machine. API keys and on-disk libraries need the{" "}
             <a
               href="https://github.com/open-gsd/gsd-pi-config"
-              className="text-gsd-accent hover:text-gsd-accent-hover"
+              className="text-primary hover:underline"
               target="_blank"
               rel="noreferrer"
             >
@@ -114,103 +119,136 @@ export function GalleryPage() {
             </a>
             .
           </p>
-          <div className="flex flex-wrap gap-2 mt-4">
-            <Link to="/new" className={btnPrimary}>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              to="/new"
+              className={cn(buttonVariants({ variant: "default" }), "min-h-10 rounded-none")}
+            >
               Create new preset
             </Link>
             <a
               href={PRESETS_CONTRIBUTING_URL}
               target="_blank"
               rel="noreferrer"
-              className={btn}
+              className={cn(buttonVariants({ variant: "outline" }), "min-h-10 rounded-none")}
             >
               Submit via PR
             </a>
           </div>
         </header>
 
-        <div className="flex gap-3 mb-6">
-          <input
+        <div className="mb-6 flex gap-3">
+          <Input
             type="search"
             placeholder="Search presets…"
+            aria-label="Search presets"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1"
+            className="min-h-10 flex-1 rounded-none"
           />
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => void loadIndex()}
             disabled={loading}
-            className={btn}
+            className="min-h-10 shrink-0 rounded-none"
           >
-            Refresh
-          </button>
+            Refresh list
+          </Button>
         </div>
 
         {error && (
-          <p className="mb-4 text-sm text-gsd-danger" role="alert">
+          <p className="mb-4 text-sm text-destructive" role="alert">
             {error}
           </p>
         )}
 
-        {loading && <p className="text-sm text-gsd-text-dim">Loading presets…</p>}
+        {loading && <p className="text-sm text-muted-foreground">Loading presets…</p>}
 
-        {!loading && filtered.length === 0 && !error && (
-          <p className="text-sm text-gsd-text-dim">
-            No presets found. Seed the{" "}
-            <a
-              href="https://github.com/open-gsd/gsd-pi-presets"
-              className="text-gsd-accent hover:text-gsd-accent-hover"
-              target="_blank"
-              rel="noreferrer"
-            >
-              gsd-pi-presets
-            </a>{" "}
-            repository or check your network.
-          </p>
+        {!loading && filtered.length === 0 && !error && hasQuery && (
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p className="font-semibold text-foreground">No presets match your search.</p>
+            <p>
+              Clear the search or{" "}
+              <Link to="/new" className="text-primary hover:underline">
+                Create new preset
+              </Link>
+              .
+            </p>
+          </div>
         )}
 
-        <ul className="rounded-lg border border-gsd-border bg-gsd-surface-solid/60 divide-y divide-gsd-border overflow-hidden">
-          {filtered.map((entry) => (
-            <li
-              key={entry.slug}
-              className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start gap-4 hover:bg-gsd-surface-hover/50 transition-colors"
-            >
-              <div className="flex-1 min-w-0">
-                <h2 className={`${heading} text-base font-medium text-gsd-text`}>
-                  {entry.title}
-                </h2>
-                <p className={`${prose} text-sm text-gsd-text-dim mt-1`}>{entry.description}</p>
-                {entry.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-2">
-                    {entry.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] px-1.5 py-0.5 rounded border border-gsd-border text-gsd-text-muted"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <p className="text-[10px] text-gsd-text-muted mt-2 font-mono">by {entry.author}</p>
-              </div>
-              <div className="flex gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => void usePreset(entry)}
-                  disabled={loadingSlug === entry.slug}
-                  className={btnPrimary}
-                >
-                  {loadingSlug === entry.slug ? "Loading…" : "Use preset"}
-                </button>
-                <button type="button" onClick={() => void previewPreset(entry)} className={btn}>
-                  Preview
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {!loading && filtered.length === 0 && !error && !hasQuery && (
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p className="font-semibold text-foreground">No presets found.</p>
+            <p>
+              Seed the{" "}
+              <a
+                href="https://github.com/open-gsd/gsd-pi-presets"
+                className="text-primary hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                gsd-pi-presets
+              </a>{" "}
+              repository or check your network. Or{" "}
+              <Link to="/new" className="text-primary hover:underline">
+                Create new preset
+              </Link>
+              .
+            </p>
+          </div>
+        )}
+
+        {!loading && filtered.length > 0 && (
+          <ul className="overflow-hidden rounded-none border border-border bg-card divide-y divide-border">
+            {filtered.map((entry) => (
+              <li
+                key={entry.slug}
+                className="flex flex-col gap-4 p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-start sm:p-5"
+              >
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-base font-semibold text-foreground">{entry.title}</h2>
+                  <p className="mt-1 text-sm text-muted-foreground">{entry.description}</p>
+                  {entry.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {entry.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-none border border-border px-1.5 py-1 text-xs text-muted-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <p className="mt-2 truncate font-mono text-xs text-muted-foreground">
+                    by {entry.author}
+                  </p>
+                </div>
+                <div className="flex shrink-0 gap-2">
+                  <Button
+                    type="button"
+                    variant="default"
+                    onClick={() => void usePreset(entry)}
+                    disabled={loadingSlug === entry.slug}
+                    className="min-h-10 rounded-none"
+                  >
+                    {loadingSlug === entry.slug ? "Loading…" : "Use preset"}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => void previewPreset(entry)}
+                    className="min-h-10 rounded-none"
+                  >
+                    Preview
+                  </Button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </main>
     </WebShell>
   );

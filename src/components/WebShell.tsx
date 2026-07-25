@@ -2,10 +2,11 @@
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
 import type { CSSProperties, ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { BrandMark } from "./BrandMark";
 import { ThemeToggle } from "./ThemeToggle";
-import { btn, btnSegment, btnSegmentActive, segmentGroup } from "../lib/uiClasses";
+import { buttonVariants } from "./ui/button";
+import { cn } from "../lib/utils";
 
 export type WebShellNav = "editor" | "gallery" | "new";
 
@@ -34,28 +35,33 @@ export function WebShell({ active, children, workspaceLabel }: WebShellProps) {
 
   return (
     <div
-      className="min-h-screen flex flex-col bg-gsd-bg text-gsd-text gsd-web-shell"
+      className="min-h-screen flex flex-col bg-background text-foreground gsd-web-shell"
       style={shellStyle}
     >
-      <header className="shrink-0 border-b border-gsd-border bg-gsd-bg/90 backdrop-blur-md z-50">
-        <div className="flex h-[var(--gsd-shell-nav-height)] w-full items-center gap-3 px-4 sm:px-6">
-          <a
-            href="https://www.opengsd.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 rounded-md transition-opacity hover:opacity-90"
+      <header className="shrink-0 border-b border-border bg-background z-50">
+        <div className="flex h-[var(--gsd-shell-nav-height)] w-full items-center gap-4 px-4 sm:px-6">
+          <Link
+            to="/"
+            className="shrink-0 rounded-none outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring/50"
+            aria-label="Open GSD Pi Config — Editor"
           >
             <BrandMark size="sm" subtitle="Pi Config" />
-          </a>
+          </Link>
 
-          <nav className={`${segmentGroup} ml-1`} aria-label="Main">
+          <nav className="ml-1 flex items-stretch gap-1" aria-label="Main">
             {NAV.map((item) => (
               <NavLink
                 key={item.id}
                 to={item.to}
                 end={item.id === "editor"}
                 className={({ isActive }) =>
-                  `text-xs font-medium ${isActive ? btnSegmentActive : btnSegment}`
+                  cn(
+                    "inline-flex items-center px-2 text-xs min-h-10 border-b border-transparent",
+                    "outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50",
+                    isActive
+                      ? "border-primary text-foreground font-semibold"
+                      : "text-muted-foreground hover:text-foreground font-normal",
+                  )
                 }
               >
                 {item.label}
@@ -69,7 +75,10 @@ export function WebShell({ active, children, workspaceLabel }: WebShellProps) {
               href="https://www.opengsd.net"
               target="_blank"
               rel="noopener noreferrer"
-              className={`${btn} hidden sm:inline-flex`}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "hidden sm:inline-flex",
+              )}
             >
               opengsd.net
             </a>
@@ -77,17 +86,17 @@ export function WebShell({ active, children, workspaceLabel }: WebShellProps) {
         </div>
 
         {active === "editor" && (
-          <div className="border-t border-gsd-border/80 bg-gsd-surface-solid/60">
-            <div className="flex h-[var(--gsd-shell-editor-strip)] w-full items-center gap-x-4 px-4 text-[11px] text-gsd-text-dim sm:px-6">
+          <div className="border-t border-border bg-card/60">
+            <div className="flex h-[var(--gsd-shell-editor-strip)] w-full items-center gap-x-4 px-4 text-xs text-muted-foreground sm:px-6">
               <span>
-                <span className="text-gsd-text-secondary font-medium">Cloud editor</span>
+                <span className="text-foreground font-semibold">Cloud editor</span>
                 {" · "}
                 Import or create a config, edit in the browser, then download files for{" "}
-                <code className="font-mono text-[10px] text-gsd-text-muted">~/.gsd/</code>
+                <code className="font-mono text-xs text-muted-foreground">~/.gsd/</code>
               </span>
               {workspaceLabel && (
                 <span
-                  className="font-mono text-[10px] text-gsd-accent truncate max-w-full"
+                  className="font-mono text-xs text-primary truncate max-w-full"
                   title={workspaceLabel}
                 >
                   {workspaceLabel}

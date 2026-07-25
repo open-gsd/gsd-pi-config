@@ -1,12 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   readJsonConfigFromFile,
   readPreferencesFromFile,
   type ImportedWorkspace,
 } from "../lib/importWorkspace";
 import { pickFile } from "../lib/pickFile";
-import { btn, btnPrimary, modalPanel } from "../lib/uiClasses";
 import type { GSDModelsConfig, GSDPreferences } from "../types";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ImportPreferencesModalProps {
   open: boolean;
@@ -173,17 +181,6 @@ export function ImportPreferencesModal({
     handleClose,
   ]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, handleClose]);
-
-  if (!open) return null;
-
   const prefsLabel = useNative
     ? fileLabel(nativeLabels.preferences, "No file selected")
     : fileLabel(prefsFile?.name, "No file selected");
@@ -195,120 +192,120 @@ export function ImportPreferencesModal({
     : fileLabel(settingsFile?.name, "Optional");
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="import-prefs-title"
-      onClick={handleClose}
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) handleClose();
+      }}
     >
-      <div
-        className={`w-full max-w-md flex flex-col overflow-hidden ${modalPanel}`}
-        onClick={(e) => e.stopPropagation()}
+      <DialogContent
+        showCloseButton
+        className="flex w-full max-w-md flex-col gap-0 overflow-hidden rounded-none p-0 sm:max-w-md"
       >
-        <div className="px-5 py-4 border-b border-gsd-border shrink-0">
-          <h2 id="import-prefs-title" className="gsd-heading text-sm font-semibold text-gsd-text">
-            Import preferences
-          </h2>
-          <p className="gsd-prose mt-1 text-xs text-gsd-text-dim">
+        <DialogHeader className="shrink-0 border-b border-border px-5 py-4 text-left">
+          <DialogTitle className="text-sm font-semibold">Import preferences</DialogTitle>
+          <DialogDescription className="text-xs text-muted-foreground">
             {isWeb ? (
               <>
                 Choose files from your computer to edit in this browser session. Files stay on
-                your machine until you use <strong className="font-medium text-gsd-text">Download files</strong>{" "}
-                to save copies for GSD Pi (typically{" "}
-                <code className="text-[10px]">~/.gsd/preferences.md</code>,{" "}
-                <code className="text-[10px]">~/.gsd/agent/models.json</code>,{" "}
-                <code className="text-[10px]">settings.json</code>).
+                your machine until you use{" "}
+                <strong className="font-medium text-foreground">Download files</strong> to save
+                copies for GSD Pi (typically{" "}
+                <code className="font-mono text-xs">~/.gsd/preferences.md</code>,{" "}
+                <code className="font-mono text-xs">~/.gsd/agent/models.json</code>,{" "}
+                <code className="font-mono text-xs">settings.json</code>).
               </>
             ) : (
               <>
                 Load your existing GSD config from disk into this workspace. Usually{" "}
-                <code className="text-[10px]">~/.gsd/preferences.md</code> with optional{" "}
-                <code className="text-[10px]">models.json</code> and{" "}
-                <code className="text-[10px]">settings.json</code> (or under{" "}
-                <code className="text-[10px]">.gsd/</code> in a project).
+                <code className="font-mono text-xs">~/.gsd/preferences.md</code> with optional{" "}
+                <code className="font-mono text-xs">models.json</code> and{" "}
+                <code className="font-mono text-xs">settings.json</code> (or under{" "}
+                <code className="font-mono text-xs">.gsd/</code> in a project).
               </>
             )}
-          </p>
-        </div>
+          </DialogDescription>
+        </DialogHeader>
 
-        <div className="px-5 py-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-gsd-text">
+        <div className="space-y-3 px-5 py-4">
+          <div className="flex min-h-10 items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-foreground">
                 preferences.md{" "}
-                <span className="text-gsd-accent font-normal">required</span>
+                <span className="font-normal text-primary">required</span>
               </div>
-              <div className="text-[10px] text-gsd-text-dim truncate" title={prefsLabel}>
+              <div className="truncate text-xs text-muted-foreground" title={prefsLabel}>
                 {prefsLabel}
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => void browsePreferences()}
-              className={`${btn} shrink-0`}
+              className="shrink-0"
             >
               {pickLabel}
-            </button>
+            </Button>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-gsd-text">
+          <div className="flex min-h-10 items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-foreground">
                 models.json{" "}
-                <span className="text-gsd-text-dim font-normal">optional</span>
+                <span className="font-normal text-muted-foreground">optional</span>
               </div>
-              <div className="text-[10px] text-gsd-text-dim truncate" title={modelsLabel}>
+              <div className="truncate text-xs text-muted-foreground" title={modelsLabel}>
                 {modelsLabel}
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => void browseModels()}
-              className={`${btn} shrink-0`}
+              className="shrink-0"
             >
               {pickLabel}
-            </button>
+            </Button>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-medium text-gsd-text">
+          <div className="flex min-h-10 items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-foreground">
                 settings.json{" "}
-                <span className="text-gsd-text-dim font-normal">optional</span>
+                <span className="font-normal text-muted-foreground">optional</span>
               </div>
-              <div className="text-[10px] text-gsd-text-dim truncate" title={settingsLabel}>
+              <div className="truncate text-xs text-muted-foreground" title={settingsLabel}>
                 {settingsLabel}
               </div>
             </div>
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => void browseSettings()}
-              className={`${btn} shrink-0`}
+              className="shrink-0"
             >
               {pickLabel}
-            </button>
+            </Button>
           </div>
 
           {error && (
-            <p className="text-xs text-gsd-danger" role="alert">
+            <p className="text-xs text-destructive" role="alert">
               {error}
             </p>
           )}
         </div>
 
-        <div className="px-5 py-4 border-t border-gsd-border flex justify-end gap-2 shrink-0">
-          <button type="button" onClick={handleClose} className={btn}>
+        <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 rounded-none border-t border-border px-5 py-3 sm:justify-end">
+          <Button type="button" variant="outline" onClick={handleClose}>
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             disabled={!canImport || busy}
             onClick={() => void handleImport()}
-            className={btnPrimary}
           >
             {busy ? "Importing…" : isWeb ? "Import into editor" : "Import into workspace"}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

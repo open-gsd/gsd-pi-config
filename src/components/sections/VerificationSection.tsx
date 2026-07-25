@@ -20,7 +20,7 @@ export function VerificationSection({ prefs, onChange }: Props) {
         description="Enhanced verification and custom verification commands."
       />
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-2 mb-2 uppercase tracking-wider">Enhanced Verification</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-2 mb-2 uppercase tracking-wider">Enhanced Verification</h3>
 
       <Field path="enhanced_verification" label="Enabled" description="Enable enhanced verification (both pre and post-execution checks).">
         <Toggle checked={prefs.enhanced_verification ?? true} onChange={(v) => set("enhanced_verification", v)} />
@@ -38,7 +38,7 @@ export function VerificationSection({ prefs, onChange }: Props) {
         <Toggle checked={prefs.enhanced_verification_strict ?? false} onChange={(v) => set("enhanced_verification_strict", v)} />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Custom Verification</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Custom Verification</h3>
 
       <Field path="verification_commands" label="Verification Commands" description="Shell commands to run as verification after task execution.">
         <TagInput

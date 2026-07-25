@@ -29,7 +29,7 @@ export function ExperimentalSection({ prefs, onChange, modelCatalog = [] }: Prop
         description="Opt-in experimental features. These may change or be removed without deprecation."
       />
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-2 mb-2 uppercase tracking-wider">Core Experimental</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-2 mb-2 uppercase tracking-wider">Core Experimental</h3>
 
       <Field path="experimental.rtk" label="RTK Shell Compression" description="Enable Real-Time Kompression for shell commands to reduce token usage.">
         <Toggle
@@ -38,7 +38,7 @@ export function ExperimentalSection({ prefs, onChange, modelCatalog = [] }: Prop
         />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Reactive Execution</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Reactive Execution</h3>
 
       <Field path="reactive_execution.enabled" label="Enabled" description="Enable graph-derived parallel task execution within slices.">
         <Toggle checked={reactive.enabled ?? false} onChange={(v) => setReactive({ enabled: v })} />
@@ -61,7 +61,7 @@ export function ExperimentalSection({ prefs, onChange, modelCatalog = [] }: Prop
         <ModelPicker value={reactive.subagent_model} onChange={(v) => setReactive({ subagent_model: v })} catalog={modelCatalog} placeholder="Default" />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Gate Evaluation</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Gate Evaluation</h3>
 
       <Field path="gate_evaluation.enabled" label="Enabled" description="Enable parallel quality gate evaluation during slice planning.">
         <Toggle checked={gate.enabled ?? false} onChange={(v) => setGate({ enabled: v })} />
@@ -79,7 +79,7 @@ export function ExperimentalSection({ prefs, onChange, modelCatalog = [] }: Prop
         <Toggle checked={gate.task_gates ?? true} onChange={(v) => setGate({ task_gates: v })} />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">Auto Supervisor</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">Auto Supervisor</h3>
 
       <Field path="auto_supervisor.model" label="Model" description="Model ID for the auto-mode supervisor.">
         <ModelPicker

@@ -3,15 +3,22 @@
 //
 // Fuzzy-free substring + token-prefix search across the field registry and
 // the section list. Keyboard-driven: ↑/↓ to move, Enter to open, Esc to
-// dismiss.
+// dismiss. Ranking stays authoritative via scoreField/scoreSection +
+// shouldFilter={false} (cmdk must not re-rank).
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ALL_FIELD_PATHS, getField } from "../lib/fields";
 import type { FieldMeta } from "../lib/fields";
 import { SECTION_GROUPS, type SectionId } from "./Sidebar";
-
 import type { SectionGroup } from "./Sidebar";
-import { modalPanel } from "../lib/uiClasses";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 
 interface Props {
   open: boolean;
@@ -78,9 +85,6 @@ export function Palette({
   sectionGroups = SECTION_GROUPS,
 }: Props) {
   const [query, setQuery] = useState("");
-  const [cursor, setCursor] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
 
   // Flat list of { id, label, group } for all sections
   const allSections = useMemo(
@@ -106,29 +110,12 @@ export function Palette({
     return out.slice(0, MAX_RESULTS);
   }, [query, allSections]);
 
-  // Reset cursor + focus when opening or query changes
+  // Reset query when opening so ranking starts clean (D-09 open reset)
   useEffect(() => {
     if (open) {
-      setCursor(0);
       setQuery("");
-      // Defer focus so the input is mounted
-      requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);
-
-  useEffect(() => {
-    setCursor(0);
-  }, [query]);
-
-  // Ensure the cursored row is scrolled into view
-  useEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-    const el = list.querySelector<HTMLElement>(`[data-idx="${cursor}"]`);
-    if (el) el.scrollIntoView({ block: "nearest" });
-  }, [cursor, results.length]);
-
-  if (!open) return null;
 
   const pick = (r: Result) => {
     if (r.kind === "section") {
@@ -139,104 +126,74 @@ export function Palette({
     onClose();
   };
 
-  const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      onClose();
-      return;
-    }
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setCursor((c) => Math.min(c + 1, results.length - 1));
-      return;
-    }
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setCursor((c) => Math.max(c - 1, 0));
-      return;
-    }
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const chosen = results[cursor];
-      if (chosen) pick(chosen);
-      return;
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
+    <CommandDialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onClose();
+      }}
+      title="Command palette"
+      description="Jump to section or field"
+      // D-09: top-ish pt-24 feel; max-w-xl; linear radius via CommandDialog defaults
+      className="top-24 max-w-xl translate-y-0 sm:max-w-xl"
+      showCloseButton={false}
     >
-      <div
-        className={`w-full max-w-xl overflow-hidden ${modalPanel}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="px-4 py-3 border-b border-gsd-border">
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder="Jump to section or field…"
-            className="w-full bg-transparent outline-none text-sm text-gsd-text placeholder:text-gsd-text-muted"
-          />
-        </div>
-        <ul
-          ref={listRef}
-          className="max-h-96 overflow-y-auto"
-        >
-          {results.length === 0 && (
-            <li className="px-4 py-6 text-center text-xs text-gsd-text-muted">No matches</li>
-          )}
-          {results.map((r, i) => {
-            const active = i === cursor;
+      {/* D-10: shouldFilter false — pre-sorted scoreField/scoreSection results only */}
+      <Command shouldFilter={false} className="rounded-none">
+        <CommandInput
+          placeholder="Jump to section or field…"
+          value={query}
+          onValueChange={setQuery}
+        />
+        <CommandList className="max-h-96">
+          <CommandEmpty className="py-6 text-center text-xs text-muted-foreground">
+            No matches
+          </CommandEmpty>
+          {results.map((r) => {
+            const value = r.kind === "section" ? `s:${r.id}` : `f:${r.path}`;
             return (
-              <li
-                key={r.kind === "section" ? `s:${r.id}` : `f:${r.path}`}
-                data-idx={i}
-                onMouseEnter={() => setCursor(i)}
-                onClick={() => pick(r)}
-                className={`min-h-10 px-4 py-2 cursor-pointer text-sm flex items-center justify-between gap-3 transition-[background-color,color,transform] active:scale-[0.96] ${
-                  active
-                    ? "bg-gsd-accent-dim text-gsd-accent"
-                    : "text-gsd-text hover:bg-gsd-surface-hover"
-                }`}
+              <CommandItem
+                key={value}
+                value={value}
+                onSelect={() => pick(r)}
+                className="min-h-10 items-center justify-between gap-3 rounded-none border-l-[3px] border-l-transparent px-3 py-2 data-selected:border-l-primary data-selected:bg-primary/10 data-selected:text-foreground [&>svg]:hidden"
               >
                 {r.kind === "section" ? (
                   <>
-                    <span className="flex items-center gap-2">
-                      <span className="text-[10px] uppercase tracking-widest text-gsd-text-muted">
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span className="text-xs font-normal uppercase tracking-widest text-muted-foreground">
                         {r.group}
                       </span>
-                      <span className="font-medium">{r.label}</span>
+                      <span className="truncate text-sm font-semibold">{r.label}</span>
                     </span>
-                    <span className="text-[10px] text-gsd-text-muted">section</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">section</span>
                   </>
                 ) : (
                   <>
-                    <span className="flex flex-col min-w-0">
-                      <span className="font-medium truncate">{r.meta.label}</span>
+                    <span className="flex min-w-0 flex-col">
+                      <span className="truncate text-sm font-semibold">{r.meta.label}</span>
                       {r.meta.hint && (
-                        <span className="text-[11px] text-gsd-text-muted truncate">
+                        <span className="truncate text-xs text-muted-foreground">
                           {r.meta.hint}
                         </span>
                       )}
                     </span>
-                    <span className="text-[10px] text-gsd-text-muted shrink-0 font-mono">
+                    <span className="shrink-0 font-mono text-xs text-muted-foreground">
                       {r.meta.section} · {r.path}
                     </span>
                   </>
                 )}
-              </li>
+              </CommandItem>
             );
           })}
-        </ul>
-        <div className="px-4 py-2 border-t border-gsd-border text-[10px] text-gsd-text-muted flex items-center justify-between">
+        </CommandList>
+        <div className="flex items-center justify-between border-t border-border px-4 py-2 text-xs text-muted-foreground">
           <span>↑↓ navigate · ↵ open · esc close</span>
-          <span>{results.length} result{results.length === 1 ? "" : "s"}</span>
+          <span>
+            {results.length} result{results.length === 1 ? "" : "s"}
+          </span>
         </div>
-      </div>
-    </div>
+      </Command>
+    </CommandDialog>
   );
 }

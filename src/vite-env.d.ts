@@ -14,6 +14,9 @@ interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
 
+/** Build-mode CSS entry resolved by Vite alias `@platform-css`. */
+declare module "@platform-css";
+
 declare module "*.svg" {
   const src: string;
   export default src;

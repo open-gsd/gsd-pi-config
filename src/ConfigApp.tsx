@@ -32,6 +32,7 @@ import {
 } from "./lib/updater";
 import type { GSDPreferences, GSDModelsConfig } from "./types";
 import { btn, btnPrimary, btnSegment, btnSegmentActive, segmentGroup } from "./lib/uiClasses";
+import { Button } from "@/components/ui/button";
 import {
   filterSectionGroups,
   isSectionVisibleOnWeb,
@@ -382,6 +383,40 @@ export function ConfigApp({ variant }: ConfigAppProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [shareContent, setShareContent] = useState("");
 
+  // D-16: single open product overlay — close all before opening one.
+  const closeAllOverlays = useCallback(() => {
+    setPaletteOpen(false);
+    setShareOpen(false);
+    setImportPrefsOpen(false);
+    setLoadPresetOpen(false);
+    setSubmitOpen(false);
+  }, []);
+
+  const openPalette = useCallback(() => {
+    closeAllOverlays();
+    setPaletteOpen(true);
+  }, [closeAllOverlays]);
+
+  const openShare = useCallback(() => {
+    closeAllOverlays();
+    setShareOpen(true);
+  }, [closeAllOverlays]);
+
+  const openImport = useCallback(() => {
+    closeAllOverlays();
+    setImportPrefsOpen(true);
+  }, [closeAllOverlays]);
+
+  const openLoad = useCallback(() => {
+    closeAllOverlays();
+    setLoadPresetOpen(true);
+  }, [closeAllOverlays]);
+
+  const openSubmit = useCallback(() => {
+    closeAllOverlays();
+    setSubmitOpen(true);
+  }, [closeAllOverlays]);
+
   const applyLoadedPreset = (
     loaded: GSDPreferences,
     meta?: { title?: string; slug?: string; description?: string },
@@ -464,7 +499,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
       setError("");
       const content = await backend.buildShareablePreset(prefs);
       setShareContent(content);
-      setShareOpen(true);
+      openShare();
     } catch (e) {
       setError(String(e));
     }
@@ -481,11 +516,11 @@ export function ConfigApp({ variant }: ConfigAppProps) {
   const shortcutCtx = useRef<{
     section: SectionId;
     setSection: (s: SectionId) => void;
-    setPaletteOpen: (v: boolean) => void;
+    openPalette: () => void;
     filePath: string;
-  }>({ section, setSection, setPaletteOpen, filePath: "" });
+  }>({ section, setSection, openPalette, filePath: "" });
   useEffect(() => {
-    shortcutCtx.current = { section, setSection, setPaletteOpen, filePath };
+    shortcutCtx.current = { section, setSection, openPalette, filePath };
   });
 
   // ⌘K palette · ⌘S save · ⌘⇧Z discard · [/] section prev/next
@@ -497,7 +532,7 @@ export function ConfigApp({ variant }: ConfigAppProps) {
       allowInInput: true,
       handler: (ev) => {
         ev.preventDefault();
-        shortcutCtx.current.setPaletteOpen(true);
+        shortcutCtx.current.openPalette();
       },
     },
     {
@@ -714,21 +749,40 @@ export function ConfigApp({ variant }: ConfigAppProps) {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Editor toolbar — hidden on web until a workspace is loaded */}
         {(!isWeb || webWorkspaceReady) && !isSkillsLibrary && (
-        <header className="gsd-local-chrome flex-wrap justify-between gap-3 px-4 bg-gsd-surface-solid/80 sm:px-6">
+        <header
+          className={
+            isWeb
+              ? "flex flex-wrap items-center justify-between gap-2 border-b border-border bg-card px-4 sm:px-6 py-2"
+              : "gsd-local-chrome flex-wrap justify-between gap-3 px-4 bg-gsd-surface-solid/80 sm:px-6"
+          }
+        >
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            {sidebarDrawer && (
-              <button
-                type="button"
-                className={`${btn} shrink-0`}
-                aria-label="Open sections menu"
-                aria-expanded={mobileNavOpen}
-                onClick={() => setMobileNavOpen(true)}
-              >
-                Sections
-              </button>
-            )}
+            {sidebarDrawer &&
+              (isWeb ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                  aria-label="Open sections menu"
+                  aria-expanded={mobileNavOpen}
+                  onClick={() => setMobileNavOpen(true)}
+                >
+                  Sections
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  className={`${btn} shrink-0`}
+                  aria-label="Open sections menu"
+                  aria-expanded={mobileNavOpen}
+                  onClick={() => setMobileNavOpen(true)}
+                >
+                  Sections
+                </button>
+              ))}
             {isWeb && !sidebarDrawer && (
-              <h1 className="text-sm font-semibold text-gsd-text truncate">
+              <h1 className="text-sm font-semibold text-foreground truncate">
                 {sectionLabel(section, sectionGroups)}
               </h1>
             )}
@@ -819,24 +873,50 @@ export function ConfigApp({ variant }: ConfigAppProps) {
                   <div className="w-px h-5 bg-gsd-border mx-1" aria-hidden />
                 </>
               )}
-              <button
-                type="button"
-                onClick={() => setImportPrefsOpen(true)}
-                disabled={needsProjectSelection}
-                title="Import preferences.md and optional models.json and settings.json from your computer"
-                className={btn}
-              >
-                Import
-              </button>
-              <button
-                type="button"
-                onClick={() => setLoadPresetOpen(true)}
-                disabled={needsProjectSelection}
-                title="Load a preset from the gallery or a .preset.md file"
-                className={btn}
-              >
-                Load preset
-              </button>
+              {isWeb ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={openImport}
+                  disabled={needsProjectSelection}
+                  title="Import preferences.md and optional models.json and settings.json from your computer"
+                >
+                  Import
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={openImport}
+                  disabled={needsProjectSelection}
+                  title="Import preferences.md and optional models.json and settings.json from your computer"
+                  className={btn}
+                >
+                  Import
+                </button>
+              )}
+              {isWeb ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={openLoad}
+                  disabled={needsProjectSelection}
+                  title="Load a preset from the gallery or a .preset.md file"
+                >
+                  Load preset
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={openLoad}
+                  disabled={needsProjectSelection}
+                  title="Load a preset from the gallery or a .preset.md file"
+                  className={btn}
+                >
+                  Load preset
+                </button>
+              )}
               {!isWeb && (
                 <button
                   type="button"
@@ -848,77 +928,116 @@ export function ConfigApp({ variant }: ConfigAppProps) {
                   Export
                 </button>
               )}
-              <button
-                type="button"
-                onClick={sharePreset}
-                disabled={needsProjectSelection}
-                title="Copy a redacted shareable YAML block to clipboard"
-                className={btn}
-              >
-                Share
-              </button>
+              {isWeb ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={sharePreset}
+                  disabled={needsProjectSelection}
+                  title="Copy a redacted shareable YAML block to clipboard"
+                >
+                  Share
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={sharePreset}
+                  disabled={needsProjectSelection}
+                  title="Copy a redacted shareable YAML block to clipboard"
+                  className={btn}
+                >
+                  Share
+                </button>
+              )}
               {isWeb && (
                 <>
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={exportPreset}
                     disabled={needsProjectSelection}
                     title="Export as .preset.md"
-                    className={btn}
                   >
                     Export
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
-                    onClick={() => setSubmitOpen(true)}
+                    variant="outline"
+                    size="sm"
+                    onClick={openSubmit}
                     disabled={needsProjectSelection}
-                    className={btn}
                   >
                     Submit
-                  </button>
+                  </Button>
                 </>
               )}
               {anyDirty && (
                 <>
-                  <div className="w-px h-5 bg-gsd-border mx-1 hidden sm:block" aria-hidden />
-                  <button type="button" onClick={reset} className={btn}>
-                    Discard
-                  </button>
+                  <div
+                    className={`w-px h-5 mx-1 hidden sm:block ${isWeb ? "bg-border" : "bg-gsd-border"}`}
+                    aria-hidden
+                  />
+                  {isWeb ? (
+                    <Button type="button" variant="outline" size="sm" onClick={reset}>
+                      Discard
+                    </Button>
+                  ) : (
+                    <button type="button" onClick={reset} className={btn}>
+                      Discard
+                    </button>
+                  )}
                 </>
               )}
-              <button
-                type="button"
-                onClick={save}
-                disabled={
-                  status === "saving" ||
-                  needsProjectSelection ||
-                  (isWeb ? !webWorkspaceReady : !anyDirty)
-                }
-                title={
-                  isWeb
-                    ? "Download preferences.md, models.json, and settings.json to your computer"
-                    : undefined
-                }
-                className={`tabular-nums ${
-                  (isWeb ? webWorkspaceReady : anyDirty) && !needsProjectSelection
-                    ? btnPrimary
-                    : `${btn} !bg-gsd-border !text-gsd-text-dim !border-transparent`
-                }`}
-              >
-                {status === "saving"
-                  ? isWeb
+              {isWeb ? (
+                <Button
+                  type="button"
+                  onClick={save}
+                  disabled={
+                    status === "saving" ||
+                    needsProjectSelection ||
+                    (isWeb ? !webWorkspaceReady : !anyDirty)
+                  }
+                  title="Download preferences.md, models.json, and settings.json to your computer"
+                  variant={
+                    (isWeb ? webWorkspaceReady : anyDirty) && !needsProjectSelection
+                      ? "default"
+                      : "outline"
+                  }
+                  size="sm"
+                  className="tabular-nums"
+                >
+                  {status === "saving"
                     ? "Downloading…"
-                    : "Saving..."
-                  : status === "saved"
-                  ? isWeb
-                    ? "Downloaded"
-                    : savedCount > 0
-                      ? `Saved ${savedCount} change${savedCount === 1 ? "" : "s"}`
-                      : "Saved"
-                  : isWeb
-                    ? "Download"
-                    : "Save"}
-              </button>
+                    : status === "saved"
+                      ? "Downloaded"
+                      : "Download"}
+                </Button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={save}
+                  disabled={
+                    status === "saving" ||
+                    needsProjectSelection ||
+                    (isWeb ? !webWorkspaceReady : !anyDirty)
+                  }
+                  className={`tabular-nums ${
+                    (isWeb ? webWorkspaceReady : anyDirty) && !needsProjectSelection
+                      ? btnPrimary
+                      : `${btn} !bg-gsd-border !text-gsd-text-dim !border-transparent`
+                  }`}
+                >
+                  {status === "saving"
+                    ? "Saving..."
+                    : status === "saved"
+                      ? savedCount > 0
+                        ? `Saved ${savedCount} change${savedCount === 1 ? "" : "s"}`
+                        : "Saved"
+                      : "Save"}
+                </button>
+              )}
             </div>
         </header>
         )}
@@ -948,11 +1067,36 @@ export function ConfigApp({ variant }: ConfigAppProps) {
           </div>
         )}
 
-        {/* Error banner */}
+        {/* Error banner — quiet soft-danger Alert-style (D-15) */}
         {error && (
-          <div className="px-6 py-2 bg-gsd-danger/10 border-b border-gsd-danger/30 text-gsd-danger text-xs flex items-center justify-between">
-            <span>{error}</span>
-            <button onClick={() => setError("")} className="ml-2 hover:text-red-300">dismiss</button>
+          <div
+            role="alert"
+            className={
+              isWeb
+                ? "px-4 sm:px-6 py-2 bg-destructive/10 border-b border-destructive/30 text-destructive text-xs flex items-center justify-between gap-3"
+                : "px-6 py-2 bg-gsd-danger/10 border-b border-gsd-danger/30 text-gsd-danger text-xs flex items-center justify-between gap-3"
+            }
+          >
+            <span className="min-w-0 break-words">{error}</span>
+            {isWeb ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="shrink-0"
+                onClick={() => setError("")}
+              >
+                Dismiss
+              </Button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setError("")}
+                className="ml-2 shrink-0 hover:text-red-300"
+              >
+                Dismiss
+              </button>
+            )}
           </div>
         )}
 
@@ -966,8 +1110,8 @@ export function ConfigApp({ variant }: ConfigAppProps) {
         >
           {isWeb && !webWorkspaceReady ? (
             <WebStartPanel
-              onUpload={() => setImportPrefsOpen(true)}
-              onLoadPreset={() => setLoadPresetOpen(true)}
+              onUpload={openImport}
+              onLoadPreset={openLoad}
             />
           ) : needsProjectSelection && !isLibrarySection ? (
             <div className="flex flex-col items-center justify-center h-full text-center">

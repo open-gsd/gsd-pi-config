@@ -9,7 +9,7 @@
 
 import { useState } from "react";
 import { SectionHeader, Field, TextField, NumberField, Toggle } from "../FormControls";
-import { btn, btnPrimary, btnDanger } from "../../lib/uiClasses";
+import { Button } from "@/components/ui/button";
 import { MODEL_CATALOG } from "../../constants";
 import type {
   GSDModelsConfig,
@@ -74,16 +74,16 @@ export function CustomProvidersSection({ value, onChange }: Props) {
       />
 
       <div className="mb-4 flex items-center justify-between">
-        <div className="text-xs text-gsd-text-dim">
+        <div className="text-xs text-muted-foreground">
           {entries.length} provider{entries.length === 1 ? "" : "s"}
         </div>
-        <button type="button" onClick={addProvider} className={btnPrimary}>
+        <Button type="button" variant="default" size="sm" onClick={addProvider}>
           + Add provider
-        </button>
+        </Button>
       </div>
 
       {entries.length === 0 && (
-        <div className="p-8 text-center rounded-lg bg-gsd-surface border border-dashed border-gsd-border text-sm text-gsd-text-dim">
+        <div className="rounded-none border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
           No custom providers yet. Click <span className="font-medium">Add provider</span> to register one.
         </div>
       )}
@@ -132,15 +132,15 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
 
   return (
     <div
-      className={`mb-4 p-4 rounded-lg border ${
+      className={`mb-4 rounded-none border p-4 ${
         collision
-          ? "bg-gsd-danger/5 border-gsd-danger/40"
-          : "bg-gsd-surface border-gsd-border"
+          ? "border-destructive/40 bg-destructive/5"
+          : "border-border bg-card"
       }`}
     >
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex-1 min-w-0">
-          <label className="text-xs font-semibold tracking-wide text-gsd-text-dim uppercase">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Provider ID
           </label>
           <input
@@ -154,15 +154,22 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
             placeholder="openrouter"
           />
           {collision && (
-            <p className="mt-1 text-xs text-gsd-danger">
+            <p className="mt-1 text-xs text-destructive">
               <strong>Collision:</strong> "{id}" conflicts with a built-in provider.
               GSD will ignore this custom entry until you rename it.
             </p>
           )}
         </div>
-        <button type="button" onClick={onDelete} title="Delete provider" className={`${btnDanger} shrink-0`}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="shrink-0 border-destructive/40 text-destructive hover:bg-destructive/10"
+          title="Delete provider"
+          onClick={onDelete}
+        >
           Delete
-        </button>
+        </Button>
       </div>
 
       <Field label="Base URL" description="OpenAI-compatible endpoint (or native API root)">
@@ -194,32 +201,37 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
             autoComplete="off"
             spellCheck={false}
           />
-          <button type="button" onClick={() => setShowKey((s) => !s)} className={btn}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setShowKey((s) => !s)}
+          >
             {showKey ? "Hide" : "Show"}
-          </button>
+          </Button>
         </div>
       </Field>
 
-      <div className="mt-4 pt-3 border-t border-gsd-border">
-        <div className="flex items-center justify-between mb-2">
-          <h4 className="text-xs font-semibold tracking-wide text-gsd-text uppercase">
+      <div className="mt-4 border-t border-border pt-3">
+        <div className="mb-2 flex items-center justify-between">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-foreground">
             Models ({models.length})
           </h4>
-          <button type="button" onClick={addModel} className={btn}>
+          <Button type="button" variant="outline" size="sm" onClick={addModel}>
             + Add model
-          </button>
+          </Button>
         </div>
 
         {models.length === 0 && (
-          <div className="p-3 text-xs text-gsd-text-dim italic">No models defined.</div>
+          <div className="p-3 text-xs italic text-muted-foreground">No models defined.</div>
         )}
 
         {models.map((m, idx) => (
           <div
             key={idx}
-            className="mb-2 p-3 rounded-md bg-gsd-bg border border-gsd-border"
+            className="mb-2 rounded-none border border-border bg-background p-3"
           >
-            <div className="flex items-start justify-between gap-2 mb-2">
+            <div className="mb-2 flex items-start justify-between gap-2">
               <input
                 type="text"
                 value={m.id}
@@ -227,9 +239,15 @@ function ProviderCard({ id, cfg, collision, onRename, onChange, onDelete }: Card
                 placeholder="model-id (required)"
                 className="flex-1 font-mono text-xs"
               />
-              <button type="button" onClick={() => removeModel(idx)} className={btnDanger}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="border-destructive/40 text-destructive hover:bg-destructive/10"
+                onClick={() => removeModel(idx)}
+              >
                 Remove
-              </button>
+              </Button>
             </div>
             <Field label="Display name">
               <TextField

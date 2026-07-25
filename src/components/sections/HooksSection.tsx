@@ -5,6 +5,7 @@ import type { GSDPreferences, PostUnitHookConfig, PreDispatchHookConfig } from "
 import { UNIT_TYPE_OPTIONS } from "../../types";
 import type { ProviderCatalog } from "../../constants";
 import { ModelPicker, MultiSelectField, SectionHeader } from "../FormControls";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   prefs: GSDPreferences;
@@ -24,7 +25,7 @@ function PostHookCard({
   modelCatalog: readonly ProviderCatalog[];
 }) {
   return (
-    <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
+    <div className="p-3 rounded-none bg-card border border-border mb-3">
       <div className="flex items-center justify-between mb-2">
         <input
           type="text"
@@ -34,7 +35,7 @@ function PostHookCard({
           className="text-sm font-medium w-48"
         />
         <div className="flex items-center gap-2">
-          <label className="text-xs text-gsd-text-dim flex items-center gap-1">
+          <label className="text-xs text-muted-foreground flex items-center gap-1">
             <input
               type="checkbox"
               checked={hook.enabled ?? true}
@@ -42,12 +43,20 @@ function PostHookCard({
             />
             Enabled
           </label>
-          <button onClick={onRemove} className="text-xs text-gsd-danger hover:text-red-400">Remove</button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onRemove}
+            className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+          >
+            Remove
+          </Button>
         </div>
       </div>
       <div className="space-y-2">
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">After (unit types)</label>
+          <label className="text-xs text-muted-foreground block mb-1">After (unit types)</label>
           <MultiSelectField
             values={hook.after}
             onChange={(after) => onUpdate({ ...hook, after })}
@@ -57,7 +66,7 @@ function PostHookCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Prompt</label>
+          <label className="text-xs text-muted-foreground block mb-1">Prompt</label>
           <textarea
             value={hook.prompt}
             onChange={(e) => onUpdate({ ...hook, prompt: e.target.value })}
@@ -68,7 +77,7 @@ function PostHookCard({
         </div>
         <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Model</label>
+            <label className="text-xs text-muted-foreground block mb-1">Model</label>
             <ModelPicker
               value={hook.model}
               onChange={(v) => onUpdate({ ...hook, model: v })}
@@ -78,21 +87,21 @@ function PostHookCard({
             />
           </div>
           <div className="w-20">
-            <label className="text-xs text-gsd-text-dim block mb-1">Max Cycles</label>
+            <label className="text-xs text-muted-foreground block mb-1">Max Cycles</label>
             <input type="number" value={hook.max_cycles ?? ""} onChange={(e) => onUpdate({ ...hook, max_cycles: e.target.value ? Number(e.target.value) : undefined })} min={1} max={10} placeholder="1" className="w-full text-xs" />
           </div>
         </div>
         <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Artifact</label>
+            <label className="text-xs text-muted-foreground block mb-1">Artifact</label>
             <input type="text" value={hook.artifact ?? ""} onChange={(e) => onUpdate({ ...hook, artifact: e.target.value || undefined })} placeholder="Output file" className="w-full text-xs" />
           </div>
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Retry On</label>
+            <label className="text-xs text-muted-foreground block mb-1">Retry On</label>
             <input type="text" value={hook.retry_on ?? ""} onChange={(e) => onUpdate({ ...hook, retry_on: e.target.value || undefined })} placeholder="Trigger file" className="w-full text-xs" />
           </div>
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Agent</label>
+            <label className="text-xs text-muted-foreground block mb-1">Agent</label>
             <input type="text" value={hook.agent ?? ""} onChange={(e) => onUpdate({ ...hook, agent: e.target.value || undefined })} placeholder="Optional agent id" className="w-full text-xs" />
           </div>
         </div>
@@ -113,7 +122,7 @@ function PreHookCard({
   modelCatalog: readonly ProviderCatalog[];
 }) {
   return (
-    <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
+    <div className="p-3 rounded-none bg-card border border-border mb-3">
       <div className="flex items-center justify-between mb-2">
         <input
           type="text"
@@ -123,7 +132,7 @@ function PreHookCard({
           className="text-sm font-medium w-48"
         />
         <div className="flex items-center gap-2">
-          <label className="text-xs text-gsd-text-dim flex items-center gap-1">
+          <label className="text-xs text-muted-foreground flex items-center gap-1">
             <input
               type="checkbox"
               checked={hook.enabled ?? true}
@@ -131,13 +140,21 @@ function PreHookCard({
             />
             Enabled
           </label>
-          <button onClick={onRemove} className="text-xs text-gsd-danger hover:text-red-400">Remove</button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onRemove}
+            className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+          >
+            Remove
+          </Button>
         </div>
       </div>
       <div className="space-y-2">
         <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Action</label>
+            <label className="text-xs text-muted-foreground block mb-1">Action</label>
             <select value={hook.action} onChange={(e) => onUpdate({ ...hook, action: e.target.value as "modify" | "skip" | "replace" })} className="w-full text-xs">
               <option value="modify">Modify</option>
               <option value="skip">Skip</option>
@@ -145,7 +162,7 @@ function PreHookCard({
             </select>
           </div>
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Before (unit types)</label>
+            <label className="text-xs text-muted-foreground block mb-1">Before (unit types)</label>
             <MultiSelectField
               values={hook.before}
               onChange={(before) => onUpdate({ ...hook, before })}
@@ -158,30 +175,30 @@ function PreHookCard({
         {hook.action === "modify" && (
           <div className="flex gap-2">
             <div className="flex-1">
-              <label className="text-xs text-gsd-text-dim block mb-1">Prepend</label>
+              <label className="text-xs text-muted-foreground block mb-1">Prepend</label>
               <textarea value={hook.prepend ?? ""} onChange={(e) => onUpdate({ ...hook, prepend: e.target.value || undefined })} rows={2} className="w-full text-xs" />
             </div>
             <div className="flex-1">
-              <label className="text-xs text-gsd-text-dim block mb-1">Append</label>
+              <label className="text-xs text-muted-foreground block mb-1">Append</label>
               <textarea value={hook.append ?? ""} onChange={(e) => onUpdate({ ...hook, append: e.target.value || undefined })} rows={2} className="w-full text-xs" />
             </div>
           </div>
         )}
         {hook.action === "replace" && (
           <div>
-            <label className="text-xs text-gsd-text-dim block mb-1">Replacement Prompt</label>
+            <label className="text-xs text-muted-foreground block mb-1">Replacement Prompt</label>
             <textarea value={hook.prompt ?? ""} onChange={(e) => onUpdate({ ...hook, prompt: e.target.value || undefined })} rows={2} className="w-full text-xs" />
           </div>
         )}
         {hook.action === "skip" && (
           <div>
-            <label className="text-xs text-gsd-text-dim block mb-1">Skip If (file exists)</label>
+            <label className="text-xs text-muted-foreground block mb-1">Skip If (file exists)</label>
             <input type="text" value={hook.skip_if ?? ""} onChange={(e) => onUpdate({ ...hook, skip_if: e.target.value || undefined })} className="w-full text-xs" placeholder="Relative file path" />
           </div>
         )}
         <div className="flex gap-2">
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Model</label>
+            <label className="text-xs text-muted-foreground block mb-1">Model</label>
             <ModelPicker
               value={hook.model}
               onChange={(v) => onUpdate({ ...hook, model: v })}
@@ -191,7 +208,7 @@ function PreHookCard({
             />
           </div>
           <div className="flex-1">
-            <label className="text-xs text-gsd-text-dim block mb-1">Unit type filter</label>
+            <label className="text-xs text-muted-foreground block mb-1">Unit type filter</label>
             <input
               type="text"
               value={hook.unit_type ?? ""}
@@ -232,12 +249,12 @@ export function HooksSection({ prefs, onChange, modelCatalog = [] }: Props) {
       />
 
       <div className="flex items-center justify-between mt-4 mb-3">
-        <h3 className="text-sm font-medium text-gsd-text-dim uppercase tracking-wider">Post-Unit Hooks</h3>
-        <button onClick={addPost} className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover hover:bg-gsd-accent/30">
+        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Post-Unit Hooks</h3>
+        <Button type="button" variant="default" size="sm" onClick={addPost} className="rounded-none">
           + Add Hook
-        </button>
+        </Button>
       </div>
-      {postHooks.length === 0 && <p className="text-xs text-gsd-text-dim mb-4">No post-unit hooks configured.</p>}
+      {postHooks.length === 0 && <p className="text-xs text-muted-foreground mb-4">No post-unit hooks configured.</p>}
       {postHooks.map((hook, i) => (
         <PostHookCard
           key={i}
@@ -255,12 +272,12 @@ export function HooksSection({ prefs, onChange, modelCatalog = [] }: Props) {
       ))}
 
       <div className="flex items-center justify-between mt-6 mb-3">
-        <h3 className="text-sm font-medium text-gsd-text-dim uppercase tracking-wider">Pre-Dispatch Hooks</h3>
-        <button onClick={addPre} className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover hover:bg-gsd-accent/30">
+        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Pre-Dispatch Hooks</h3>
+        <Button type="button" variant="default" size="sm" onClick={addPre} className="rounded-none">
           + Add Hook
-        </button>
+        </Button>
       </div>
-      {preHooks.length === 0 && <p className="text-xs text-gsd-text-dim mb-4">No pre-dispatch hooks configured.</p>}
+      {preHooks.length === 0 && <p className="text-xs text-muted-foreground mb-4">No pre-dispatch hooks configured.</p>}
       {preHooks.map((hook, i) => (
         <PreHookCard
           key={i}

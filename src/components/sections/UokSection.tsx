@@ -81,7 +81,7 @@ export function UokSection({ prefs, onChange }: Props) {
         />
       </Field>
 
-      <h3 className="text-sm font-medium text-gsd-text-dim mt-6 mb-2 uppercase tracking-wider">GitOps</h3>
+      <h3 className="text-sm font-medium text-muted-foreground mt-6 mb-2 uppercase tracking-wider">GitOps</h3>
 
       <Field path="uok.gitops.enabled" label="GitOps Enabled">
         <Toggle

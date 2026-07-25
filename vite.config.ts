@@ -1,9 +1,13 @@
 // GSD Pi Config - Vite Configuration
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => {
   const isWeb = mode === "web";
@@ -14,6 +18,16 @@ export default defineConfig(({ mode }) => {
     base: isWeb ? (process.env.VITE_BASE_PATH ?? "/") : "/",
     define: {
       "import.meta.env.VITE_PLATFORM": JSON.stringify(isWeb ? "web" : "desktop"),
+    },
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+        // FOUC-safe static CSS entry: web → shadcn tokens, desktop → legacy gsd-*
+        "@platform-css": path.resolve(
+          __dirname,
+          isWeb ? "./src/index.web.css" : "./src/index.desktop.css",
+        ),
+      },
     },
     build: {
       outDir: "dist",

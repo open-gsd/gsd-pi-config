@@ -482,7 +482,7 @@ export function AgentSettingsSection({ value, onChange, modelCatalog = [] }: Pro
       </SettingsGroup>
 
       <SettingsGroup title="Task isolation (pi runtime)">
-        <p className="text-xs text-gsd-text-dim py-2">
+        <p className="text-xs text-muted-foreground py-2">
           pi-coding-agent task isolation. GSD workflow git isolation is configured under Git in preferences.
         </p>
         <Field label="Isolation mode">
@@ -559,7 +559,7 @@ export function AgentSettingsSection({ value, onChange, modelCatalog = [] }: Pro
       </SettingsGroup>
 
       <SettingsGroup title="Shell hooks">
-        <p className="text-xs text-gsd-text-dim py-2 mb-2">
+        <p className="text-xs text-muted-foreground py-2 mb-2">
           Layer 0 shell-command hooks. Project hooks require <code className="font-mono">.gsd/hooks.trusted</code>.
         </p>
         <HooksEditor
@@ -571,7 +571,7 @@ export function AgentSettingsSection({ value, onChange, modelCatalog = [] }: Pro
       </SettingsGroup>
 
       <SettingsGroup title="Security overrides (global only)">
-        <p className="text-xs text-gsd-text-dim py-2">
+        <p className="text-xs text-muted-foreground py-2">
           Only applied from global <code className="font-mono">~/.gsd/agent/settings.json</code>; ignored in project settings.
         </p>
         <StringListField

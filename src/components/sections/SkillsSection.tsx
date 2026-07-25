@@ -4,6 +4,7 @@
 import type { GSDPreferences, SkillDiscoveryMode, GSDSkillRule } from "../../types";
 import { CATALOG_PROVIDER_IDS, MODEL_CATALOG } from "../../constants";
 import { Field, SelectField, NumberField, TagInput, SectionHeader, MultiSelectField } from "../FormControls";
+import { Button } from "@/components/ui/button";
 
 function SkillRuleCard({
   rule,
@@ -15,12 +16,18 @@ function SkillRuleCard({
   onRemove: () => void;
 }) {
   return (
-    <div className="p-3 rounded-lg bg-gsd-surface border border-gsd-border mb-3">
+    <div className="p-3 rounded-none bg-card border border-border mb-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-gsd-text-dim">When condition</span>
-        <button type="button" onClick={onRemove} className="text-xs text-gsd-danger hover:text-red-400">
+        <span className="text-xs text-muted-foreground">When condition</span>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onRemove}
+          className="rounded-none border-destructive/40 text-destructive hover:bg-destructive/10"
+        >
           Remove
-        </button>
+        </Button>
       </div>
       <input
         type="text"
@@ -31,7 +38,7 @@ function SkillRuleCard({
       />
       <div className="space-y-2">
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Use</label>
+          <label className="text-xs text-muted-foreground block mb-1">Use</label>
           <TagInput
             values={rule.use ?? []}
             onChange={(use) => onUpdate({ ...rule, use: use.length > 0 ? use : undefined })}
@@ -39,7 +46,7 @@ function SkillRuleCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Prefer</label>
+          <label className="text-xs text-muted-foreground block mb-1">Prefer</label>
           <TagInput
             values={rule.prefer ?? []}
             onChange={(prefer) => onUpdate({ ...rule, prefer: prefer.length > 0 ? prefer : undefined })}
@@ -47,7 +54,7 @@ function SkillRuleCard({
           />
         </div>
         <div>
-          <label className="text-xs text-gsd-text-dim block mb-1">Avoid</label>
+          <label className="text-xs text-muted-foreground block mb-1">Avoid</label>
           <TagInput
             values={rule.avoid ?? []}
             onChange={(avoid) => onUpdate({ ...rule, avoid: avoid.length > 0 ? avoid : undefined })}
@@ -140,22 +147,24 @@ export function SkillsSection({ prefs, onChange }: Props) {
       </Field>
 
       <div className="flex items-center justify-between mt-6 mb-3">
-        <h3 className="text-sm font-medium text-gsd-text-dim uppercase tracking-wider">Conditional Rules</h3>
-        <button
+        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Conditional Rules</h3>
+        <Button
           type="button"
+          variant="default"
+          size="sm"
+          className="rounded-none"
           onClick={() =>
             onChange({
               ...prefs,
               skill_rules: [...skillRules, { when: "" }],
             })
           }
-          className="text-xs px-2 py-1 rounded bg-gsd-accent/20 text-gsd-accent-hover hover:bg-gsd-accent/30"
         >
           + Add rule
-        </button>
+        </Button>
       </div>
       {skillRules.length === 0 && (
-        <p className="text-xs text-gsd-text-dim mb-4">No conditional skill rules.</p>
+        <p className="text-xs text-muted-foreground mb-4">No conditional skill rules.</p>
       )}
       {skillRules.map((rule, i) => (
         <SkillRuleCard

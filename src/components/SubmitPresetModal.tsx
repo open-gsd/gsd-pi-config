@@ -11,7 +11,17 @@ import {
 import { PRESETS_CONTRIBUTING_URL } from "../lib/presetsCatalog";
 import { readWebDraftMeta } from "../platform/web";
 import type { GSDPreferences } from "../types";
-import { btn, btnPrimary, heading, modalPanel, prose } from "../lib/uiClasses";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const BUILD_TIME_CLIENT_ID = import.meta.env.VITE_GITHUB_CLIENT_ID ?? "";
 const SUBMIT_API_URL = import.meta.env.VITE_SUBMIT_PRESET_API_URL ?? "/api/submit-preset";
@@ -57,16 +67,8 @@ export function SubmitPresetModal({ open, prefs, onClose }: SubmitPresetModalPro
       setError("");
       setPrUrl("");
       setBusy(false);
-      return;
     }
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
+  }, [open]);
 
   const startOAuth = async () => {
     const githubClientId = await resolveGitHubClientId();
@@ -103,116 +105,122 @@ export function SubmitPresetModal({ open, prefs, onClose }: SubmitPresetModalPro
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next) onClose();
+      }}
     >
-      <div
-        className={`w-full max-w-lg p-5 ${modalPanel}`}
-        onClick={(e) => e.stopPropagation()}
+      <DialogContent
+        showCloseButton
+        className="flex max-h-[85vh] w-full max-w-lg flex-col gap-0 overflow-hidden rounded-none p-0 sm:max-w-lg"
       >
-        <h2 className={`${heading} text-sm font-semibold text-gsd-text`}>Submit to gallery</h2>
-        <p className={`${prose} text-xs text-gsd-text-dim mt-1`}>
-          Opens a pull request on{" "}
-          <code className="text-[10px]">open-gsd/gsd-pi-presets</code>. Content is redacted
-          for review — see preview in Share.
-        </p>
+        <DialogHeader className="shrink-0 border-b border-border px-5 py-4 text-left">
+          <DialogTitle className="text-sm font-semibold">Submit to gallery</DialogTitle>
+          <DialogDescription className="text-xs text-muted-foreground">
+            Opens a pull request on{" "}
+            <code className="font-mono text-xs">open-gsd/gsd-pi-presets</code>. Content is
+            redacted for review — see preview in Share.
+          </DialogDescription>
+        </DialogHeader>
 
         {prUrl ? (
-          <div className="mt-4">
-            <p className="text-sm text-gsd-text">Pull request created:</p>
-            <a
-              href={prUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm text-gsd-accent break-all"
-            >
-              {prUrl}
-            </a>
-            <button
-              type="button"
-              onClick={onClose}
-              className={`mt-4 ${btnPrimary}`}
-            >
-              Done
-            </button>
-          </div>
+          <>
+            <div className="min-h-0 flex-1 space-y-2 overflow-auto px-5 py-4">
+              <p className="text-sm text-foreground">Pull request created:</p>
+              <a
+                href={prUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="break-all text-sm text-primary hover:underline"
+              >
+                {prUrl}
+              </a>
+            </div>
+            <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 rounded-none border-t border-border px-5 py-3 sm:justify-end">
+              <Button type="button" onClick={onClose}>
+                Done
+              </Button>
+            </DialogFooter>
+          </>
         ) : (
           <>
-            <div className="mt-4 space-y-3">
-              <label className="block text-xs text-gsd-text-dim">
+            <div className="min-h-0 flex-1 space-y-3 overflow-auto px-5 py-4">
+              <label className="block text-xs text-muted-foreground">
                 Slug (filename)
-                <input
-                  className="mt-1 w-full"
+                <Input
+                  className="mt-1 rounded-none"
                   value={slug}
                   onChange={(e) => setSlug(e.target.value)}
                 />
               </label>
-              <label className="block text-xs text-gsd-text-dim">
+              <label className="block text-xs text-muted-foreground">
                 Title
-                <input
-                  className="mt-1 w-full"
+                <Input
+                  className="mt-1 rounded-none"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
               </label>
-              <label className="block text-xs text-gsd-text-dim">
+              <label className="block text-xs text-muted-foreground">
                 Description
-                <textarea
-                  className="mt-1 w-full"
+                <Textarea
+                  className="mt-1 min-h-0 rounded-none"
                   rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </label>
+
+              {error && (
+                <p className="text-xs text-destructive" role="alert">
+                  {error}
+                </p>
+              )}
+
+              <p className="text-xs text-muted-foreground">
+                Or{" "}
+                <a
+                  href={PRESETS_CONTRIBUTING_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary underline underline-offset-2 hover:text-foreground"
+                >
+                  open a manual PR
+                </a>
+                . Preview redacted YAML:{" "}
+                <button
+                  type="button"
+                  className="text-primary underline underline-offset-2 hover:text-foreground"
+                  onClick={() => {
+                    void navigator.clipboard.writeText(
+                      buildShareablePreset(
+                        cleanPrefs(prefs as unknown as Record<string, unknown>) as GSDPreferences,
+                      ),
+                    );
+                  }}
+                >
+                  copy share block
+                </button>
+              </p>
             </div>
 
-            {error && (
-              <p className="mt-3 text-xs text-gsd-danger">{error}</p>
-            )}
-
-            <div className="flex flex-wrap gap-2 mt-4">
-              <button
+            <DialogFooter className="mx-0 mb-0 shrink-0 gap-2 rounded-none border-t border-border px-5 py-3 sm:justify-end">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
                 type="button"
                 disabled={busy}
                 onClick={() => void startOAuth()}
-                className={btnPrimary}
               >
                 {busy ? "Submitting…" : "Sign in with GitHub"}
-              </button>
-              <button type="button" onClick={onClose} className={btn}>
-                Cancel
-              </button>
-            </div>
-            <p className="mt-4 text-[10px] text-gsd-text-muted">
-              Or{" "}
-              <a
-                href={PRESETS_CONTRIBUTING_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-gsd-accent"
-              >
-                open a manual PR
-              </a>
-              . Preview redacted YAML:{" "}
-              <button
-                type="button"
-                className="text-gsd-accent underline"
-                onClick={() => {
-                  void navigator.clipboard.writeText(
-                    buildShareablePreset(
-                      cleanPrefs(prefs as unknown as Record<string, unknown>) as GSDPreferences,
-                    ),
-                  );
-                }}
-              >
-                copy share block
-              </button>
-            </p>
+              </Button>
+            </DialogFooter>
           </>
         )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

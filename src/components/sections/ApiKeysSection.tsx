@@ -4,7 +4,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { SectionHeader } from "../FormControls";
 import { useConfigBackend } from "../../platform/backend";
-import { btn, btnPrimary, bannerDanger } from "../../lib/uiClasses";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface KeyStatus {
   name: string;
@@ -452,7 +453,7 @@ export function ApiKeysSection() {
 
   return (
     <div>
-      <div className="flex items-start justify-between gap-4 mb-4">
+      <div className="mb-4 flex items-start justify-between gap-4">
         <SectionHeader
           title="API Keys & Auth"
           description={
@@ -461,45 +462,55 @@ export function ApiKeysSection() {
               : "Store provider keys securely in the macOS Keychain. Export to ~/.gsd/env.sh to source into your shell."
           }
         />
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-gsd-text-dim">
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="text-xs text-muted-foreground">
             {setCount} / {ALL_KEY_NAMES.length} set
           </span>
-          <button type="button" onClick={exportEnv} className={btnPrimary}>
+          <Button type="button" variant="default" size="sm" onClick={exportEnv}>
             Export env.sh
-          </button>
+          </Button>
         </div>
       </div>
 
       {error && (
-        <div className={`${bannerDanger} mb-3 flex items-center justify-between text-xs`}>
+        <div
+          role="alert"
+          className="mb-3 flex items-center justify-between rounded-none border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-xs text-destructive"
+        >
           <span>{error}</span>
-          <button type="button" onClick={() => setError("")} className={`${btn} ml-2`}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="ml-2"
+            onClick={() => setError("")}
+          >
             Dismiss
-          </button>
+          </Button>
         </div>
       )}
       {exportMsg && (
-        <div className="mb-3 px-3 py-2 bg-gsd-accent-dim border border-gsd-accent/30 text-gsd-accent text-xs rounded">
+        <div className="mb-3 rounded-none border border-primary/30 bg-primary/10 px-3 py-2 text-xs text-primary">
           {exportMsg}
         </div>
       )}
 
-      <input
+      <Input
         type="text"
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
         placeholder="Search keys..."
-        className="w-full mb-4"
+        aria-label="Search keys"
+        className="mb-4"
       />
 
       {/* OAuth / CLI-based providers */}
       <div className="mb-6">
-        <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted mb-2 px-1">
+        <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           OAuth / CLI Auth (subscription-based)
         </h3>
         {!backend.canCheckCli() && (
-          <p className="text-[11px] text-gsd-text-dim mb-2 px-1">
+          <p className="mb-2 px-1 text-xs text-muted-foreground">
             Install and run these CLIs on your machine — the web app cannot detect them. Use the
             desktop app for live CLI status.
           </p>
@@ -510,40 +521,41 @@ export function ApiKeysSection() {
             return (
               <div
                 key={p.id}
-                className="p-3 rounded-lg bg-gsd-surface border border-gsd-border"
+                className="rounded-none border border-border bg-card p-3"
               >
-                <div className="flex items-center justify-between mb-1">
-                  <h4 className="text-sm font-semibold text-gsd-text">{p.label}</h4>
+                <div className="mb-1 flex items-center justify-between">
+                  <h4 className="text-sm font-semibold text-foreground">{p.label}</h4>
                   {installed === undefined ? (
-                    <span className="text-[9px] text-gsd-text-muted">checking...</span>
+                    <span className="text-xs text-muted-foreground">checking...</span>
                   ) : installed ? (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-gsd-success/20 text-gsd-success uppercase tracking-wider">
+                    <span className="rounded-none border border-border bg-muted px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-foreground">
                       Installed
                     </span>
                   ) : (
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-gsd-border text-gsd-text-dim uppercase tracking-wider">
+                    <span className="rounded-none border border-border bg-muted px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Not found
                     </span>
                   )}
                 </div>
-                <p className="text-[11px] text-gsd-text-dim mb-2 leading-snug">{p.description}</p>
+                <p className="mb-2 text-xs leading-snug text-muted-foreground">{p.description}</p>
                 {!installed && (
                   <div className="mb-2">
-                    <div className="text-[9px] text-gsd-text-muted uppercase tracking-wider mb-0.5">Install</div>
-                    <code className="block text-[10px] bg-gsd-surface-solid px-2 py-1 rounded text-gsd-accent font-mono break-all">
+                    <div className="mb-0.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Install</div>
+                    <code className="block break-all rounded-none bg-background px-2 py-1 font-mono text-xs text-primary">
                       {p.installCmd}
                     </code>
                   </div>
                 )}
                 <div className="mb-2">
-                  <div className="text-[9px] text-gsd-text-muted uppercase tracking-wider mb-0.5">Sign in</div>
-                  <code className="block text-[10px] bg-gsd-surface-solid px-2 py-1 rounded text-gsd-accent font-mono break-all">
+                  <div className="mb-0.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Sign in</div>
+                  <code className="block break-all rounded-none bg-background px-2 py-1 font-mono text-xs text-primary">
                     {p.authCmd}
                   </code>
                 </div>
                 <button
+                  type="button"
                   onClick={() => openExternal(p.docsUrl)}
-                  className="text-[10px] text-gsd-accent hover:underline"
+                  className="text-xs text-primary hover:underline"
                 >
                   Open docs →
                 </button>
@@ -556,10 +568,10 @@ export function ApiKeysSection() {
       {/* Key groups */}
       {filteredGroups.map((g) => (
         <div key={g.id} className="mb-5">
-          <h3 className="text-[10px] font-semibold tracking-[0.15em] uppercase text-gsd-text-muted mb-2 px-1">
+          <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {g.label} — {g.description}
           </h3>
-          <div className="rounded-lg bg-gsd-surface border border-gsd-border overflow-hidden">
+          <div className="overflow-hidden rounded-none border border-border bg-card">
             {g.keys.map((k, i) => {
               const status = statuses[k.name];
               const isEditing = k.name in editing;
@@ -567,26 +579,27 @@ export function ApiKeysSection() {
               return (
                 <div
                   key={k.name}
-                  className={`p-3 ${i > 0 ? "border-t border-gsd-border" : ""}`}
+                  className={`p-3 ${i > 0 ? "border-t border-border" : ""}`}
                 >
-                  <div className="flex items-start justify-between gap-3 mb-1">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-gsd-text">{k.label}</span>
-                        <code className="text-[10px] text-gsd-text-muted font-mono">{k.name}</code>
+                  <div className="mb-1 flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-medium text-foreground">{k.label}</span>
+                        <code className="font-mono text-xs text-muted-foreground">{k.name}</code>
                         {status?.is_set && !isEditing && (
-                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-gsd-success/20 text-gsd-success uppercase tracking-wider">
+                          <span className="rounded-none border border-border bg-muted px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-foreground">
                             Set
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-gsd-text-dim mt-0.5">{k.description}</p>
+                      <p className="mt-0.5 text-xs text-muted-foreground">{k.description}</p>
                     </div>
-                    <div className="shrink-0 flex items-center gap-1">
+                    <div className="flex shrink-0 items-center gap-1">
                       {k.url && !isEditing && (
                         <button
+                          type="button"
                           onClick={() => openExternal(k.url!)}
-                          className="text-[10px] text-gsd-accent hover:underline px-1"
+                          className="px-1 text-xs text-primary hover:underline"
                           title="Get key"
                         >
                           Get key ↗
@@ -596,53 +609,65 @@ export function ApiKeysSection() {
                   </div>
 
                   {isEditing ? (
-                    <div className="flex items-center gap-2 mt-2">
-                      <input
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <Input
                         type={isRevealed ? "text" : "password"}
                         value={editing[k.name]}
                         onChange={(e) => setEditing((p) => ({ ...p, [k.name]: e.target.value }))}
                         placeholder="Paste key value"
-                        className="flex-1 font-mono text-xs"
+                        className="min-w-0 flex-1 font-mono text-xs"
+                        aria-label={`${k.label} value`}
                         autoFocus
                       />
-                      <button
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={() => toggleReveal(k.name)}
-                        className="text-[10px] px-2 py-1 rounded border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
                       >
                         {isRevealed ? "Hide" : "Show"}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={() => cancelEdit(k.name)}
-                        className="text-[10px] px-2 py-1 rounded border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
                       >
                         Cancel
-                      </button>
-                      <button
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="default"
+                        size="sm"
                         onClick={() => saveKey(k.name)}
-                        className="text-[10px] px-3 py-1 rounded bg-gsd-accent text-gsd-on-accent font-medium hover:bg-gsd-accent-hover"
                       >
                         Save
-                      </button>
+                      </Button>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="font-mono text-xs text-gsd-text-muted">
+                    <div className="mt-1 flex flex-wrap items-center gap-2">
+                      <span className="font-mono text-xs text-muted-foreground">
                         {status?.is_set ? `••••••••${status.preview ?? ""}` : "not set"}
                       </span>
                       <div className="flex-1" />
-                      <button
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={() => startEdit(k.name)}
-                        className="text-[10px] px-2 py-1 rounded border border-gsd-border text-gsd-text-dim hover:text-gsd-text"
                       >
                         {status?.is_set ? "Edit" : "Set"}
-                      </button>
+                      </Button>
                       {status?.is_set && (
-                        <button
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="border-destructive/40 text-destructive hover:bg-destructive/10"
                           onClick={() => clearKey(k.name)}
-                          className="text-[10px] px-2 py-1 rounded border border-gsd-danger/40 text-gsd-danger hover:bg-gsd-danger/10"
                         >
                           Clear
-                        </button>
+                        </Button>
                       )}
                     </div>
                   )}
@@ -653,14 +678,14 @@ export function ApiKeysSection() {
         </div>
       ))}
 
-      <div className="text-[10px] text-gsd-text-muted mt-6 leading-relaxed">
+      <div className="mt-6 text-xs leading-relaxed text-muted-foreground">
         <p className="mb-1">
-          <strong className="text-gsd-text-dim">Storage:</strong> Keys are stored in your OS keychain (macOS Keychain, Linux Secret Service, Windows Credential Manager). They never touch disk in plain text.
+          <strong className="text-muted-foreground">Storage:</strong> Keys are stored in your OS keychain (macOS Keychain, Linux Secret Service, Windows Credential Manager). They never touch disk in plain text.
         </p>
         <p className="mb-1">
-          <strong className="text-gsd-text-dim">Shell integration:</strong> Click <em>Export env.sh</em> to write a sourceable file at <code className="bg-gsd-surface px-1 rounded">~/.gsd/env.sh</code>, then add this to your <code className="bg-gsd-surface px-1 rounded">~/.zshrc</code>:
+          <strong className="text-muted-foreground">Shell integration:</strong> Click <em>Export env.sh</em> to write a sourceable file at <code className="rounded-none bg-card px-1">~/.gsd/env.sh</code>, then add this to your <code className="rounded-none bg-card px-1">~/.zshrc</code>:
         </p>
-        <code className="block bg-gsd-surface-solid px-2 py-1 rounded text-gsd-accent font-mono">
+        <code className="block rounded-none bg-background px-2 py-1 font-mono text-xs text-primary">
           [ -f ~/.gsd/env.sh ] && source ~/.gsd/env.sh
         </code>
       </div>

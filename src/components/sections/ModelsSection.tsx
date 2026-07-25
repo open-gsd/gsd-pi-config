@@ -98,8 +98,8 @@ export function ModelsSection({ prefs, onChange, customModels }: Props) {
         const val = models[phase];
         const chain = getChain(val);
         return (
-          <div key={phase} className="mb-4 p-4 rounded-lg bg-gsd-surface border border-gsd-border">
-            <h3 className="text-sm font-semibold text-gsd-accent mb-2 tracking-tight">
+          <div key={phase} className="mb-4 p-4 rounded-none bg-card border border-border">
+            <h3 className="text-sm font-semibold text-primary mb-2 tracking-tight">
               {PHASE_LABELS[phase]}
             </h3>
             <Field label="Model chain" description="Primary first, then fallbacks in order">

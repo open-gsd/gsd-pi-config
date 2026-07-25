@@ -4,6 +4,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { completeOAuthSubmit } from "../components/SubmitPresetModal";
+import { WebShell } from "../components/WebShell";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function OAuthCallbackPage() {
   const navigate = useNavigate();
@@ -27,19 +30,26 @@ export function OAuthCallbackPage() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gsd-bg text-gsd-text p-6">
-      <div className="text-center max-w-md">
-        {error ? (
-          <>
-            <p className="text-gsd-danger text-sm">{error}</p>
-            <Link to="/" className="text-gsd-accent text-sm mt-4 inline-block">
-              Back to editor
-            </Link>
-          </>
-        ) : (
-          <p className="text-sm text-gsd-text-dim">Completing sign-in…</p>
-        )}
-      </div>
-    </div>
+    <WebShell active="editor">
+      <main className="flex flex-1 items-center justify-center bg-background p-6 text-foreground">
+        <div className="max-w-md text-center">
+          {error ? (
+            <>
+              <p className="text-sm text-destructive" role="alert">
+                {error}
+              </p>
+              <Link
+                to="/"
+                className={cn(buttonVariants({ variant: "link" }), "mt-4 inline-flex")}
+              >
+                Back to editor
+              </Link>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">Completing sign-in…</p>
+          )}
+        </div>
+      </main>
+    </WebShell>
   );
 }

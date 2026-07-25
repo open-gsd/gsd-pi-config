@@ -4,10 +4,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { WebShell } from "../components/WebShell";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { applyModePreset, applyProfilePreset } from "../lib/presets";
 import { setWebDraft, writeWebDraftMeta, writeWebWorkspaceLabel } from "../platform/web";
 import type { TokenProfile, WorkflowMode } from "../types";
-import { btn, btnPrimary, choiceBtn, choiceBtnActive, heading, prose } from "../lib/uiClasses";
+
+function choiceRowClass(active: boolean, extra?: string) {
+  return cn(
+    "rounded-none border border-border bg-transparent p-4 text-sm capitalize min-h-12",
+    "outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring/50",
+    active
+      ? "border-l-[3px] border-l-primary bg-primary/10 text-foreground"
+      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+    extra,
+  );
+}
 
 export function WizardPage() {
   const navigate = useNavigate();
@@ -32,17 +46,17 @@ export function WizardPage() {
 
   return (
     <WebShell active="new">
-      <main className="mx-auto w-full max-w-lg flex-1 px-4 py-8 sm:px-6 space-y-8">
+      <main className="mx-auto w-full max-w-lg flex-1 space-y-8 px-4 py-8 sm:px-6">
         <header>
-          <h1 className={`${heading} text-xl font-semibold text-gsd-text`}>New preset</h1>
-          <p className={`${prose} text-sm text-gsd-text-dim mt-2`}>
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">New preset</h1>
+          <p className="mt-2 text-sm text-muted-foreground">
             Choose workflow and token profile. You can refine every field in the editor, then
             download files for GSD Pi on your machine.
           </p>
         </header>
 
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gsd-text-muted mb-3">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Workflow mode
           </h2>
           <div className="flex gap-2">
@@ -51,9 +65,7 @@ export function WizardPage() {
                 key={m}
                 type="button"
                 onClick={() => setMode(m)}
-                className={`flex-1 text-sm capitalize ${
-                  mode === m ? choiceBtnActive : choiceBtn
-                }`}
+                className={choiceRowClass(mode === m, "flex-1 text-center")}
               >
                 {m}
               </button>
@@ -62,7 +74,7 @@ export function WizardPage() {
         </section>
 
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gsd-text-muted mb-3">
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Token profile
           </h2>
           <div className="flex flex-col gap-2">
@@ -71,9 +83,7 @@ export function WizardPage() {
                 key={p}
                 type="button"
                 onClick={() => setProfile(p)}
-                className={`w-full text-sm text-left capitalize ${
-                  profile === p ? choiceBtnActive : choiceBtn
-                }`}
+                className={choiceRowClass(profile === p, "w-full text-left")}
               >
                 {p}
               </button>
@@ -82,31 +92,48 @@ export function WizardPage() {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gsd-text-muted">
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Optional metadata
           </h2>
-          <input
-            type="text"
-            placeholder="Preset title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full"
-          />
-          <textarea
-            placeholder="Short description for the gallery"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            className="w-full"
-          />
+          <div className="space-y-1.5">
+            <label htmlFor="preset-title" className="text-sm text-foreground">
+              Preset title
+            </label>
+            <Input
+              id="preset-title"
+              type="text"
+              placeholder="Preset title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="min-h-10 rounded-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label htmlFor="preset-desc" className="text-sm text-foreground">
+              Short description for the gallery
+            </label>
+            <Textarea
+              id="preset-desc"
+              placeholder="Short description for the gallery"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              className="rounded-none"
+            />
+          </div>
         </section>
 
-        <div className="flex flex-wrap gap-2 pt-2">
-          <button type="button" onClick={() => void create()} className={btnPrimary}>
-            Open editor
-          </button>
-          <button
+        <div className="flex flex-col-reverse flex-wrap gap-2 pt-2 sm:flex-row">
+          <Button
             type="button"
+            onClick={() => void create()}
+            className="min-h-10 w-full rounded-none sm:w-auto"
+          >
+            Open editor
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
             onClick={() => {
               void (async () => {
                 await setWebDraft({});
@@ -114,10 +141,10 @@ export function WizardPage() {
                 navigate("/");
               })();
             }}
-            className={btn}
+            className="min-h-10 w-full rounded-none sm:w-auto"
           >
             Skip (blank)
-          </button>
+          </Button>
         </div>
       </main>
     </WebShell>

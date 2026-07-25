@@ -1,7 +1,7 @@
-// GSD Pi Config - Open GSD brand mark (opengsd.net)
+// GSD Pi Config - Open GSD brand wordmark
 // Copyright (c) 2026 Jeremy McSpadden <jeremy@fluxlabs.net>
 
-import opengsdLogo from "../assets/opengsd-logo.png";
+import { cn } from "@/lib/utils";
 
 interface BrandMarkProps {
   /** sm: shell header · md: desktop sidebar */
@@ -11,29 +11,39 @@ interface BrandMarkProps {
   className?: string;
 }
 
+/**
+ * Linear wordmark only (no PNG). Dual-platform tokens via `gsd-text` / `gsd-accent`
+ * (web maps those to Mist Sky semantic colors).
+ */
 export function BrandMark({ size = "sm", subtitle, className = "" }: BrandMarkProps) {
-  const img = size === "sm" ? "h-8 w-8" : "h-9 w-9";
+  const titleSize = size === "sm" ? "text-sm" : "text-base";
+  const subSize = size === "sm" ? "text-[10px]" : "text-[11px]";
 
   return (
-    <span className={`inline-flex items-center gap-2.5 min-w-0 ${className}`}>
-      <img
-        src={opengsdLogo}
-        alt=""
-        className={`${img} shrink-0 rounded-sm object-contain`}
-        width={36}
-        height={36}
-        decoding="async"
-      />
-      <span className="flex min-w-0 flex-col justify-center leading-none">
-        <span className="text-sm font-semibold tracking-tight text-gsd-text truncate">
-          Open GSD
-        </span>
-        {subtitle && (
-          <span className="text-[10px] text-gsd-text-muted mt-1 tracking-wide truncate">
-            {subtitle}
-          </span>
+    <span
+      className={cn(
+        "inline-flex min-w-0 flex-col justify-center leading-none",
+        className,
+      )}
+    >
+      <span
+        className={cn(
+          titleSize,
+          "font-semibold tracking-tight text-gsd-text truncate",
         )}
+      >
+        Open<span className="text-gsd-accent">GSD</span>
       </span>
+      {subtitle ? (
+        <span
+          className={cn(
+            subSize,
+            "mt-0.5 tracking-wide text-gsd-text-muted truncate",
+          )}
+        >
+          {subtitle}
+        </span>
+      ) : null}
     </span>
   );
 }

@@ -36,10 +36,14 @@ export function resolveTheme(pref: ThemePreference): EffectiveTheme {
   return pref;
 }
 
-/** Apply the effective theme to `<html data-theme="...">`. */
+/**
+ * Apply the effective theme to `<html>` for both GSD tokens (`data-theme`)
+ * and shadcn (`.dark` class). Single authority — no second ThemeProvider.
+ */
 export function applyTheme(effective: EffectiveTheme) {
   if (typeof document === "undefined") return;
   document.documentElement.dataset.theme = effective;
+  document.documentElement.classList.toggle("dark", effective === "dark");
 }
 
 /**
