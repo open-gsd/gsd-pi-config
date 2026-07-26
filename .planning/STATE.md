@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: Web UI Redesign
-status: Milestone v1.0 shipped — PR #3
+status: Awaiting next milestone
 current_phase: 0
-stopped_at: Shipped via /gsd-ship PR #3
-last_updated: "2026-07-23T12:00:00.000Z"
-last_activity: 2026-07-23
-last_activity_desc: "Shipped v1.0 — PR #3"
+stopped_at: "PR #3 merged to main"
+last_updated: "2026-07-26T00:00:00.000Z"
+last_activity: 2026-07-26
+last_activity_desc: "PR #3 merged; on main, up to date with origin"
 progress:
   total_phases: 5
   completed_phases: 5
@@ -17,6 +17,7 @@ progress:
 closeout_type: override_closeout
 pr_number: 3
 pr_url: https://github.com/open-gsd/gsd-pi-config/pull/3
+pr_merged: true
 ---
 
 # Project State
@@ -26,14 +27,14 @@ pr_url: https://github.com/open-gsd/gsd-pi-config/pull/3
 See: .planning/PROJECT.md (updated 2026-07-23)
 
 **Core value:** Every web page uses a single shadcn-based design system so the site looks cohesive and UI work stays maintainable — without changing what users can do.  
-**Current focus:** PR #3 review/merge — then `/gsd-new-milestone` when ready
+**Current focus:** Planning next milestone — run `/gsd-new-milestone`
 
 ## Current Position
 
 Phase: — (v1.0 complete)  
 Plan: —  
-Status: Milestone v1.0 shipped — PR #3  
-Last activity: 2026-07-23 — /gsd-ship created PR #3
+Status: Awaiting next milestone  
+Last activity: 2026-07-26 — PR #3 merged; local `main` matches `origin/main`
 
 Progress: [██████████] 100% (v1.0)
 
@@ -54,5 +55,5 @@ Known verification overrides: 5 (UAT tooling false positives only)
 
 ## Session Continuity
 
-Last session: `/gsd-ship` → PR #3  
-Next: review/merge PR; `/gsd-new-milestone` for next version
+Last session: PR #3 merged; cleaned feature branch; `main` current  
+Next: `/gsd-new-milestone`
