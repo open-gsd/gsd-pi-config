@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Pi
+Exec=pi
+Icon=com.opengsd.pi
+Type=Application
+Categories=Development;Utility;
+Keywords=tauri;desktop;config;

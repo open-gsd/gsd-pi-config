@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.opengsd.pi</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Pi</name>
+  <summary>A Tauri v2 desktop application</summary>
+  <description>
+    <p>
+      Pi is a desktop application built with Tauri v2.
+      It provides a modern, secure interface for configuration and management.
+    </p>
+  </description>
+  <url type="homepage">https://github.com/open-gsd/gsd-pi-config</url>
+  <url type="bugtracker">https://github.com/open-gsd/gsd-pi-config/issues</url>
+  <provides>
+    <binary>pi</binary>
+  </provides>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-06-02">
+      <description>
+        <p>Initial release with basic functionality.</p>
+      </description>
+    </release>
+  </releases>
+</component>

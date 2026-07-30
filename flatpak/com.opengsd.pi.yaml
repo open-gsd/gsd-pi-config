@@ -1,0 +1,66 @@
+app-id: com.opengsd.pi
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: pi
+
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --device=dri
+  - --filesystem=xdg-run/keyring
+  - --share=network
+  - --env=WEBKIT_DISABLE_DMABUF_RENDERER=1
+
+build-options:
+  env:
+    CARGO_HOME: /run/build/pi/cargo
+
+modules:
+  # Node.js runtime
+  - name: nodejs
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/nodejs
+      - mv * /app/share/nodejs/
+      - mkdir -p /app/bin
+      - ln -s /app/share/nodejs/bin/node /app/bin/node
+      - ln -s /app/share/nodejs/bin/npm /app/bin/npm
+      - ln -s /app/share/nodejs/bin/npx /app/bin/npx
+    sources:
+      - type: archive
+        url: https://nodejs.org/dist/v22.16.0/node-v22.16.0-linux-x64.tar.xz
+        sha256: f4cb75bb036f0d0eddf6b79d9596df1aaab9ddccd6a20bf489be5abe9467e84e
+
+  # Build everything in one module (frontend + Tauri with asset embedding)
+  - name: pi
+    buildsystem: simple
+    build-options:
+      append-path: /app/share/nodejs/bin:/usr/lib/sdk/rust-stable/bin
+    build-commands:
+      # Build frontend
+      - npm run build
+      # Build with tauri — this embeds frontend assets into the binary
+      - mkdir -p .cargo
+      - cp cargo-config.toml .cargo/config.toml
+      - CARGO_NET_OFFLINE=true npx tauri build --no-bundle
+      # Install binary
+      - mkdir -p ${FLATPAK_DEST}/bin
+      - cp src-tauri/target/release/gsd-pi-config ${FLATPAK_DEST}/bin/pi
+      # Install desktop/icon/metadata
+      - mkdir -p ${FLATPAK_DEST}/share/applications
+      - cp flatpak/com.opengsd.pi.desktop ${FLATPAK_DEST}/share/applications/
+      - mkdir -p ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps
+      - cp flatpak/com.opengsd.pi.svg ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/
+      - mkdir -p ${FLATPAK_DEST}/share/metainfo
+      - cp flatpak/com.opengsd.pi.metainfo.xml ${FLATPAK_DEST}/share/metainfo/
+    sources:
+      - type: dir
+        path: ..
+      - type: dir
+        path: cargo-vendor
+        dest: src-tauri/vendor
+      - type: file
+        path: cargo-config.toml

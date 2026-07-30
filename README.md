@@ -91,6 +91,21 @@ npm run tauri build
 
 Bundles land in `src-tauri/target/release/bundle/`.
 
+### Build a Flatpak
+
+```bash
+cd flatpak
+./build.sh
+```
+
+This vendors all npm and Cargo dependencies on the host (required because the Flatpak sandbox can't resolve DNS), then builds inside the sandbox with `npx tauri build --no-bundle` so frontend assets are properly embedded. The `tauri-plugin-localhost` serves the bundled assets at runtime since the `tauri://` custom protocol doesn't work inside WebKit2GTK in the Flatpak sandbox.
+
+```bash
+flatpak run com.opengsd.pi
+```
+
+See `flatpak/README.md` for prerequisites and details.
+
 ## Keyboard shortcuts
 
 | Shortcut | Action |
